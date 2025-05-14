@@ -1,1 +1,0 @@
-/usr/bin/g++ -rdynamic CMakeFiles/Progetto.dir/main.cpp.o CMakeFiles/Progetto.dir/ExportParaview/UCDUtilities.cpp.o -o Progetto  /usr/local/lib/libgtest.a /usr/local/lib/libgtest_main.a /usr/local/lib/libgmock.a /usr/local/lib/libgmock_main.a /usr/local/lib/libgmock.a /usr/local/lib/libgtest.a 
