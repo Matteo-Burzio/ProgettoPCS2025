@@ -8,8 +8,8 @@ set(CMAKE_DEPENDS_LANGUAGES
 
 # The set of dependency files which are needed:
 set(CMAKE_DEPENDS_DEPENDENCY_FILES
-  "/workspaces/Data/ProgettoPCS2025/ExportParaview/UCDUtilities.cpp" "CMakeFiles/Progetto.dir/ExportParaview/UCDUtilities.cpp.o" "gcc" "CMakeFiles/Progetto.dir/ExportParaview/UCDUtilities.cpp.o.d"
-  "/workspaces/Data/ProgettoPCS2025/main.cpp" "CMakeFiles/Progetto.dir/main.cpp.o" "gcc" "CMakeFiles/Progetto.dir/main.cpp.o.d"
+  "/home/appuser/Data/Repository_git_hub/ProgettoPCS2025/ExportParaview/UCDUtilities.cpp" "CMakeFiles/Progetto.dir/ExportParaview/UCDUtilities.cpp.o" "gcc" "CMakeFiles/Progetto.dir/ExportParaview/UCDUtilities.cpp.o.d"
+  "/home/appuser/Data/Repository_git_hub/ProgettoPCS2025/main.cpp" "CMakeFiles/Progetto.dir/main.cpp.o" "gcc" "CMakeFiles/Progetto.dir/main.cpp.o.d"
   )
 
 # Targets to which this target links.

@@ -1,4 +1,4 @@
-# Install script for directory: /workspaces/Data/ProgettoPCS2025/ExportParaview
+# Install script for directory: /home/appuser/Data/Repository_git_hub/ProgettoPCS2025/ExportParaview
 
 # Set the install prefix
 if(NOT DEFINED CMAKE_INSTALL_PREFIX)

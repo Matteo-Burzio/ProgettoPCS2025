@@ -21,8 +21,14 @@ int main(int argc, char *argv[])
     }
 
     // Write checks for number of inputs / get variables
-
-    
+	if (argc>6|argc <4)
+	{
+		cout <<"Number of dates are not compatible whith programm execution"<<endl;
+		return 1;
+	}
+    for(int a = 0; a < argc; a++)
+        cout << argv[a] << " ";
+    cout << endl;
 
     cout << "Hello" << endl;
     return 0;

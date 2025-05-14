@@ -57,10 +57,10 @@ RM = /usr/bin/cmake -E rm -f
 EQUALS = =
 
 # The top-level source directory on which CMake was run.
-CMAKE_SOURCE_DIR = /workspaces/Data/ProgettoPCS2025
+CMAKE_SOURCE_DIR = /home/appuser/Data/Repository_git_hub/ProgettoPCS2025
 
 # The top-level build directory on which CMake was run.
-CMAKE_BINARY_DIR = /workspaces/Data/ProgettoPCS2025/build
+CMAKE_BINARY_DIR = /home/appuser/Data/Repository_git_hub/ProgettoPCS2025/build
 
 #=============================================================================
 # Targets provided globally by CMake.
@@ -87,14 +87,14 @@ rebuild_cache/fast: rebuild_cache
 
 # The main all target
 all: cmake_check_build_system
-	cd /workspaces/Data/ProgettoPCS2025/build && $(CMAKE_COMMAND) -E cmake_progress_start /workspaces/Data/ProgettoPCS2025/build/CMakeFiles /workspaces/Data/ProgettoPCS2025/build/src_test//CMakeFiles/progress.marks
-	cd /workspaces/Data/ProgettoPCS2025/build && $(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 src_test/all
-	$(CMAKE_COMMAND) -E cmake_progress_start /workspaces/Data/ProgettoPCS2025/build/CMakeFiles 0
+	cd /home/appuser/Data/Repository_git_hub/ProgettoPCS2025/build && $(CMAKE_COMMAND) -E cmake_progress_start /home/appuser/Data/Repository_git_hub/ProgettoPCS2025/build/CMakeFiles /home/appuser/Data/Repository_git_hub/ProgettoPCS2025/build/src_test//CMakeFiles/progress.marks
+	cd /home/appuser/Data/Repository_git_hub/ProgettoPCS2025/build && $(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 src_test/all
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/appuser/Data/Repository_git_hub/ProgettoPCS2025/build/CMakeFiles 0
 .PHONY : all
 
 # The main clean target
 clean:
-	cd /workspaces/Data/ProgettoPCS2025/build && $(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 src_test/clean
+	cd /home/appuser/Data/Repository_git_hub/ProgettoPCS2025/build && $(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 src_test/clean
 .PHONY : clean
 
 # The main clean target
@@ -103,17 +103,17 @@ clean/fast: clean
 
 # Prepare targets for installation.
 preinstall: all
-	cd /workspaces/Data/ProgettoPCS2025/build && $(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 src_test/preinstall
+	cd /home/appuser/Data/Repository_git_hub/ProgettoPCS2025/build && $(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 src_test/preinstall
 .PHONY : preinstall
 
 # Prepare targets for installation.
 preinstall/fast:
-	cd /workspaces/Data/ProgettoPCS2025/build && $(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 src_test/preinstall
+	cd /home/appuser/Data/Repository_git_hub/ProgettoPCS2025/build && $(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 src_test/preinstall
 .PHONY : preinstall/fast
 
 # clear depends
 depend:
-	cd /workspaces/Data/ProgettoPCS2025/build && $(CMAKE_COMMAND) -S$(CMAKE_SOURCE_DIR) -B$(CMAKE_BINARY_DIR) --check-build-system CMakeFiles/Makefile.cmake 1
+	cd /home/appuser/Data/Repository_git_hub/ProgettoPCS2025/build && $(CMAKE_COMMAND) -S$(CMAKE_SOURCE_DIR) -B$(CMAKE_BINARY_DIR) --check-build-system CMakeFiles/Makefile.cmake 1
 .PHONY : depend
 
 # Help Target
@@ -135,6 +135,6 @@ help:
 # No rule that depends on this can have commands that come from listfiles
 # because they might be regenerated.
 cmake_check_build_system:
-	cd /workspaces/Data/ProgettoPCS2025/build && $(CMAKE_COMMAND) -S$(CMAKE_SOURCE_DIR) -B$(CMAKE_BINARY_DIR) --check-build-system CMakeFiles/Makefile.cmake 0
+	cd /home/appuser/Data/Repository_git_hub/ProgettoPCS2025/build && $(CMAKE_COMMAND) -S$(CMAKE_SOURCE_DIR) -B$(CMAKE_BINARY_DIR) --check-build-system CMakeFiles/Makefile.cmake 0
 .PHONY : cmake_check_build_system
 

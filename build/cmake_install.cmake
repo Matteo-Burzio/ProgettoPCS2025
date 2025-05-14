@@ -1,4 +1,4 @@
-# Install script for directory: /workspaces/Data/ProgettoPCS2025
+# Install script for directory: /home/appuser/Data/Repository_git_hub/ProgettoPCS2025
 
 # Set the install prefix
 if(NOT DEFINED CMAKE_INSTALL_PREFIX)
@@ -44,9 +44,9 @@ endif()
 
 if(NOT CMAKE_INSTALL_LOCAL_ONLY)
   # Include the install script for each subdirectory.
-  include("/workspaces/Data/ProgettoPCS2025/build/src/cmake_install.cmake")
-  include("/workspaces/Data/ProgettoPCS2025/build/src_test/cmake_install.cmake")
-  include("/workspaces/Data/ProgettoPCS2025/build/ExportParaview/cmake_install.cmake")
+  include("/home/appuser/Data/Repository_git_hub/ProgettoPCS2025/build/src/cmake_install.cmake")
+  include("/home/appuser/Data/Repository_git_hub/ProgettoPCS2025/build/src_test/cmake_install.cmake")
+  include("/home/appuser/Data/Repository_git_hub/ProgettoPCS2025/build/ExportParaview/cmake_install.cmake")
 
 endif()
 
@@ -58,5 +58,5 @@ endif()
 
 string(REPLACE ";" "\n" CMAKE_INSTALL_MANIFEST_CONTENT
        "${CMAKE_INSTALL_MANIFEST_FILES}")
-file(WRITE "/workspaces/Data/ProgettoPCS2025/build/${CMAKE_INSTALL_MANIFEST}"
+file(WRITE "/home/appuser/Data/Repository_git_hub/ProgettoPCS2025/build/${CMAKE_INSTALL_MANIFEST}"
      "${CMAKE_INSTALL_MANIFEST_CONTENT}")

@@ -54,10 +54,10 @@ RM = /usr/bin/cmake -E rm -f
 EQUALS = =
 
 # The top-level source directory on which CMake was run.
-CMAKE_SOURCE_DIR = /workspaces/Data/ProgettoPCS2025
+CMAKE_SOURCE_DIR = /home/appuser/Data/Repository_git_hub/ProgettoPCS2025
 
 # The top-level build directory on which CMake was run.
-CMAKE_BINARY_DIR = /workspaces/Data/ProgettoPCS2025/build
+CMAKE_BINARY_DIR = /home/appuser/Data/Repository_git_hub/ProgettoPCS2025/build
 
 #=============================================================================
 # Directory level rules for the build root directory
@@ -136,14 +136,14 @@ src_test/clean:
 CMakeFiles/Progetto.dir/all:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/Progetto.dir/build.make CMakeFiles/Progetto.dir/depend
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/Progetto.dir/build.make CMakeFiles/Progetto.dir/build
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/workspaces/Data/ProgettoPCS2025/build/CMakeFiles --progress-num=1,2,3 "Built target Progetto"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/appuser/Data/Repository_git_hub/ProgettoPCS2025/build/CMakeFiles --progress-num=1,2,3 "Built target Progetto"
 .PHONY : CMakeFiles/Progetto.dir/all
 
 # Build rule for subdir invocation for target.
 CMakeFiles/Progetto.dir/rule: cmake_check_build_system
-	$(CMAKE_COMMAND) -E cmake_progress_start /workspaces/Data/ProgettoPCS2025/build/CMakeFiles 3
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/appuser/Data/Repository_git_hub/ProgettoPCS2025/build/CMakeFiles 3
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 CMakeFiles/Progetto.dir/all
-	$(CMAKE_COMMAND) -E cmake_progress_start /workspaces/Data/ProgettoPCS2025/build/CMakeFiles 0
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/appuser/Data/Repository_git_hub/ProgettoPCS2025/build/CMakeFiles 0
 .PHONY : CMakeFiles/Progetto.dir/rule
 
 # Convenience name for target.
@@ -162,14 +162,14 @@ CMakeFiles/Progetto.dir/clean:
 CMakeFiles/Progetto_TEST.dir/all:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/Progetto_TEST.dir/build.make CMakeFiles/Progetto_TEST.dir/depend
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/Progetto_TEST.dir/build.make CMakeFiles/Progetto_TEST.dir/build
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/workspaces/Data/ProgettoPCS2025/build/CMakeFiles --progress-num=4,5,6 "Built target Progetto_TEST"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/appuser/Data/Repository_git_hub/ProgettoPCS2025/build/CMakeFiles --progress-num=4,5,6 "Built target Progetto_TEST"
 .PHONY : CMakeFiles/Progetto_TEST.dir/all
 
 # Build rule for subdir invocation for target.
 CMakeFiles/Progetto_TEST.dir/rule: cmake_check_build_system
-	$(CMAKE_COMMAND) -E cmake_progress_start /workspaces/Data/ProgettoPCS2025/build/CMakeFiles 3
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/appuser/Data/Repository_git_hub/ProgettoPCS2025/build/CMakeFiles 3
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 CMakeFiles/Progetto_TEST.dir/all
-	$(CMAKE_COMMAND) -E cmake_progress_start /workspaces/Data/ProgettoPCS2025/build/CMakeFiles 0
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/appuser/Data/Repository_git_hub/ProgettoPCS2025/build/CMakeFiles 0
 .PHONY : CMakeFiles/Progetto_TEST.dir/rule
 
 # Convenience name for target.
