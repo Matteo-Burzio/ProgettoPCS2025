@@ -42,10 +42,22 @@ int main(int argc, char *argv[])
 	
 	if(argv[2] < 0)
 	{
-		
-	
-	
+		cerr << "Wrong value for b" << endl;
+		return 1;		
+	}
+	if(argv[3] < 0)
+	{
+		cerr << "Wrong value for c" << endl;
+		return 1;
+	}
+	if(argv[2] == argv[3] &argv[2] < 1)
+	{
+		cerr << "Wrong value for b" << endl;
+		return 1;		
+	}
+    int b = argv[2];
+	int c = argv[3];
 
-    cout << "Hello" << endl;
+	cout << "Hello" << endl;
     return 0;
 }
