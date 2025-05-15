@@ -1,6 +1,10 @@
-#include<iostream>
+#include "polyhedral_mesh.hpp"
+#include "Utils.hpp"
+#include "Utils.cpp"
 
 using namespace std;
+using namespace Eigen;
+using namespace PolyhedralLibrary;
 
 // To pass parameters to main the standard syntax is:
 // argc: number of arguments
@@ -11,53 +15,108 @@ int main(int argc, char *argv[])
 {
 
     // Print number of arguments
-    cout << "argc: " << argc << endl;
+    cout << "Number of arguments: " << argc << endl;
 
 
-    // Write checks for number of inputs / get variables
-	if (argc>6 | argc <4)
+    // Check number of inputs
+	if (argc != 7 & argc != 5)
 	{
-		cerr <<"Number of dates are not compatible whith programm execution"<<endl;
+		cerr << "Number of inputs is not compatible with program execution" << endl;
 		return 1;
 	}
 	
-	// Print the arguments themselves
-    for(int a = 0; a < argc; a++)
-        cout << argv[a] << " ";
-    cout << endl;
-	
-	if(argv[0] < 3 | argv[0] > 5)
+	// Get value of p 
+	int p;
+	istringstream convert_p(argv[1]);
+        convert_p >> p;
+   	
+	if(p < 3 | p > 5)
 	{
 		cerr << "Wrong value for p" << endl;
 		return 1;
 	}
-	int p = argv[0];
 	
-	if(argv[1] < 3 | argv[1] > 5)
+	// Get value of q
+	int q;
+	istringstream convert_q(argv[2]);
+        convert_q >> q;
+	if(q < 3 | q > 5)
 	{
 		cerr << "Wrong value for q" << endl;
 		return 1;
 	}
-	int q = argv[1];
-	
-	if(argv[2] < 0)
+
+	// Check if p and q are compatible
+	if( p == 3 & (q == 3 | q == 4 | q == 5))
+	{
+		cout << "p: " << p << endl;
+	    cout << "q: " << q << endl;
+	} 
+	else if(q == 3 & (p == 3 | p == 4 | p == 5))
+	{
+		cout << "p: " << p << endl;
+	    cout << "q: " << q << endl;
+	} 
+	else
+	{
+		cerr << "p and q are not compatible" << endl;
+		return 1;
+	}
+
+	// Get value of b
+	int b;
+	istringstream convert_b(argv[3]);
+        convert_b >> b;
+	if(b < 0)
 	{
 		cerr << "Wrong value for b" << endl;
 		return 1;		
 	}
-	if(argv[3] < 0)
+
+	// Get value of c
+	int c;
+	istringstream convert_c(argv[4]);
+        convert_c >> c;
+	if(c < 0)
 	{
 		cerr << "Wrong value for c" << endl;
 		return 1;
 	}
-	if(argv[2] == argv[3] &argv[2] < 1)
-	{
-		cerr << "Wrong value for b" << endl;
-		return 1;		
-	}
-    int b = argv[2];
-	int c = argv[3];
 
-	cout << "Hello" << endl;
+	// Check if b and c are compatible
+	int val;
+
+	if((b == c) & (b != 0))
+	{
+		cout << "b: " << b << endl;
+    	cout << "c: " << c << endl;
+
+		val = b;
+		cout << "Class II with parameter: "	<< val << endl;	
+	}
+	else if(((b == 0) & (c != 0)) | (b != 0) & (c == 0))
+	{
+		cout << "b: " << b << endl;
+    	cout << "c: " << c << endl;
+
+		if(b != 0)
+		{
+			val = b;
+		}
+		else
+		{
+			val = c;
+		}
+		cout << "Class I with parameter: " << val << endl;
+	} else
+	{
+		cerr << "b and c are not compatible" << endl;
+		return 1;
+	}
+
+	// Get ID of starting vertex
+	// (da completare)
+
+
     return 0;
 }

@@ -1,7 +1,7 @@
-list(APPEND src_headers ${CMAKE_CURRENT_SOURCE_DIR}/Polygon.hpp)
-list(APPEND src_headers ${CMAKE_CURRENT_SOURCE_DIR}/Triangle.hpp)
+list(APPEND src_headers ${CMAKE_CURRENT_SOURCE_DIR}/polyhedral_mesh.hpp)
+list(APPEND src_headers ${CMAKE_CURRENT_SOURCE_DIR}/Utils.hpp)
 
-# list(APPEND src_sources ${CMAKE_CURRENT_SOURCE_DIR}/Pippo.cpp)
+list(APPEND src_sources ${CMAKE_CURRENT_SOURCE_DIR}/Utils.cpp)
 
 list(APPEND src_includes ${CMAKE_CURRENT_SOURCE_DIR})
 
