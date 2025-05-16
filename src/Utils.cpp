@@ -1,11 +1,13 @@
 #include "Utils.hpp"
+#include <cmath>
 
 using namespace std;
-using namespace Eigen;
 using namespace PolyhedralLibrary;
 
 
-Polyhedron Tetrahedron() {     // funzione per il tetraedro
+// Function that constructs a tetrahedron represented as a Polyhedron
+Polyhedron Tetrahedron()
+{
 	Polyhedron P;
 	P.id = 0;
 	vector<Vertex> nonNormalizedVertices = {
@@ -14,8 +16,10 @@ Polyhedron Tetrahedron() {     // funzione per il tetraedro
 		{2,-1,1,-1},
 		{3,1,-1,-1}
 	};
-	for (const Vertex& v : nonNormalizedVertices) {
-		P.vertices.push_back(normalizeVertex(v));}
+	for (const Vertex& v : nonNormalizedVertices)
+	{
+		P.vertices.push_back(normalizeVertex(v));
+	}
 	P.edges = {
 		{0,0,1}, {1,1,2}, {2,2,0},
 		{3,0,3}, {4,3,1}, {5,3,2}
@@ -29,7 +33,9 @@ Polyhedron Tetrahedron() {     // funzione per il tetraedro
 	return P;
 }       
 
-Polyhedron Octahedron() {      // funzione per l'ottaedro
+// Function that constructs an octahedron represented as a Polyhedron
+Polyhedron Octahedron()
+{
 	Polyhedron P;
 	P.id = 1;
 	P.vertices = {
@@ -58,7 +64,9 @@ Polyhedron Octahedron() {      // funzione per l'ottaedro
 	return P;
 }
 
-Polyhedron Icosahedron() {      // funzione per l'icosaedro
+// Function that constructs an icosahedron represented as a Polyhedron
+Polyhedron Icosahedron()
+{
 	Polyhedron P;
 	P.id = 2;
 	const double phi = (1.0 + sqrt(5.0)) / 2.0;
@@ -76,8 +84,10 @@ Polyhedron Icosahedron() {      // funzione per l'icosaedro
 		{10,-phi,0,-1},
 		{11,-phi,0,1}
 	};
-	for (const Vertex& v : nonNormalizedVertices) {
-		P.vertices.push_back(normalizeVertex(v));}
+	for (const Vertex& v : nonNormalizedVertices)
+	{
+		P.vertices.push_back(normalizeVertex(v));
+	}
 	P.edges = {
 		{0,0,5}, {1,0,1}, {2,0,11}, {3,0,10}, {4,0,7},
 		{5,1,5}, {6,1,7}, {7,1,8}, {8,1,9}, {9,5,9},
@@ -112,8 +122,10 @@ Polyhedron Icosahedron() {      // funzione per l'icosaedro
 }
 
 
-
-Vertex normalizeVertex(const Vertex& v) {      // funzione per normalizzare i vertici
+// Function that normalizes the coordinates of a vertex to lie on the unit sphere
+Vertex normalizeVertex(const Vertex& v)
+{
 	double length = sqrt(v.x * v.x + v.y * v.y + v.z * v.z);
 	return Vertex{v.id, v.x/length, v.y/length, v.z/length};
 }
+
