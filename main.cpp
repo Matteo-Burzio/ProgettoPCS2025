@@ -1,6 +1,6 @@
 #include "polyhedral_mesh.hpp"
 #include "Utils.hpp"
-#include "Utils.cpp"
+
 
 using namespace std;
 using namespace Eigen;

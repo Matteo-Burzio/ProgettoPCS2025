@@ -27,7 +27,7 @@ Polyhedron Tetrahedron() {     // funzione per il tetraedro
 		{3, {1,2,3}, {1,5,4}}
 	};
 	return P;
-};         
+}       
 
 Polyhedron Octahedron() {      // funzione per l'ottaedro
 	Polyhedron P;
@@ -56,7 +56,7 @@ Polyhedron Octahedron() {      // funzione per l'ottaedro
 		{7, {3,5,1}, {11,10,2}}
 	};
 	return P;
-};
+}
 
 Polyhedron Icosahedron() {      // funzione per l'icosaedro
 	Polyhedron P;
@@ -109,11 +109,11 @@ Polyhedron Icosahedron() {      // funzione per l'icosaedro
 		{19, {11,2,10}, {19,26,29}}
 	};
 	return P;
-};
+}
 
 
 
 Vertex normalizeVertex(const Vertex& v) {      // funzione per normalizzare i vertici
 	double length = sqrt(v.x * v.x + v.y * v.y + v.z * v.z);
 	return Vertex{v.id, v.x/length, v.y/length, v.z/length};
-};
+}
