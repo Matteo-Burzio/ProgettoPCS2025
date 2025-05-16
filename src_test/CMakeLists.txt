@@ -1,5 +1,5 @@
-list(APPEND src_test_headers ${CMAKE_CURRENT_SOURCE_DIR}/TestPolygon.hpp)
-list(APPEND src_test_headers ${CMAKE_CURRENT_SOURCE_DIR}/TestTriangle.hpp)
+list(APPEND src_test_headers ${CMAKE_CURRENT_SOURCE_DIR}/Polyhedron_test.hpp)
+
 
 list(APPEND src_test_includes ${CMAKE_CURRENT_SOURCE_DIR})
 

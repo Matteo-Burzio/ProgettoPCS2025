@@ -9,43 +9,60 @@ using namespace Eigen;
 
 namespace PolyhedralLibrary {
 
-struct polyhedral_mesh
-{
-    // Number of cells of each dimension
-    unsigned int num_cell0D;
-    unsigned int num_cell1D;
-    unsigned int num_cell2D;
-    unsigned int num_cell3D;
-
-    // Vectors storing the Ids of each type cell
-    vector<unsigned int> id_cell0D;
-    vector<unsigned int> id_cell1D;
-    vector<unsigned int> id_cell2D;
-    vector<unsigned int> id_cell3D;
-
-    // 0D cells are points
-    // Matrix which stores the (X,Y,Z) coordinates for each point (as doubles)
-    Eigen::MatrixXd coords_cell0D;
-
-    // 1D cells are segments
-    // Matrix which stores the IDs of the two points at the ends of each segment (as integers)
-    Eigen::MatrixXi extrema_cell1D;
-
-    // 2D cells are polygons
-    // Vector of vectors storing the IDs of the vertices of each polygon
-    vector<vector<unsigned int>> vertices_cell2D;
-    // Vector of vectors storing the Ids of the edges of each polygon
-    vector<vector<unsigned int>> edges_cell2D;
-
-    // 3D cells are polyhedra
-    // Vector of vectors storing the IDs of the vertices of each polyhedra
-    vector<vector<unsigned int>> vertices_cell3D;
-    // Vector of vectors storing the Ids of the edges of each polyhedra
-    vector<vector<unsigned int>> edges_cell3D;
-    // Vector of vectors storing the Ids of the faces of each polyhedra
-    vector<vector<unsigned int>> faces_cell3D;
-
-    // Markers for shortest path algorythm
+struct Vertex {              // struttura dei vertici
+	int id;
+	double x;
+	double y;
+	double z;
+	int shortPath = 0;
 };
+
+struct Edge {                // struttura dei lati
+	int id;
+	int origin;
+	int end;
+	int shortPath = 0;
+};
+
+struct Face {                // struttura delle facce
+	int id;
+	vector<int> idVertices;
+	vector<int> idEdges;
+	int numVertices() const {return idVertices.size();}
+	int numEdges() const {return idEdges.size();}
+};
+
+struct Polyhedron {          // struttura dei poliedri
+	int id;
+	vector<Vertex> vertices;
+	vector<Edge> edges;
+	vector<Face> faces;
+	int numVertices() const {return vertices.size();}
+	int numEdges() const {return edges.size();}
+	int numFaces() const {return faces.size();}
+	bool checkFaces() const {
+		for (const Face& face : faces) {
+			int E = face.numEdges(); // = 3
+			for (int e = 0; e < E; ++e) {
+				int idEdge = face.idEdges[e];
+				int idVertex = face.idVertices[e];
+				const Edge& edge = edges[idEdge];
+				// vertice = inizio o fine del lato
+				if (edge.origin != idVertex && edge.end != idVertex) {
+					cerr << "Error: vertex-edge mismatch" << endl;
+					return false;}
+				// connesione tra 2 edge consecutivi
+				int idVertexNext = face.idVertices[(e + 1) % E];
+				int currentEdgeEnd = (edge.origin == idVertex) ? edge.end : edge.origin; // scrivi con if else
+					// condizione ? valore_se_vero : valore_se_falso
+				if (currentEdgeEnd != idVertexNext) {
+					cerr << "Error: edge-edge discontinuity" << endl;
+					return false;}
+			}
+		}
+		return true;
+	}
+};
+
 
 }
