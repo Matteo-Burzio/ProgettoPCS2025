@@ -15,7 +15,6 @@ int main(int argc, char *argv[])
 	// Print number of arguments
 	cout << "Number of arguments: " << argc << endl;
 
-
 	// Check number of inputs
 	if ((argc != 7) && (argc != 5))
 	{
@@ -23,8 +22,13 @@ int main(int argc, char *argv[])
 		return 1;
 	}
 	
+	// Initialize variables
+	int p; // number of edges of each face of the chosen platonic solid
+	int q; // number of faces which meet in each vertex of the solid
+	int b;
+	int c;
+
 	// Get value of p 
-	int p;
 	istringstream convert_p(argv[1]);
 		convert_p >> p;
 	if((p < 3) || (p > 5))
@@ -34,7 +38,6 @@ int main(int argc, char *argv[])
 	}
 	
 	// Get value of q
-	int q;
 	istringstream convert_q(argv[2]);
 		convert_q >> q;
 	if((q < 3) || (q > 5))
@@ -61,7 +64,6 @@ int main(int argc, char *argv[])
 	}
 
 	// Get value of b
-	int b;
 	istringstream convert_b(argv[3]);
 		convert_b >> b;
 	if(b < 0)
@@ -71,7 +73,6 @@ int main(int argc, char *argv[])
 	}
 
 	// Get value of c
-	int c;
 	istringstream convert_c(argv[4]);
 		convert_c >> c;
 	if(c < 0)
@@ -81,17 +82,10 @@ int main(int argc, char *argv[])
 	}
 
 	// Check if b and c are compatible
-	int val;
 
-	if((b == c) && (b != 0))
-	{
-		cout << "b: " << b << endl;
-		cout << "c: " << c << endl;
+	int val; // temporary variable
 
-		val = b;
-		cout << "Class II with parameter: " << val << endl;
-	}
-	else if(((b == 0) && (c != 0)) || ((b != 0) && (c == 0)))
+	if(((b == 0) && (c != 0)) || ((b != 0) && (c == 0)))
 	{
 		cout << "b: " << b << endl;
 		cout << "c: " << c << endl;
@@ -104,7 +98,15 @@ int main(int argc, char *argv[])
 		{
 			val = c;
 		}
-		cout << "Class I with parameter: " << val << endl;
+		cout << "Class I with parameter: " << val << endl;	
+	}
+	else if((b == c) && (b != 0))
+	{
+		cout << "b: " << b << endl;
+		cout << "c: " << c << endl;
+
+		val = b;
+		cout << "Class II with parameter: " << val << endl;
 	}
 	else
 	{

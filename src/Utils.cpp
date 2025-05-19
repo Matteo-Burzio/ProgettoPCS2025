@@ -125,7 +125,10 @@ Polyhedron Icosahedron()
 // Function that normalizes the coordinates of a vertex to lie on the unit sphere
 Vertex normalizeVertex(const Vertex& v)
 {
+	// Compute the Euclidean norm of the vector
 	double length = sqrt(v.x * v.x + v.y * v.y + v.z * v.z);
+
+	// Return the vertex with normalized coordinates
 	return Vertex{v.id, v.x/length, v.y/length, v.z/length};
 }
 
