@@ -23,15 +23,14 @@ int main(int argc, char *argv[])
 	}
 	
 	// Initialize variables
-	int p; // number of edges of each face of the chosen platonic solid
-	int q; // number of faces which meet in each vertex of the solid
-	int b;
-	int c;
+	unsigned int p; // number of edges of each face of the chosen platonic solid
+	unsigned int q; // number of faces which meet in each vertex of the solid
+	unsigned int b; // subdivision parameter
+	unsigned int c; // subdivision parameter
 
 	// Get value of p 
 	istringstream convert_p(argv[1]);
-		convert_p >> p;
-	if((p < 3) || (p > 5))
+	if(!(convert_p >> p) || (p < 3) || (p > 5))
 	{
 		cerr << "Wrong value for p" << endl;
 		return 1;
@@ -39,8 +38,7 @@ int main(int argc, char *argv[])
 	
 	// Get value of q
 	istringstream convert_q(argv[2]);
-		convert_q >> q;
-	if((q < 3) || (q > 5))
+	if(!(convert_q >> q) || (q < 3) || (q > 5))
 	{
 		cerr << "Wrong value for q" << endl;
 		return 1;
@@ -65,8 +63,7 @@ int main(int argc, char *argv[])
 
 	// Get value of b
 	istringstream convert_b(argv[3]);
-		convert_b >> b;
-	if(b < 0)
+	if(!(convert_b >> b))
 	{
 		cerr << "Wrong value for b" << endl;
 		return 1;
@@ -74,16 +71,15 @@ int main(int argc, char *argv[])
 
 	// Get value of c
 	istringstream convert_c(argv[4]);
-		convert_c >> c;
-	if(c < 0)
+	if(!(convert_c >> c))
 	{
 		cerr << "Wrong value for c" << endl;
 		return 1;
 	}
 
 	// Check if b and c are compatible
-
-	int val; // temporary variable
+	
+	unsigned int val; // temporary variable
 
 	if(((b == 0) && (c != 0)) || ((b != 0) && (c == 0)))
 	{

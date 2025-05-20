@@ -9,7 +9,7 @@ using namespace std;
 namespace PolyhedralLibrary {
 
 
-	// Struct which stores the ID of each vertex and its coordinates
+	// Struct which stores the ID and coordinates of a vertex
 	struct Vertex
 	{
 		unsigned int id;
@@ -19,7 +19,7 @@ namespace PolyhedralLibrary {
 		bool shortPath = 0;
 	};
 
-	// Struct which stores the ID of each edge and the IDs of its extrema
+	// Struct which stores the ID of an edge and the IDs of its extrema
 	struct Edge
 	{
 		unsigned int id;
@@ -28,28 +28,29 @@ namespace PolyhedralLibrary {
 		bool shortPath = 0;
 	};
 
-	// Struct which stores the ID of each polygon, the IDs of its vertices and edges,
+	// Struct which stores the ID of a face, the IDs of its vertices and edges
 		// and the number of vertices and edges
 	struct Face
 	{
 		unsigned int id;
-		vector<int> idVertices;
-		vector<int> idEdges;
+		vector<unsigned int> idVertices;
+		vector<unsigned int> idEdges;
 
-		// Method which returns number of vertices of a face
-		int numVertices() const
+		// Method which returns the number of vertices of the face
+		unsigned int numVertices() const
 		{
 			return idVertices.size();
 		}
 
-		// Method which returns number of edges of a face
-		int numEdges() const
+		// Method which returns the number of edges of the face
+		unsigned int numEdges() const
 		{
 			return idEdges.size();
 		}
 	};
 
-	// Struct which stores the ID of each Polyhedron
+	// Struct which stores the ID of a polyhedron, the IDs of its vertices and edges
+		// and the number of vertices, edges and faces
 	struct Polyhedron
 	{
 		unsigned int id;
@@ -57,33 +58,33 @@ namespace PolyhedralLibrary {
 		vector<Edge> edges;
 		vector<Face> faces;
 
-		// Method which returns number of vertices of a polyhedron
-		int numVertices() const
+		// Method which returns the number of vertices of the polyhedron
+		unsigned int numVertices() const
 		{
 			return vertices.size();
 		}
 
-		// Method which returns number of edges of a polyhedron
-		int numEdges() const{
+		// Method which returns the number of edges of the polyhedron
+		unsigned int numEdges() const{
 			return edges.size();
 		}
 
-		// Method which returns number of faces of a polyhedron
-		int numFaces() const
+		// Method which returns the number of faces of the polyhedron
+		unsigned int numFaces() const
 		{
 			return faces.size();
 		}
 	
-		// Method which checks if the vertices and edges of the faces are coherent
+		// Method which checks if the vertices and edges of each face are coherent
 		bool checkFaces() const
 		{
-			// Iterate for all of the polyhedron's faces
+			// Iterate through all faces of the polyhedron
 			for (const Face& face : faces)
 			{
 				// Get number of edges and vertices
 				// (for this project we expect this value to be always 3)
-				int E = face.numEdges();
-				int V = face.numVertices();
+				unsigned int E = face.numEdges();
+				unsigned int V = face.numVertices();
 
 				// Check if they are the same
 				if(E != V)
@@ -95,26 +96,27 @@ namespace PolyhedralLibrary {
 				// Iterate along each vector of IDs
 				for (size_t e = 0; e < E; ++e)
 				{
-					// Get IDs of first edge and vertex
-					int idEdge = face.idEdges[e];
-					int idVertex = face.idVertices[e];
+					// Get IDs of the e-th edge and vertex, and the e-th edge
+					unsigned int idEdge = face.idEdges[e];
+					unsigned int idVertex = face.idVertices[e];
 
-					// Cosa fa questo?
+					// Get e-th edge
 					const Edge& edge = edges[idEdge];
 
-					// The ID of the first vertex must be either the origin or end
-					// of the first edge
+					// The ID of the e-th vertex must be either the origin or the end
+					// of the e-th edge
 					if (edge.origin != idVertex && edge.end != idVertex)
 					{
 						cerr << "Error: vertex-edge mismatch" << endl;
 						return false;
 					}
 
-					// Temporary variables to store IDs
-					int idVertexNext = face.idVertices[(e + 1) % E];
-					int currentEdgeEnd;
-
-					//
+					// Get ID of the (e+1)-th vertex
+					unsigned int idVertexNext = face.idVertices[(e + 1) % E];
+					
+					
+					// Get ID of the end of the e-th edge
+					unsigned int currentEdgeEnd;
 					if (edge.origin == idVertex)
 					{
 						currentEdgeEnd = edge.end;
@@ -124,7 +126,7 @@ namespace PolyhedralLibrary {
 						currentEdgeEnd = edge.origin;
 					}
 
-					//
+					// The ID of the (e+1)-th vertex must be the end of the e-th edge
 					if (currentEdgeEnd != idVertexNext)
 					{
 						cerr << "Error: edge-edge discontinuity" << endl;

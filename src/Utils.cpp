@@ -2,7 +2,9 @@
 #include <cmath>
 
 using namespace std;
-using namespace PolyhedralLibrary;
+
+
+namespace PolyhedralLibrary {
 
 
 // Function that constructs a tetrahedron represented as a Polyhedron
@@ -132,3 +134,5 @@ Vertex normalizeVertex(const Vertex& v)
 	return Vertex{v.id, v.x/length, v.y/length, v.z/length};
 }
 
+
+}
