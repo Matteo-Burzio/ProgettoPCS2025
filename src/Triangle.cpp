@@ -6,10 +6,10 @@ using namespace std;
 
 namespace PolyhedralLibrary {
 
-
 // Function that adds vertices to a face if it's not already present (within a tolerance)
 unsigned int addVertex(Polyhedron& P, double x, double y, double z)
 {
+	// Get machine precision
 	const double eps = numeric_limits<double>::epsilon();
 	
 	// Check if the new vertex already exists in P (within a tolerance)
@@ -25,6 +25,7 @@ unsigned int addVertex(Polyhedron& P, double x, double y, double z)
 			return i; // The new vertex is duplicate 
 		}
 	}
+	
 	// If the new vertex doesn't exist in P
 	Vertex v0 = {P.numVertices(), x, y, z}; // Define the new vertex
 	Vertex v = normalizeVertex(v0); // Normalize the new vertex

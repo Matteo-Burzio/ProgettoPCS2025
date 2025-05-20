@@ -38,6 +38,13 @@ TEST(PolyhedronTest, ValidIcosahedron)
 	ASSERT_TRUE(P.checkFaces());
 }
 
+TEST(PolyhedronTest, Barycenter)
+{
+	// build a face struct and manually compute barycenter
+	// compare it with the implementation of the function
+	//////////// DA COMPLETARE /////////
+}
+
 
 TEST(PolyhedronTest, VertexAddition)
 {

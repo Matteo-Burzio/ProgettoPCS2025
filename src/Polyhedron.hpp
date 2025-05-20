@@ -50,7 +50,7 @@ namespace PolyhedralLibrary {
 	};
 
 	// Struct which stores the ID of a polyhedron, the IDs of its vertices and edges
-		// and the number of vertices, edges and faces
+	// and the number of vertices, edges and faces
 	struct Polyhedron
 	{
 		unsigned int id;
@@ -113,7 +113,6 @@ namespace PolyhedralLibrary {
 
 					// Get ID of the (e+1)-th vertex
 					unsigned int idVertexNext = face.idVertices[(e + 1) % E];
-					
 					
 					// Get ID of the end of the e-th edge
 					unsigned int currentEdgeEnd;

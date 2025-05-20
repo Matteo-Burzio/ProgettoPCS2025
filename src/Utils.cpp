@@ -1,7 +1,12 @@
 #include "Utils.hpp"
 #include <cmath>
+#include <numbers>
+
+#include "Eigen/Eigen"
+#include "UCDUtilities.hpp"
 
 using namespace std;
+using namespace Eigen;
 
 
 namespace PolyhedralLibrary {
@@ -10,36 +15,49 @@ namespace PolyhedralLibrary {
 // Function that constructs a tetrahedron represented as a Polyhedron
 Polyhedron Tetrahedron()
 {
+	// Initialize polyhedron struct and set the ID
 	Polyhedron P;
 	P.id = 0;
+
+	// Set (non normalized) vertices
 	vector<Vertex> nonNormalizedVertices = {
 		{0,1,1,1},
 		{1,-1,-1,1},
 		{2,-1,1,-1},
 		{3,1,-1,-1}
 	};
+
+	// Normalize vertices to lie on unit sphere
 	for (const Vertex& v : nonNormalizedVertices)
 	{
 		P.vertices.push_back(normalizeVertex(v));
 	}
+
+	// Set values of edges
 	P.edges = {
 		{0,0,1}, {1,1,2}, {2,2,0},
 		{3,0,3}, {4,3,1}, {5,3,2}
 	};
+
+	// Set values of faces
 	P.faces = {
 		{0, {0,1,2}, {0,1,2}},
 		{1, {0,3,2}, {3,5,2}},
 		{2, {0,1,3}, {0,4,3}},
 		{3, {1,2,3}, {1,5,4}}
 	};
+
 	return P;
 }       
 
 // Function that constructs an octahedron represented as a Polyhedron
 Polyhedron Octahedron()
 {
+	// Initialize polyhedron struct and set the ID
 	Polyhedron P;
 	P.id = 1;
+
+	// Set (already normalized) vertices
 	P.vertices = {
 		{0,1,0,0},
 		{1,-1,0,0},
@@ -48,11 +66,15 @@ Polyhedron Octahedron()
 		{4,0,0,1},
 		{5,0,0,-1}
 	};
+
+	// Set values of edges
 	P.edges = {
 		{0,0,2}, {1,2,1}, {2,1,3}, {3,3,0},
 		{4,0,4}, {5,2,4}, {6,1,4}, {7,3,4},
 		{8,0,5}, {9,2,5}, {10,1,5}, {11,3,5}
 	};
+
+	// Set values of faces
 	P.faces = {
 		{0, {0,2,4}, {0,5,4}},
 		{1, {0,4,3}, {4,7,3}},
@@ -63,15 +85,20 @@ Polyhedron Octahedron()
 		{6, {0,5,3}, {8,11,3}},
 		{7, {3,5,1}, {11,10,2}}
 	};
+
 	return P;
 }
 
 // Function that constructs an icosahedron represented as a Polyhedron
 Polyhedron Icosahedron()
 {
+	// Initialize polyhedron struct and set the ID
 	Polyhedron P;
 	P.id = 2;
-	const double phi = (1.0 + sqrt(5.0)) / 2.0;
+
+	using std::numbers::phi;
+
+	// Set (non normalized) vertices
 	vector<Vertex> nonNormalizedVertices = {
 		{0,-1,phi,0},
 		{1,1,phi,0},
@@ -86,10 +113,14 @@ Polyhedron Icosahedron()
 		{10,-phi,0,-1},
 		{11,-phi,0,1}
 	};
+
+	// Normalize vertices to lie on unit sphere
 	for (const Vertex& v : nonNormalizedVertices)
 	{
 		P.vertices.push_back(normalizeVertex(v));
 	}
+
+	// Set values of edges
 	P.edges = {
 		{0,0,5}, {1,0,1}, {2,0,11}, {3,0,10}, {4,0,7},
 		{5,1,5}, {6,1,7}, {7,1,8}, {8,1,9}, {9,5,9},
@@ -98,6 +129,8 @@ Polyhedron Icosahedron()
 		{20,2,3}, {21,2,6}, {22,6,3}, {23,8,3}, {24,8,6},
 		{25,7,6}, {26,2,10}, {27,10,6}, {28,10,7}, {29,11,10}
 	};
+
+	// Set values of faces
 	P.faces = {
 		{0, {5,0,11}, {0,2,10}},
 		{1, {0,5,1}, {0,5,1}},
@@ -120,6 +153,7 @@ Polyhedron Icosahedron()
 		{18, {1,0,7}, {1,4,6}},
 		{19, {11,2,10}, {19,26,29}}
 	};
+
 	return P;
 }
 
@@ -132,6 +166,83 @@ Vertex normalizeVertex(const Vertex& v)
 
 	// Return the vertex with normalized coordinates
 	return Vertex{v.id, v.x/length, v.y/length, v.z/length};
+}
+
+// Function which computes the barycenter of a face
+Vertex barycenter(const Polyhedron& P, unsigned int f_id)
+{
+	// initialize vertex struct
+	Vertex barycenter;
+
+	// Assign same ID as the face
+	barycenter.id = f_id;
+
+	// Initialize coordinates of the barycenter
+	double x = 0;
+	double y = 0;
+	double z = 0;
+
+	// Iterate along vertices of the face
+	for(const auto& v_id : P.faces[f_id].idVertices)
+	{
+		// Get sum of all coordinates
+		x += P.vertices[v_id].x;
+		y += P.vertices[v_id].y;
+		z += P.vertices[v_id].z;
+	}
+
+	// Divide cumulative sum by number of vertices of the face
+	unsigned int val = P.faces[f_id].numVertices();
+	barycenter.x = x / val;
+	barycenter.y = y / val;
+	barycenter.z = z / val;
+
+	return barycenter;
+}
+
+// Function which allows to export a polyhedron for Paraview
+void exportPolyhedron(const Polyhedron& P)
+{
+	// Initialize matrix of vertex coordinates
+	MatrixXd coordsCell0D;
+	coordsCell0D = MatrixXd::Zero(3, P.numVertices());
+
+	// Fill the matrix with the correct values
+	for(const auto& v : P.vertices)
+	{
+		// Use the ID of the vertex as the index
+		unsigned int id = v.id;
+
+		// Get the coordinates
+		coordsCell0D(0, id) = v.x;
+		coordsCell0D(1, id) = v.y;
+		coordsCell0D(2, id) = v.z;
+	}
+
+	// Initialize matrix of IDs of edges
+	MatrixXi extremaCell1D;
+	extremaCell1D = MatrixXi::Zero(2, P.numEdges());
+
+	// Fill the matrix with the correct values
+	for(const auto& e : P.edges)
+	{
+		// Use the ID of the edge as the index
+		unsigned int id = e.id;
+
+		// Get IDs of extremas
+		extremaCell1D(0, id) = e.origin;
+		extremaCell1D(1, id) = e.end;
+	}
+
+    // Export in the correct format
+    Gedim::UCDUtilities utilities;
+    utilities.ExportPoints("./Cell0Ds.inp",
+                           coordsCell0D);
+                           
+    utilities.ExportSegments("./Cell1Ds.inp",
+                             coordsCell0D,
+                             extremaCell1D);	
+
 }
 
 

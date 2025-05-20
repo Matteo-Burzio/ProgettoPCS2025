@@ -114,6 +114,13 @@ int main(int argc, char *argv[])
 	// (da completare)
 
 
+	// Initialize the polyhedron
+	Polyhedron poly;
+	poly = Icosahedron();
+
+	// Export for Paraview
+	exportPolyhedron(poly);
+
 	
 	return 0;
 	
