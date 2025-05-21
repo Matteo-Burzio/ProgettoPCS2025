@@ -8,14 +8,7 @@
 using namespace std;
 
 
-TEST(VertexTest, VertexNormalization)
-{
-	Vertex v = {0, {4.3, 5.0, 6.8}};
-	Vertex v0 = normalizeVertex(v);
-	double length = v0.coords.norm();
-	ASSERT_NEAR(length, 1.0, numeric_limits<double>::epsilon());
-}
-
+// Polyhedron TEST
 
 TEST(PolyhedronTest, ValidTetrahedron)
 {
@@ -38,60 +31,122 @@ TEST(PolyhedronTest, ValidIcosahedron)
 }
 
 
-TEST(PolyhedronTest, Barycenter)
+
+// Export TEST
+
+TEST(ExportTest, ExportParaview)
 {
-	// build a face struct and manually compute barycenter
-	// compare it with the implementation of the function
-	//////////// DA COMPLETARE /////////
+	
 }
 
 
-TEST(PolyhedronTest, VertexAddition)
+
+// Geometry TEST
+
+TEST(GeometryTest, VertexNormalization)
 {
-	// Polyhedron P;
-	// unsigned int id0 = addVertex(P, {0.0, 0.0, 1.0});
-	// unsigned int id1 = addVertex(P, {0.0, 0.0, 1.0}); // duplicate
-	// unsigned int id2 = addVertex(P, {0.1, 3.4, 1.0}); // not normalized
-	// ASSERT_EQ(id0, 0);
-	// ASSERT_EQ(id1, 0);
-	// ASSERT_EQ(id2, 1);
-	// ASSERT_EQ(P.numVertices(), 2); // id0, id2
-	// Vertex v2 = P.vertices[1];
-	// double length2 = sqrt(v2.x * v2.x + v2.y * v2.y + v2.z * v2.z);
-	// ASSERT_NEAR(length2, 1.0, numeric_limits<double>::epsilon());
+	Vertex v = {0, {4.3, 5.0, 6.8}};
+	Vertex v0 = normalizeVertex(v);
+	double length = v0.coords.norm();
+	ASSERT_NEAR(length, 1.0, numeric_limits<double>::epsilon());
 }
 
-TEST(PolyhedronTest, EdgeAddition)
+
+TEST(GeometryTest, BarycenterComputation)
 {
-	// Polyhedron P;
-	// unsigned int id0 = addVertex(P, 1.0, 0.0, 0.0); // id = 0
-	// unsigned int id1 = addVertex(P, 0.0, 1.0, 0.0); // id = 1
-	// unsigned int id2 = addVertex(P, 0.0, 0.0, 1.0); // id = 2
-	// unsigned int e0 = addEdge(P, id0, id1); // edge valido
-	// ASSERT_EQ(e0, 0);
-	// ASSERT_EQ(P.numEdges(), 1); // e0
-	// unsigned int e1 = addEdge(P, id0, id1); // duplicato (stesso ordine)
-	// ASSERT_EQ(e1, 0);
-	// unsigned int e2 = addEdge(P, id1, id0); // duplicato (ordine inverso)
-	// ASSERT_EQ(e2, 0);
-	// ASSERT_EQ(P.numEdges(), 1); // e0
-	// unsigned int e3 = addEdge(P, id1, id2); // edge valido
-	// ASSERT_EQ(e3, 1);
-	// ASSERT_EQ(P.numEdges(), 2); // e0, e3
-	// unsigned int e4 = addEdge(P, id0, id0); // edge non valido
-	// ASSERT_EQ(e4, UINT_MAX);
-	// /////////////// SISTEMARE IN BASE A COSA SI METTE IN addEdge() ///////////////////
-	// ASSERT_EQ(P.numEdges(), 2); // e0, e3
+	Polyhedron P;
+	Vertex v0 = {0, {0, 0, 0}};
+	Vertex v1 = {1, {1, 0, 0}};
+	Vertex v2 = {2, {0, 1, 0}};
+	P.vertices.push_back(v0);
+	P.vertices.push_back(v1);
+	P.vertices.push_back(v2);
+	Face f;
+	f.id = 0;
+	f.idVertices = {0, 1, 2};
+	P.faces.push_back(f);
+	Vertex bc = Barycenter(P, 0);
+	Vector3d expected = {1.0/3.0, 1.0/3.0, 0};
+	ASSERT_TRUE(bc.coords.isApprox(expected, numeric_limits<double>::epsilon()));
 }
 
-/*
+
+TEST(GeometryTest, DualComputation)
+{
+	
+}
+
+
+
+// Triangle TEST
+
+TEST(TriangleTest, VertexCheck)
+{
+	Polyhedron P;
+	Vertex v0 = {0, {1,2,3}};
+	P.vertices.push_back(v0);
+	Vertex v1 = {0, {1,2,3}}; // exact duplicate
+	ASSERT_FALSE(checkVertex(P, v1));
+	Vertex v2 = {0, {1 + numeric_limits<double>::epsilon(),
+					 2 + numeric_limits<double>::epsilon(),
+					 3 + numeric_limits<double>::epsilon()}}; // near duplicate
+	ASSERT_FALSE(checkVertex(P, v2));
+	Vertex v3 = {0, {4,5,6}}; // different
+	ASSERT_TRUE(checkVertex(P, v3));
+}
+
+
+TEST(TriangleTest, VertexAddition)
+{
+	Polyhedron P;
+	Vertex v;
+	v.coords = {1,2,3};
+	addVertex(P, v);
+	ASSERT_EQ(P.numVertices(), 1); // add vertex
+	ASSERT_EQ(v.id, 0);
+	ASSERT_EQ(P.vertices[0].id, 0); // correct id
+	ASSERT_TRUE(P.vertices[0].coords.isApprox(v.coords));
+}
+
+
+TEST(TriangleTest, EdgeCheck)
+{
+	Polyhedron P;
+	P.vertices = {{0, {0,0,1}}, {1, {1,0,0}}, {2, {0,1,0}}}; // 3 vertices
+	Edge e0 = {0,0,1};
+	P.edges = {e0}; // 1 edge
+	Edge e1 = {0,2,3}; // non existing vertex
+	ASSERT_FALSE(checkEdge(P, e1));
+	Edge e2 = {0,0,1}; // duplicate (same order)
+	ASSERT_FALSE(checkEdge(P, e2));
+	Edge e3 = {0,1,0}; // duplicate (different order)
+	ASSERT_FALSE(checkEdge(P, e3));
+	Edge e4 = {0,1,2}; // different edge
+	ASSERT_TRUE(checkEdge(P, e4));
+}
+
+
+TEST(TriangleTest, EdgeAddition)
+{
+	Polyhedron P;
+	P.vertices = {{0, {0,0,1}}, {1, {1,0,0}}}; // 2 vertices
+	Edge e0 = {0,0,1}; // valid edge
+	addEdge(P, e0);
+	ASSERT_EQ(P.numEdges(), 1); // add edge
+	ASSERT_EQ(e0.id, 0);
+	ASSERT_EQ(P.edges[0].id, 0); // correct id
+	ASSERT_EQ(P.edges[0].origin, e0.origin); // correct origin
+	ASSERT_EQ(P.edges[0].end, e0.end); // correct end
+}
+
+
 TEST(TriangleTest, ClassI)
 {
 	
 }
 
+
 TEST(TriangleTest, ClassII)
 {
 	
 }
-*/

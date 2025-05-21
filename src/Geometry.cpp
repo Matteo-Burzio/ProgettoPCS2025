@@ -39,7 +39,10 @@ Vertex Barycenter(const Polyhedron& P, const unsigned int& f_id)
 	return bc;
 }
 
+
+// Function that creates the dual of the polyhedron
 Polyhedron Dual(const Polyhedron& P)
 {
-    return P;
+	Polyhedron dual = P;
+	return dual;
 }

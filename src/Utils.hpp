@@ -6,12 +6,14 @@
 using namespace std;
 
 
-//namespace PolyhedralLibrary {
-
 // Functions that create tetrahedron, octahedron and icosahedron (Utils.cpp)
 Polyhedron Tetrahedron();
 Polyhedron Octahedron();
 Polyhedron Icosahedron();
+
+// Function that exports the polyhedron for Paraview (Utils.cpp)
+void exportPolyhedron(const Polyhedron& P);
+
 
 
 // Function that normalizes the vertices (Geometry.cpp)
@@ -20,23 +22,22 @@ Vertex normalizeVertex(const Vertex& v);
 // Function which computes the barycenter of a face (Geometry.cpp)
 Vertex Barycenter(const Polyhedron& P, const unsigned int& f_id);
 
-// Function that exports the polyhedron for Paraview
-void exportPolyhedron(const Polyhedron& P);
+// Function that creates the dual of the polyhedron (Geometry.cpp)
+Polyhedron Dual(const Polyhedron& P);
 
 
-// Function that adds a vertex to a polyhedron if it's not already present (Triangle.cpp)
-// Returns the ID of the new vertex to add
-unsigned int addVertex(Polyhedron& P, Vertex& v0);
+
+// Functions that check if the new vertex already exists and add it to P(Triangle.cpp)
+bool checkVertex(const Polyhedron& P, const Vertex& v);
+void addVertex(Polyhedron& P, Vertex& v);
+
+// Functions that check if the new edge already exists and add it to P(Triangle.cpp)
+bool checkEdge(const Polyhedron& P, const Edge& e);
+void addEdge(Polyhedron& P, Edge& e);
 
 
-// Function that adds an edge to a polyhedron if it's not already present (Triangle.cpp)
-// Returns the ID of the edge in P.edges
-unsigned int addEdge(Polyhedron& P, unsigned int origin, unsigned int end);
-
-
+/*
 // Functions for Class I and Class II triangulation of a polyhedron (Triangle.cpp)
-Polyhedron TriangleClassI(Polyhedron& P, const unsigned int& val);
-Polyhedron TriangleClassII(Polyhedron& P, const unsigned int& val);
-
-
-//}
+Polyhedron TriangleClassI(const Polyhedron& P_old, const unsigned int& val);
+Polyhedron TriangleClassII(const Polyhedron& P_old, const unsigned int& val);
+*/

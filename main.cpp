@@ -99,7 +99,7 @@ int main(int argc, char *argv[])
 			val = c;
 		}
 		cout << "Class I with parameter: " << val << endl;
-		flag = 1;	
+		flag = 1;
 	}
 	else if((b == c) && (b != 0))
 	{
@@ -138,7 +138,7 @@ int main(int argc, char *argv[])
 	// Triangulate the faces of the polyhedron 
 	if(flag == 1)
 	{
-		TriangleClassI(P, val);
+		// TriangleClassI(P, val);
 	}
 	else if (flag == 2)
 	{

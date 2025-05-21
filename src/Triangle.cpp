@@ -5,7 +5,7 @@ using namespace Eigen;
 
 
 // Function that checks if the new vertex already exists in the Polyhedron
-bool checkVertex(Polyhedron& P, Vertex& v)
+bool checkVertex(const Polyhedron& P, const Vertex& v)
 {
 	// Get machine precision
 	const double eps = numeric_limits<double>::epsilon();
@@ -13,7 +13,7 @@ bool checkVertex(Polyhedron& P, Vertex& v)
 	// Iterate along vertices to check if it doesn't exist yet
 	for (unsigned int i = 0; i < P.numVertices(); ++i)
 	{
-		// get a reference to the current vertex
+		// Get a reference to the current vertex
 		const Vertex& existing = P.vertices[i];
 
 		// Check if it's the same
@@ -34,36 +34,50 @@ void addVertex(Polyhedron& P, Vertex& v)
 	v.id = P.numVertices();
 
 	// Add the new vertex to P
-	P.vertices.push_back(v); 
+	P.vertices.push_back(v);
 }
 
 
 
-// Function that adds edges to a face if it's not already present
-unsigned int addEdge(Polyhedron& P, unsigned int origin, unsigned int end)
+// Function that checks if the new edge already exists in the Polyhedron
+bool checkEdge(const Polyhedron& P, const Edge& e)
 {
+	// Check if vertices exist
+	if (e.origin >= P.numVertices() || e.end >= P.numVertices())
+		return false;
+		
 	// Check that the edge is valid
-	if (origin == end)
-	{
-		cerr << "Error: invalid extrema in adding an edge" << endl;
-		return -1; // Returns max unsigned int = 2^64 - 1 (macchina a 64 bit)
-		////////////////////// SISTEMA STA COSA ///////////////////////////
-	}
-	// Check if the new edge already exists in P
+	if (e.origin == e.end)
+		return false;
+
+	// Iterate along edges to check if it doesn't exist yet
 	for (unsigned int i = 0; i < P.numEdges(); ++i)
 	{
+		// Get a reference to the current vertex
 		const Edge& existing = P.edges[i];
-		if ((existing.origin == origin && existing.end == end) ||
-			(existing.origin == end && existing.end == origin))
-		{
-			return i; // The new edge is a duplicate
-		}
+		
+		// Check if it's the same
+		if ((existing.origin == e.origin && existing.end == e.end) ||
+			(existing.origin == e.end && existing.end == e.origin))
+			return false; // The new edge already exists
 	}
-	// If the new edge doesn't exist in P
-	Edge e = {P.numEdges(), origin, end}; // Define the new edge
-	P.edges.push_back(e); // Add the new edge to P
-	return e.id;
+	
+	return true;
 }
+
+
+// Function that adds a new edge to the polyhedron
+void addEdge(Polyhedron& P, Edge& e)
+{
+	// ID of new edge is the first available natural number
+	e.id = P.numEdges();
+
+	// Add the new edge to P
+	P.edges.push_back(e);
+}
+
+
+/*
 
 
 // Function for Class I triangulation of a polyhedron with parameter val (val > 0)
@@ -117,7 +131,7 @@ Polyhedron TriangleClassI(const Polyhedron& P_old, const unsigned int& val)
 				{
 					// Add the vertex to the polyhedron
 					addVertex(P,V);
-				}	
+				}
 				
 				// Connect vertices with proper edges
 
@@ -134,22 +148,22 @@ Polyhedron TriangleClassI(const Polyhedron& P_old, const unsigned int& val)
 	}
 
 	return P;
-};
+}
 
 
 
 
 
 
-/*
+
 
 
 // Function for Class II triangulation of a polyhedron with parameter a (b = c =: a > 0)
-Polyhedron TriangleClassII(Polyhedron& P, unsigned int a)
+Polyhedron TriangleClassII(const Polyhedron& P_old, const unsigned int& val)
 {
 
 	return P;
-};
+}
 
 
 

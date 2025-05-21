@@ -163,7 +163,7 @@ void exportPolyhedron(const Polyhedron& P)
 		coordsCell0D.col(v.id) << v.coords;
 	}
 
-	// Initialize matrix of IDs of edges
+	// Initialize matrix of edge IDs
 	MatrixXi extremaCell1D;
 	extremaCell1D = MatrixXi::Zero(2, P.numEdges());
 
@@ -178,14 +178,14 @@ void exportPolyhedron(const Polyhedron& P)
 		extremaCell1D(1, id) = e.end;
 	}
 
-    // Export in the correct format
-    Gedim::UCDUtilities utilities;
-    utilities.ExportPoints("./Cell0Ds.inp",
-                           coordsCell0D);
-                           
-    utilities.ExportSegments("./Cell1Ds.inp",
-                             coordsCell0D,
-                             extremaCell1D);	
+	// Export in the correct format
+	Gedim::UCDUtilities utilities;
+	utilities.ExportPoints("./Cell0Ds.inp",
+						   coordsCell0D);
+
+	utilities.ExportSegments("./Cell1Ds.inp",
+							 coordsCell0D,
+							 extremaCell1D);
 
 }
 
