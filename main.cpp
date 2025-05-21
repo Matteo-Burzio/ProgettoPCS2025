@@ -28,6 +28,8 @@ int main(int argc, char *argv[])
 	unsigned int b; // subdivision parameter
 	unsigned int c; // subdivision parameter
 
+	// (da completare: spostare dentro una funzione il check degli input)
+
 	// Get value of p 
 	istringstream convert_p(argv[1]);
 	if(!(convert_p >> p) || (p < 3) || (p > 5))
@@ -80,6 +82,7 @@ int main(int argc, char *argv[])
 	// Check if b and c are compatible
 	
 	unsigned int val; // temporary variable
+	bool flag = false; // flag which distinguishes class I & II
 
 	if(((b == 0) && (c != 0)) || ((b != 0) && (c == 0)))
 	{
@@ -103,6 +106,7 @@ int main(int argc, char *argv[])
 
 		val = b;
 		cout << "Class II with parameter: " << val << endl;
+		flag = true;
 	}
 	else
 	{
@@ -110,16 +114,55 @@ int main(int argc, char *argv[])
 		return 1;
 	}
 
-	// Get ID of starting vertex
+
+	// Get ID of starting vertex for shortest path
 	// (da completare)
 
 
+	// (da completare: spostare dentro una funzione la costruzione del poliedro di partenza)
 	// Initialize the polyhedron
-	Polyhedron poly;
-	poly = Icosahedron();
+	Polyhedron P;
+
+	// Create the correct platonic solid to start from
+	if((p == 3) && (q == 3))
+	{
+		P = Tetrahedron();
+	} 
+	else if((p == 3) && (q == 4))
+	{
+		P = Octahedron();
+	} 
+	else if((p == 3) && (q == 5))
+	{
+		P = Icosahedron();
+	}
+
+
+	
+
+
+	// Triangulate the faces of the polyhedron 
+	if(flag == false)
+	{
+		// class I function
+	}
+	else if (flag == true)
+	{
+		// class II function
+	}
+
+	// Create the dual polyhedron
+	if(p != 3)
+	{
+		// dual function
+	}
+	
+
+
+
 
 	// Export for Paraview
-	exportPolyhedron(poly);
+	exportPolyhedron(P);
 
 	
 	return 0;

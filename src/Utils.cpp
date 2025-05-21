@@ -11,6 +11,21 @@ using namespace Eigen;
 
 namespace PolyhedralLibrary {
 
+// (da completare)
+
+// bool checkInput(const unsigned int& p,
+// 				const unsigned int& q
+// 				const unsigned int& b,
+// 				const unsigned int& c,
+// 				const unsigned int& id_1,
+// 				const unsigned int& id_2)
+// {
+
+// }
+
+
+
+
 
 // Function that constructs a tetrahedron represented as a Polyhedron
 Polyhedron Tetrahedron()
