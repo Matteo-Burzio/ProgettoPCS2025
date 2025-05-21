@@ -1,5 +1,5 @@
 #pragma once
-
+#include "Eigen/Eigen"
 #include <iostream>
 #include <sstream>
 #include <limits>
@@ -21,7 +21,7 @@ Polyhedron Icosahedron();
 Vertex normalizeVertex(const Vertex& v);
 
 // Function which computes the barycenter of a face
-Vertex barycenter(const Polyhedron& P, unsigned int f_id);
+Vertex Barycenter(const Polyhedron& P, const unsigned int& f_id);
 
 // Function that exports the polyhedron for Paraview
 void exportPolyhedron(const Polyhedron& P);

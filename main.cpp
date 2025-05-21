@@ -81,7 +81,7 @@ int main(int argc, char *argv[])
 
 	// Check if b and c are compatible
 	
-	unsigned int val; // temporary variable
+	unsigned int val; // get the non-null value between b and c
 	bool flag = false; // flag which distinguishes class I & II
 
 	if(((b == 0) && (c != 0)) || ((b != 0) && (c == 0)))
@@ -144,7 +144,7 @@ int main(int argc, char *argv[])
 	// Triangulate the faces of the polyhedron 
 	if(flag == false)
 	{
-		// class I function
+		TriangleClassI(Polyhedron& P, const unsigned int& val);
 	}
 	else if (flag == true)
 	{

@@ -1,5 +1,5 @@
 #pragma once
-
+#include "Eigen/Eigen"
 #include <iostream>
 #include <vector>
 
@@ -13,9 +13,7 @@ namespace PolyhedralLibrary {
 	struct Vertex
 	{
 		unsigned int id;
-		double x;
-		double y;
-		double z;
+		Vector3d coords;
 		bool shortPath = 0;
 	};
 
@@ -37,13 +35,13 @@ namespace PolyhedralLibrary {
 		vector<unsigned int> idEdges;
 
 		// Method which returns the number of vertices of the face
-		unsigned int numVertices() const
+		unsigned int numVertices() 
 		{
 			return idVertices.size();
 		}
 
 		// Method which returns the number of edges of the face
-		unsigned int numEdges() const
+		unsigned int numEdges()
 		{
 			return idEdges.size();
 		}
@@ -59,24 +57,25 @@ namespace PolyhedralLibrary {
 		vector<Face> faces;
 
 		// Method which returns the number of vertices of the polyhedron
-		unsigned int numVertices() const
+		unsigned int numVertices() 
 		{
 			return vertices.size();
 		}
 
 		// Method which returns the number of edges of the polyhedron
-		unsigned int numEdges() const{
+		unsigned int numEdges() 
+		{
 			return edges.size();
 		}
 
 		// Method which returns the number of faces of the polyhedron
-		unsigned int numFaces() const
+		unsigned int numFaces() 
 		{
 			return faces.size();
 		}
 	
 		// Method which checks if the vertices and edges of each face are coherent
-		bool checkFaces() const
+		bool checkFaces()
 		{
 			// Iterate through all faces of the polyhedron
 			for (const Face& face : faces)

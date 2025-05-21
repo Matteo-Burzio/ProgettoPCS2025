@@ -36,10 +36,10 @@ Polyhedron Tetrahedron()
 
 	// Set (non normalized) vertices
 	vector<Vertex> nonNormalizedVertices = {
-		{0,1,1,1},
-		{1,-1,-1,1},
-		{2,-1,1,-1},
-		{3,1,-1,-1}
+		{0,{1,1,1}},
+		{1,{-1,-1,1}},
+		{2,{-1,1,-1}},
+		{3,{1,-1,-1}}
 	};
 
 	// Normalize vertices to lie on unit sphere
@@ -74,12 +74,12 @@ Polyhedron Octahedron()
 
 	// Set (already normalized) vertices
 	P.vertices = {
-		{0,1,0,0},
-		{1,-1,0,0},
-		{2,0,1,0},
-		{3,0,-1,0},
-		{4,0,0,1},
-		{5,0,0,-1}
+		{0,{1,0,0}},
+		{1,{-1,0,0}},
+		{2,{0,1,0}},
+		{3,{0,-1,0}},
+		{4,{0,0,1}},
+		{5,{0,0,-1}}
 	};
 
 	// Set values of edges
@@ -115,18 +115,18 @@ Polyhedron Icosahedron()
 
 	// Set (non normalized) vertices
 	vector<Vertex> nonNormalizedVertices = {
-		{0,-1,phi,0},
-		{1,1,phi,0},
-		{2,-1,-phi,0},
-		{3,1,-phi,0},
-		{4,0,-1,phi},
-		{5,0,1,phi},
-		{6,0,-1,-phi},
-		{7,0,1,-phi},
-		{8,phi,0,-1},
-		{9,phi,0,1},
-		{10,-phi,0,-1},
-		{11,-phi,0,1}
+		{0,{-1,phi,0}},
+		{1,{1,phi,0}},
+		{2,{-1,-phi,0}},
+		{3,{1,-phi,0}},
+		{4,{0,-1,phi}},
+		{5,{0,1,phi}},
+		{6,{0,-1,-phi}},
+		{7,{0,1,-phi}},
+		{8,{phi,0,-1}},
+		{9,{phi,0,1}},
+		{10,{-phi,0,-1}},
+		{11,{-phi,0,1}}
 	};
 
 	// Normalize vertices to lie on unit sphere
@@ -177,42 +177,32 @@ Polyhedron Icosahedron()
 Vertex normalizeVertex(const Vertex& v)
 {
 	// Compute the Euclidean norm of the vector
-	double length = sqrt(v.x * v.x + v.y * v.y + v.z * v.z);
+	double length = v.coords.norm();
 
 	// Return the vertex with normalized coordinates
-	return Vertex{v.id, v.x/length, v.y/length, v.z/length};
+	return Vertex{v.id, v.coords / length};
 }
 
 // Function which computes the barycenter of a face
-Vertex barycenter(const Polyhedron& P, unsigned int f_id)
+Vertex Barycenter(const Polyhedron& P, const unsigned int& f_id)
 {
 	// initialize vertex struct
-	Vertex barycenter;
+	Vertex bc;
 
 	// Assign same ID as the face
-	barycenter.id = f_id;
-
-	// Initialize coordinates of the barycenter
-	double x = 0;
-	double y = 0;
-	double z = 0;
-
-	// Iterate along vertices of the face
-	for(const auto& v_id : P.faces[f_id].idVertices)
+	bc.id = f_id;
+	bc.coords = {0, 0, 0};
+	
+	//Compute coordinates of bc
+	unsigned int num_v = P.faces[f_id].numVertices();
+	for (size_t i=0; i<num_v;i++)
 	{
-		// Get sum of all coordinates
-		x += P.vertices[v_id].x;
-		y += P.vertices[v_id].y;
-		z += P.vertices[v_id].z;
+		unsigned int id_v = P.faces[f_id].idVertices[i];
+		bc.coords += P.vertices[id_v].coords;
 	}
+	bc.coords /= num_v;
 
-	// Divide cumulative sum by number of vertices of the face
-	unsigned int val = P.faces[f_id].numVertices();
-	barycenter.x = x / val;
-	barycenter.y = y / val;
-	barycenter.z = z / val;
-
-	return barycenter;
+	return bc;
 }
 
 // Function which allows to export a polyhedron for Paraview

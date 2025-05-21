@@ -2,37 +2,35 @@
 #include "Utils.hpp"
 
 using namespace std;
-
+using namespace Eigen;
 
 namespace PolyhedralLibrary {
 
-// Function that adds vertices to a face if it's not already present (within a tolerance)
-bool addVertex(Polyhedron& P, Vertex& v0)
+// Function that checks if the new vertex already existes in the Polyhedron
+bool checkVertex(Polyhedron& P, Vertex& v)
 {
-	// Get machine precision
 	const double eps = numeric_limits<double>::epsilon();
 	
-	// Check if the new vertex already exists in P (within a tolerance)
 	for (unsigned int i = 0; i < P.numVertices(); ++i)
 	{
 		const Vertex& existing = P.vertices[i];
-		double dx = existing.x - v0.x;
-		double dy = existing.y - v0.y;
-		double dz = existing.z - v0.z;
-		double distSquared = dx * dx + dy * dy + dz * dz;
-		if (distSquared < eps * eps)
+		if (v.isApprox(existing, eps))
 		{
-			return 1; // The new vertex is duplicate 
+			return 1; // The new vertex already exists
 		}
 	}
-	
-	// If the new vertex doesn't exist in P
+}
+
+
+// Function that adds a new vertex to the polyhedron
+unsigned int addVertex(Polyhedron& P, Vertex& v0)
+{
 	v0.id = P.numVertices();
 	Vertex v = normalizeVertex(v0); // Normalize the new vertex
 	P.vertices.push_back(v); // Add the normalized new vertex to P
-
-	return 0; 
+	return v.id; 
 }
+
 
 
 // Function that adds edges to a face if it's not already present
@@ -63,17 +61,36 @@ unsigned int addEdge(Polyhedron& P, unsigned int origin, unsigned int end)
 
 
 
-
-
-
-
-/*
-
-
-// Function for Class I triangulation of a polyhedron with parameter a (a > 0)
-Polyhedron TriangleClassI(Polyhedron& P, unsigned int a)
+// Function for Class I triangulation of a polyhedron with parameter val (val > 0)
+Polyhedron TriangleClassI(Polyhedron& P, const unsigned int& val)
 {
-
+	for(auto& face : P.faces)
+	{
+		id_A = face.idVertices[0];
+		Vertex A = P.vertices[id_A];
+		
+		id_B = face.idVertices[1];
+		Vertex B = P.vertices[id_B];
+		
+		id_C = face.idVertices[2];
+		Vertex C = P.vertices[id_C];
+		
+		
+		for (size_t i=0;i <= val;i++)
+		{
+			for (size_t j=0; j<= val-i;j++)
+			{
+				Vertex V;
+				V.coords = (i * A.coords + j* B.coords +(val-i-j) * C.coords) / val;
+				if (checkVertex(P,V))
+				{
+					V.id= addVertex(P,V);
+				}							
+			}
+		}
+		
+		
+	}
 	return P;
 };
 
@@ -82,7 +99,7 @@ Polyhedron TriangleClassI(Polyhedron& P, unsigned int a)
 
 
 
-
+/*
 
 
 // Function for Class II triangulation of a polyhedron with parameter a (b = c =: a > 0)
