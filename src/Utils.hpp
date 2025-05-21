@@ -1,15 +1,12 @@
 #pragma once
-#include "Eigen/Eigen"
-#include <iostream>
-#include <sstream>
-#include <limits>
 
 #include "Polyhedron.hpp"
+#include "UCDUtilities.hpp"
 
 using namespace std;
 
 
-namespace PolyhedralLibrary {
+//namespace PolyhedralLibrary {
 
 // Functions that create tetrahedron, octahedron and icosahedron (Utils.cpp)
 Polyhedron Tetrahedron();
@@ -17,10 +14,10 @@ Polyhedron Octahedron();
 Polyhedron Icosahedron();
 
 
-// Function that normalizes the vertices (Utils.cpp)
+// Function that normalizes the vertices (Geometry.cpp)
 Vertex normalizeVertex(const Vertex& v);
 
-// Function which computes the barycenter of a face
+// Function which computes the barycenter of a face (Geometry.cpp)
 Vertex Barycenter(const Polyhedron& P, const unsigned int& f_id);
 
 // Function that exports the polyhedron for Paraview
@@ -28,8 +25,8 @@ void exportPolyhedron(const Polyhedron& P);
 
 
 // Function that adds a vertex to a polyhedron if it's not already present (Triangle.cpp)
-// Returns the ID of the vertex in P.vertices
-unsigned int addVertex(Polyhedron& P, double x, double y, double z);
+// Returns the ID of the new vertex to add
+unsigned int addVertex(Polyhedron& P, Vertex& v0);
 
 
 // Function that adds an edge to a polyhedron if it's not already present (Triangle.cpp)
@@ -38,8 +35,8 @@ unsigned int addEdge(Polyhedron& P, unsigned int origin, unsigned int end);
 
 
 // Functions for Class I and Class II triangulation of a polyhedron (Triangle.cpp)
-Polyhedron TriangleClassI(Polyhedron& P, unsigned int a);
-Polyhedron TriangleClassII(Polyhedron& P, unsigned int a);
+Polyhedron TriangleClassI(Polyhedron& P, const unsigned int& val);
+Polyhedron TriangleClassII(Polyhedron& P, const unsigned int& val);
 
 
-}
+//}

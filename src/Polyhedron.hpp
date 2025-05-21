@@ -1,139 +1,143 @@
 #pragma once
-#include "Eigen/Eigen"
+
 #include <iostream>
 #include <vector>
+#include <iostream>
+#include <sstream>
+#include <limits>
+#include <cmath>
+#include <numbers>
+
+#include "Eigen/Eigen"
 
 using namespace std;
+using namespace Eigen;
 
 
-namespace PolyhedralLibrary {
+// Struct which stores the ID and coordinates of a vertex
+struct Vertex
+{
+	unsigned int id;
+	Vector3d coords;
+	bool shortPath = 0;
+};
 
+// Struct which stores the ID of an edge and the IDs of its extrema
+struct Edge
+{
+	unsigned int id;
+	unsigned int origin;
+	unsigned int end;
+	bool shortPath = 0;
+};
 
-	// Struct which stores the ID and coordinates of a vertex
-	struct Vertex
+// Struct which stores the ID of a face, the IDs of its vertices and edges
+	// and the number of vertices and edges
+struct Face
+{
+	unsigned int id;
+	vector<unsigned int> idVertices;
+	vector<unsigned int> idEdges;
+
+	// Method which returns the number of vertices of the face
+	unsigned int numVertices() const
 	{
-		unsigned int id;
-		Vector3d coords;
-		bool shortPath = 0;
-	};
+		return idVertices.size();
+	}
 
-	// Struct which stores the ID of an edge and the IDs of its extrema
-	struct Edge
+	// Method which returns the number of edges of the face
+	unsigned int numEdges() const
 	{
-		unsigned int id;
-		unsigned int origin;
-		unsigned int end;
-		bool shortPath = 0;
-	};
+		return idEdges.size();
+	}
+};
 
-	// Struct which stores the ID of a face, the IDs of its vertices and edges
-		// and the number of vertices and edges
-	struct Face
+// Struct which stores the ID of a polyhedron, the IDs of its vertices and edges
+// and the number of vertices, edges and faces
+struct Polyhedron
+{
+	unsigned int id;
+	vector<Vertex> vertices;
+	vector<Edge> edges;
+	vector<Face> faces;
+
+	// Method which returns the number of vertices of the polyhedron
+	unsigned int numVertices() const
 	{
-		unsigned int id;
-		vector<unsigned int> idVertices;
-		vector<unsigned int> idEdges;
+		return vertices.size();
+	}
 
-		// Method which returns the number of vertices of the face
-		unsigned int numVertices() 
-		{
-			return idVertices.size();
-		}
-
-		// Method which returns the number of edges of the face
-		unsigned int numEdges()
-		{
-			return idEdges.size();
-		}
-	};
-
-	// Struct which stores the ID of a polyhedron, the IDs of its vertices and edges
-	// and the number of vertices, edges and faces
-	struct Polyhedron
+	// Method which returns the number of edges of the polyhedron
+	unsigned int numEdges() const
 	{
-		unsigned int id;
-		vector<Vertex> vertices;
-		vector<Edge> edges;
-		vector<Face> faces;
+		return edges.size();
+	}
 
-		// Method which returns the number of vertices of the polyhedron
-		unsigned int numVertices() 
-		{
-			return vertices.size();
-		}
+	// Method which returns the number of faces of the polyhedron
+	unsigned int numFaces() const
+	{
+		return faces.size();
+	}
 
-		// Method which returns the number of edges of the polyhedron
-		unsigned int numEdges() 
+	// Method which checks if the vertices and edges of each face are coherent
+	bool checkFaces() const
+	{
+		// Iterate through all faces of the polyhedron
+		for (const Face& face : faces)
 		{
-			return edges.size();
-		}
+			// Get number of edges and vertices
+			// (for this project we expect this value to be always 3)
+			unsigned int E = face.numEdges();
+			unsigned int V = face.numVertices();
 
-		// Method which returns the number of faces of the polyhedron
-		unsigned int numFaces() 
-		{
-			return faces.size();
-		}
-	
-		// Method which checks if the vertices and edges of each face are coherent
-		bool checkFaces()
-		{
-			// Iterate through all faces of the polyhedron
-			for (const Face& face : faces)
+			// Check if they are the same
+			if(E != V)
 			{
-				// Get number of edges and vertices
-				// (for this project we expect this value to be always 3)
-				unsigned int E = face.numEdges();
-				unsigned int V = face.numVertices();
+				cerr << "Mismatch number of edges and vertices" << endl;
+				return false;
+			}
 
-				// Check if they are the same
-				if(E != V)
+			// Iterate along each vector of IDs
+			for (size_t e = 0; e < E; ++e)
+			{
+				// Get IDs of the e-th edge and vertex, and the e-th edge
+				unsigned int idEdge = face.idEdges[e];
+				unsigned int idVertex = face.idVertices[e];
+
+				// Get e-th edge
+				const Edge& edge = edges[idEdge];
+
+				// The ID of the e-th vertex must be either the origin or the end
+				// of the e-th edge
+				if (edge.origin != idVertex && edge.end != idVertex)
 				{
-					cerr << "Mismatch number of edges and vertices" << endl;
+					cerr << "Error: vertex-edge mismatch" << endl;
 					return false;
 				}
 
-				// Iterate along each vector of IDs
-				for (size_t e = 0; e < E; ++e)
+				// Get ID of the (e+1)-th vertex
+				unsigned int idVertexNext = face.idVertices[(e + 1) % E];
+				
+				// Get ID of the end of the e-th edge
+				unsigned int currentEdgeEnd;
+				if (edge.origin == idVertex)
 				{
-					// Get IDs of the e-th edge and vertex, and the e-th edge
-					unsigned int idEdge = face.idEdges[e];
-					unsigned int idVertex = face.idVertices[e];
+					currentEdgeEnd = edge.end;
+				}
+				else
+				{
+					currentEdgeEnd = edge.origin;
+				}
 
-					// Get e-th edge
-					const Edge& edge = edges[idEdge];
-
-					// The ID of the e-th vertex must be either the origin or the end
-					// of the e-th edge
-					if (edge.origin != idVertex && edge.end != idVertex)
-					{
-						cerr << "Error: vertex-edge mismatch" << endl;
-						return false;
-					}
-
-					// Get ID of the (e+1)-th vertex
-					unsigned int idVertexNext = face.idVertices[(e + 1) % E];
-					
-					// Get ID of the end of the e-th edge
-					unsigned int currentEdgeEnd;
-					if (edge.origin == idVertex)
-					{
-						currentEdgeEnd = edge.end;
-					}
-					else
-					{
-						currentEdgeEnd = edge.origin;
-					}
-
-					// The ID of the (e+1)-th vertex must be the end of the e-th edge
-					if (currentEdgeEnd != idVertexNext)
-					{
-						cerr << "Error: edge-edge discontinuity" << endl;
-						return false;
-					}
+				// The ID of the (e+1)-th vertex must be the end of the e-th edge
+				if (currentEdgeEnd != idVertexNext)
+				{
+					cerr << "Error: edge-edge discontinuity" << endl;
+					return false;
 				}
 			}
-			return true;
 		}
-	};
+		return true;
+	}
+};
 
-}

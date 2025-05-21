@@ -1,30 +1,7 @@
 #include "Utils.hpp"
-#include <cmath>
-#include <numbers>
-
-#include "Eigen/Eigen"
-#include "UCDUtilities.hpp"
 
 using namespace std;
 using namespace Eigen;
-
-
-namespace PolyhedralLibrary {
-
-// (da completare)
-
-// bool checkInput(const unsigned int& p,
-// 				const unsigned int& q
-// 				const unsigned int& b,
-// 				const unsigned int& c,
-// 				const unsigned int& id_1,
-// 				const unsigned int& id_2)
-// {
-
-// }
-
-
-
 
 
 // Function that constructs a tetrahedron represented as a Polyhedron
@@ -173,38 +150,6 @@ Polyhedron Icosahedron()
 }
 
 
-// Function that normalizes the coordinates of a vertex to lie on the unit sphere
-Vertex normalizeVertex(const Vertex& v)
-{
-	// Compute the Euclidean norm of the vector
-	double length = v.coords.norm();
-
-	// Return the vertex with normalized coordinates
-	return Vertex{v.id, v.coords / length};
-}
-
-// Function which computes the barycenter of a face
-Vertex Barycenter(const Polyhedron& P, const unsigned int& f_id)
-{
-	// initialize vertex struct
-	Vertex bc;
-
-	// Assign same ID as the face
-	bc.id = f_id;
-	bc.coords = {0, 0, 0};
-	
-	//Compute coordinates of bc
-	unsigned int num_v = P.faces[f_id].numVertices();
-	for (size_t i=0; i<num_v;i++)
-	{
-		unsigned int id_v = P.faces[f_id].idVertices[i];
-		bc.coords += P.vertices[id_v].coords;
-	}
-	bc.coords /= num_v;
-
-	return bc;
-}
-
 // Function which allows to export a polyhedron for Paraview
 void exportPolyhedron(const Polyhedron& P)
 {
@@ -215,13 +160,7 @@ void exportPolyhedron(const Polyhedron& P)
 	// Fill the matrix with the correct values
 	for(const auto& v : P.vertices)
 	{
-		// Use the ID of the vertex as the index
-		unsigned int id = v.id;
-
-		// Get the coordinates
-		coordsCell0D(0, id) = v.x;
-		coordsCell0D(1, id) = v.y;
-		coordsCell0D(2, id) = v.z;
+		coordsCell0D.col(v.id) << v.coords;
 	}
 
 	// Initialize matrix of IDs of edges
@@ -250,5 +189,3 @@ void exportPolyhedron(const Polyhedron& P)
 
 }
 
-
-}

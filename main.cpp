@@ -1,9 +1,8 @@
-#include "Polyhedron.hpp"
 #include "Utils.hpp"
 
 
 using namespace std;
-using namespace PolyhedralLibrary;
+
 
 // To pass parameters to main the standard syntax is:
 // argc: number of arguments
@@ -27,6 +26,8 @@ int main(int argc, char *argv[])
 	unsigned int q; // number of faces which meet in each vertex of the solid
 	unsigned int b; // subdivision parameter
 	unsigned int c; // subdivision parameter
+	unsigned int id_path_start; // ID of starting vertex
+	unsigned int id_path_end; // ID of ending vertex
 
 	// (da completare: spostare dentro una funzione il check degli input)
 
@@ -80,15 +81,15 @@ int main(int argc, char *argv[])
 	}
 
 	// Check if b and c are compatible
-	
 	unsigned int val; // get the non-null value between b and c
-	bool flag = false; // flag which distinguishes class I & II
+	unsigned int flag = 0; // flag which distinguishes class I & II
 
 	if(((b == 0) && (c != 0)) || ((b != 0) && (c == 0)))
 	{
 		cout << "b: " << b << endl;
 		cout << "c: " << c << endl;
 
+		// val is the non-null parameter
 		if(b != 0)
 		{
 			val = b;
@@ -97,16 +98,18 @@ int main(int argc, char *argv[])
 		{
 			val = c;
 		}
-		cout << "Class I with parameter: " << val << endl;	
+		cout << "Class I with parameter: " << val << endl;
+		flag = 1;	
 	}
 	else if((b == c) && (b != 0))
 	{
 		cout << "b: " << b << endl;
 		cout << "c: " << c << endl;
 
+		// val is the value of b=c
 		val = b;
 		cout << "Class II with parameter: " << val << endl;
-		flag = true;
+		flag = 2;
 	}
 	else
 	{
@@ -115,11 +118,6 @@ int main(int argc, char *argv[])
 	}
 
 
-	// Get ID of starting vertex for shortest path
-	// (da completare)
-
-
-	// (da completare: spostare dentro una funzione la costruzione del poliedro di partenza)
 	// Initialize the polyhedron
 	Polyhedron P;
 
@@ -128,28 +126,30 @@ int main(int argc, char *argv[])
 	{
 		P = Tetrahedron();
 	} 
-	else if((p == 3) && (q == 4))
+	else if(((p == 3) && (q == 4)) || ((p == 4) && (q == 3)))
 	{
 		P = Octahedron();
 	} 
-	else if((p == 3) && (q == 5))
+	else if(((p == 3) && (q == 5)) || ((p == 5) && (q == 3)))
 	{
 		P = Icosahedron();
 	}
 
-
-	
-
-
 	// Triangulate the faces of the polyhedron 
-	if(flag == false)
+	if(flag == 1)
 	{
-		TriangleClassI(Polyhedron& P, const unsigned int& val);
+		TriangleClassI(P, val);
 	}
-	else if (flag == true)
+	else if (flag == 2)
 	{
-		// class II function
+		// TriangleClassII(P, val);
 	}
+	else
+	{
+		cerr << "Something went wrong... (flag error)" << endl;
+		return 1;
+	}
+
 
 	// Create the dual polyhedron
 	if(p != 3)
@@ -158,13 +158,35 @@ int main(int argc, char *argv[])
 	}
 	
 
+	// Get ID of starting vertex for shortest path
+	if(argc == 7)
+	{
+		// Get value of id_path_start
+		istringstream convert_start(argv[5]);
+		if(!(convert_start >> id_path_start))
+		{
+			cerr << "Wrong value for starting ID" << endl;
+			return 1;
+		}
 
+		// Get value of id_path_end
+		istringstream convert_end(argv[6]);
+		if(!(convert_end >> id_path_end))
+		{
+			cerr << "Wrong value for ending ID" << endl;
+			return 1;
+		}
+
+		// Check if the IDs are valid
+		// (da completare)
+
+	}
 
 
 	// Export for Paraview
 	exportPolyhedron(P);
 
-	
+
 	return 0;
 	
 }
