@@ -43,24 +43,40 @@ void addVertex(Polyhedron& P, Vertex& v)
 bool checkEdge(const Polyhedron& P, const Edge& e)
 {
 	// Check if vertices exist
-	if (e.origin >= P.numVertices() || e.end >= P.numVertices())
+	if(e.origin >= P.numVertices() || e.end >= P.numVertices())
+	{
 		return false;
+	}
 		
 	// Check that the edge is valid
-	if (e.origin == e.end)
-		return false;
-
-	// Iterate along edges to check if it doesn't exist yet
-	for (unsigned int i = 0; i < P.numEdges(); ++i)
+	if(e.origin == e.end)
 	{
-		// Get a reference to the current vertex
-		const Edge& existing = P.edges[i];
-		
-		// Check if it's the same
-		if ((existing.origin == e.origin && existing.end == e.end) ||
-			(existing.origin == e.end && existing.end == e.origin))
-			return false; // The new edge already exists
+		return false;
 	}
+		
+	// Iterate along edges to check if it doesn't exist yet
+	for(const auto& current : P.edges)
+	{
+		// Check if it's the same
+		if ((current.origin == e.origin && current.end == e.end) ||
+			(current.origin == e.end && current.end == e.origin))
+		{
+			return false; // The new edge already exists
+		}
+	}
+
+	// for(unsigned int i = 0; i < P.numEdges(); ++i)
+	// {
+	// 	// Get a reference to the current vertex
+	// 	const Edge& existing = P.edges[i];
+		
+	// 	// Check if it's the same
+	// 	if ((existing.origin == e.origin && existing.end == e.end) ||
+	// 		(existing.origin == e.end && existing.end == e.origin))
+	// 	{
+	// 		return false; // The new edge already exists
+	// 	}
+	// }
 	
 	return true;
 }
@@ -77,9 +93,6 @@ void addEdge(Polyhedron& P, Edge& e)
 }
 
 
-/*
-
-
 // Function for Class I triangulation of a polyhedron with parameter val (val > 0)
 Polyhedron TriangleClassI(const Polyhedron& P_old, const unsigned int& val)
 {
@@ -88,20 +101,20 @@ Polyhedron TriangleClassI(const Polyhedron& P_old, const unsigned int& val)
 
 	// (da completare)
 	// Allocate the correct amount of space for new vertices
-	unsigned int num_vertices = (val * (val + 1)) * 0.5 * P_old.numFaces;
+	unsigned int num_vertices = (val * (val + 1)) * 0.5 * P_old.numFaces();
 	P.edges.reserve(num_vertices);
 		
 	// Allocate the correct amount of space for new edges
-	unsigned int num_edges = (val * (val + 1)) * 1.5 * P_old.numFaces;
+	unsigned int num_edges = (val * (val + 1)) * 1.5 * P_old.numFaces();
 	P.edges.reserve(num_edges);
 
 	// Allocate the correct amount of space for new faces
-	unsigned int num_triangles = (val ^ 2) * P_old.numFaces;
+	unsigned int num_triangles = (val ^ 2) * P_old.numFaces();
 	P.faces.reserve(num_triangles);
 
 
 	// Iterate along faces of the platonic solid
-	for(auto& face : P.faces)
+	for(const auto& face : P.faces)
 	{
 		// We expect all faces to be triangles
 		// Get IDs and a reference of each vertex of the face
@@ -124,7 +137,7 @@ Polyhedron TriangleClassI(const Polyhedron& P_old, const unsigned int& val)
 				Vertex V;
 
 				// Set the vertex's coordinates
-				V.coords = (i * A.coords + j* B.coords +(val-i-j) * C.coords) / val;
+				V.coords = (i * A.coords + j * B.coords + (val - i - j) * C.coords) / val;
 
 				// Check if the vertex already exists
 				if (checkVertex(P,V))
@@ -134,7 +147,6 @@ Polyhedron TriangleClassI(const Polyhedron& P_old, const unsigned int& val)
 				}
 				
 				// Connect vertices with proper edges
-
 
 				// be careful about double edges
 
@@ -155,7 +167,7 @@ Polyhedron TriangleClassI(const Polyhedron& P_old, const unsigned int& val)
 
 
 
-
+/*
 
 
 // Function for Class II triangulation of a polyhedron with parameter a (b = c =: a > 0)

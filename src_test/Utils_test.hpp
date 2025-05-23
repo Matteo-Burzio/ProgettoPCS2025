@@ -45,8 +45,13 @@ TEST(ExportTest, ExportParaview)
 
 TEST(GeometryTest, VertexNormalization)
 {
+	// Create a vertex 
 	Vertex v = {0, {4.3, 5.0, 6.8}};
+
+	// Normalize the vertex
 	Vertex v0 = normalizeVertex(v);
+
+	// Check that the function worked correctly
 	double length = v0.coords.norm();
 	ASSERT_NEAR(length, 1.0, numeric_limits<double>::epsilon());
 }
@@ -54,17 +59,22 @@ TEST(GeometryTest, VertexNormalization)
 
 TEST(GeometryTest, BarycenterComputation)
 {
+	// Create a polyhedron object
 	Polyhedron P;
 	Vertex v0 = {0, {0, 0, 0}};
 	Vertex v1 = {1, {1, 0, 0}};
 	Vertex v2 = {2, {0, 1, 0}};
+
 	P.vertices.push_back(v0);
 	P.vertices.push_back(v1);
 	P.vertices.push_back(v2);
+
 	Face f;
 	f.id = 0;
 	f.idVertices = {0, 1, 2};
 	P.faces.push_back(f);
+
+	// Compute the barycenter and check if it's corrrect
 	Vertex bc = Barycenter(P, 0);
 	Vector3d expected = {1.0/3.0, 1.0/3.0, 0};
 	ASSERT_TRUE(bc.coords.isApprox(expected, numeric_limits<double>::epsilon()));
@@ -82,29 +92,44 @@ TEST(GeometryTest, DualComputation)
 
 TEST(TriangleTest, VertexCheck)
 {
+	// Create a vertex object
 	Polyhedron P;
 	Vertex v0 = {0, {1,2,3}};
 	P.vertices.push_back(v0);
-	Vertex v1 = {0, {1,2,3}}; // exact duplicate
+
+	// Compare the vertex with a duplicate
+	Vertex v1 = {0, {1,2,3}};
 	ASSERT_FALSE(checkVertex(P, v1));
+
+	// Compare the vertex with a near duplicate
 	Vertex v2 = {0, {1 + numeric_limits<double>::epsilon(),
 					 2 + numeric_limits<double>::epsilon(),
-					 3 + numeric_limits<double>::epsilon()}}; // near duplicate
+					 3 + numeric_limits<double>::epsilon()}};
 	ASSERT_FALSE(checkVertex(P, v2));
-	Vertex v3 = {0, {4,5,6}}; // different
+
+	// Compare the vertex with a different one
+	Vertex v3 = {0, {4,5,6}};
 	ASSERT_TRUE(checkVertex(P, v3));
 }
 
 
 TEST(TriangleTest, VertexAddition)
 {
+	// Create a vertex object
 	Polyhedron P;
 	Vertex v;
 	v.coords = {1,2,3};
+
+	// Add the vertex to the polyhedron
 	addVertex(P, v);
-	ASSERT_EQ(P.numVertices(), 1); // add vertex
+
+	// Check that the vertex has been added
+	ASSERT_EQ(P.numVertices(), 1);
+
+	// Check that the ID is the correct value
 	ASSERT_EQ(v.id, 0);
 	ASSERT_EQ(P.vertices[0].id, 0); // correct id
+
 	ASSERT_TRUE(P.vertices[0].coords.isApprox(v.coords));
 }
 
@@ -113,14 +138,19 @@ TEST(TriangleTest, EdgeCheck)
 {
 	Polyhedron P;
 	P.vertices = {{0, {0,0,1}}, {1, {1,0,0}}, {2, {0,1,0}}}; // 3 vertices
+
 	Edge e0 = {0,0,1};
 	P.edges = {e0}; // 1 edge
+
 	Edge e1 = {0,2,3}; // non existing vertex
 	ASSERT_FALSE(checkEdge(P, e1));
+
 	Edge e2 = {0,0,1}; // duplicate (same order)
 	ASSERT_FALSE(checkEdge(P, e2));
+
 	Edge e3 = {0,1,0}; // duplicate (different order)
 	ASSERT_FALSE(checkEdge(P, e3));
+
 	Edge e4 = {0,1,2}; // different edge
 	ASSERT_TRUE(checkEdge(P, e4));
 }
@@ -130,8 +160,10 @@ TEST(TriangleTest, EdgeAddition)
 {
 	Polyhedron P;
 	P.vertices = {{0, {0,0,1}}, {1, {1,0,0}}}; // 2 vertices
+
 	Edge e0 = {0,0,1}; // valid edge
 	addEdge(P, e0);
+	
 	ASSERT_EQ(P.numEdges(), 1); // add edge
 	ASSERT_EQ(e0.id, 0);
 	ASSERT_EQ(P.edges[0].id, 0); // correct id
