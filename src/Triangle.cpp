@@ -64,19 +64,6 @@ bool checkEdge(const Polyhedron& P, const Edge& e)
 			return false; // The new edge already exists
 		}
 	}
-
-	// for(unsigned int i = 0; i < P.numEdges(); ++i)
-	// {
-	// 	// Get a reference to the current vertex
-	// 	const Edge& existing = P.edges[i];
-		
-	// 	// Check if it's the same
-	// 	if ((existing.origin == e.origin && existing.end == e.end) ||
-	// 		(existing.origin == e.end && existing.end == e.origin))
-	// 	{
-	// 		return false; // The new edge already exists
-	// 	}
-	// }
 	
 	return true;
 }
@@ -99,45 +86,68 @@ Polyhedron TriangleClassI(const Polyhedron& P_old, const unsigned int& val)
 	// Initialize a new polyhedron
 	Polyhedron P;
 
-	// (da completare)
-	// Allocate the correct amount of space for new vertices
-	unsigned int num_vertices = (val * (val + 1)) * 0.5 * P_old.numFaces();
-	P.edges.reserve(num_vertices);
-		
-	// Allocate the correct amount of space for new edges
-	unsigned int num_edges = (val * (val + 1)) * 1.5 * P_old.numFaces();
-	P.edges.reserve(num_edges);
+	// Allocate the correct amount of space for the polyhedron
 
-	// Allocate the correct amount of space for new faces
-	unsigned int num_triangles = (val ^ 2) * P_old.numFaces();
-	P.faces.reserve(num_triangles);
+	// Temporary variable
+	unsigned int T = val * val;
 
-
+	// Tetrahedron
+	if(P_old.numVertices() == 4)
+	{
+		P.vertices.reserve(2 * T + 2);
+		P.edges.reserve(6 * T);
+		P.faces.reserve(4 * T);
+	}
+	// Octahedron
+	else if (P_old.numVertices() == 6)
+	{
+		P.vertices.reserve(4 * T + 2);
+		P.edges.reserve(12 * T);
+		P.faces.reserve(8 * T);
+	}
+	// Icosahedron
+	else
+	{
+		P.vertices.reserve(10 * T + 2);
+		P.edges.reserve(30 * T);
+		P.faces.reserve(20 * T);
+	}
+	
 	// Iterate along faces of the platonic solid
-	for(const auto& face : P.faces)
+	for(const auto& face : P_old.faces)
 	{
 		// We expect all faces to be triangles
 		// Get IDs and a reference of each vertex of the face
 		unsigned int id_A = face.idVertices[0];
-		const Vertex& A = P.vertices[id_A];
+		const Vertex& A = P_old.vertices[id_A];
 		
 		unsigned int id_B = face.idVertices[1];
-		const Vertex& B = P.vertices[id_B];
+		const Vertex& B = P_old.vertices[id_B];
 		
 		unsigned int id_C = face.idVertices[2];
-		const Vertex& C = P.vertices[id_C];
+		const Vertex& C = P_old.vertices[id_C];
+		
 		
 
 		// Triangulation algorithm
+
+		// Number of vertices in each face
+		unsigned int N = (val + 1) * (val + 2) / 2;
+
+		// Matrix with ID of vertices and (i,j) indices
+		MatrixXi v_indices = MatrixXi::Zero(3, N);
+
 		for (size_t i = 0; i <= val; i++)
 		{
-			for (size_t j=0; j<= val-i;j++)
+			for (size_t j = 0; j <= val - i; j++)
 			{
 				// Initialize a vertex
 				Vertex V;
 
 				// Set the vertex's coordinates
 				V.coords = (i * A.coords + j * B.coords + (val - i - j) * C.coords) / val;
+
+				// da completare (fare edge i-j)
 
 				// Check if the vertex already exists
 				if (checkVertex(P,V))

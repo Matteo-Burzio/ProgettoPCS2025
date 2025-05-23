@@ -31,14 +31,12 @@ TEST(PolyhedronTest, ValidIcosahedron)
 }
 
 
-
 // Export TEST
 
 TEST(ExportTest, ExportParaview)
 {
 	
 }
-
 
 
 // Geometry TEST
@@ -136,21 +134,26 @@ TEST(TriangleTest, VertexAddition)
 
 TEST(TriangleTest, EdgeCheck)
 {
+	// Create a polyhedron with edges
 	Polyhedron P;
 	P.vertices = {{0, {0,0,1}}, {1, {1,0,0}}, {2, {0,1,0}}}; // 3 vertices
 
+	// Add an edge
 	Edge e0 = {0,0,1};
 	P.edges = {e0}; // 1 edge
 
+	// Try to add an edge connected to a non-existing vertex
 	Edge e1 = {0,2,3}; // non existing vertex
 	ASSERT_FALSE(checkEdge(P, e1));
 
+	// Try to add a duplicate edge
 	Edge e2 = {0,0,1}; // duplicate (same order)
 	ASSERT_FALSE(checkEdge(P, e2));
 
 	Edge e3 = {0,1,0}; // duplicate (different order)
 	ASSERT_FALSE(checkEdge(P, e3));
 
+	// Check if the edge is not already present
 	Edge e4 = {0,1,2}; // different edge
 	ASSERT_TRUE(checkEdge(P, e4));
 }
@@ -158,13 +161,16 @@ TEST(TriangleTest, EdgeCheck)
 
 TEST(TriangleTest, EdgeAddition)
 {
+	// Create a polyhedron object
 	Polyhedron P;
 	P.vertices = {{0, {0,0,1}}, {1, {1,0,0}}}; // 2 vertices
 
-	Edge e0 = {0,0,1}; // valid edge
+	// Add an valid edge
+	Edge e0 = {0,0,1};
 	addEdge(P, e0);
-	
-	ASSERT_EQ(P.numEdges(), 1); // add edge
+
+	// Check if the edge is correct
+	ASSERT_EQ(P.numEdges(), 1);
 	ASSERT_EQ(e0.id, 0);
 	ASSERT_EQ(P.edges[0].id, 0); // correct id
 	ASSERT_EQ(P.edges[0].origin, e0.origin); // correct origin
