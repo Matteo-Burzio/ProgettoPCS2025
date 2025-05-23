@@ -7,6 +7,8 @@
 #include <limits>
 #include <cmath>
 #include <numbers>
+#include <map>
+#include <utility>
 
 #include "Eigen/Eigen"
 

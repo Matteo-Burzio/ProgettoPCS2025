@@ -31,10 +31,16 @@ Polyhedron Dual(const Polyhedron& P);
 bool checkVertex(const Polyhedron& P, const Vertex& v);
 void addVertex(Polyhedron& P, Vertex& v);
 
+// Function that finds the ID of a vertex in a polyhedron (Triangle.cpp)
+unsigned int findVertex(const Polyhedron& P, const Vertex& v);
+
 // Functions that check if the new edge already exists and add it to P(Triangle.cpp)
 bool checkEdge(const Polyhedron& P, const Edge& e);
 void addEdge(Polyhedron& P, Edge& e);
 
+// Functions that check if the new face already exists and add it to P(Triangle.cpp)
+bool checkFace(const Polyhedron& P, const Face& f);
+void addFace(Polyhedron& P, Face& f);
 
 /*
 // Functions for Class I and Class II triangulation of a polyhedron (Triangle.cpp)

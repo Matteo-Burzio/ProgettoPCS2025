@@ -38,22 +38,35 @@ void addVertex(Polyhedron& P, Vertex& v)
 }
 
 
+// Function that finds the ID of a vertex in a polyhedron
+unsigned int findVertex(const Polyhedron& P, const Vertex& v)
+{
+	for (unsigned int i = 0; i < P.vertices.size(); ++i)
+	{
+		if (P.vertices[i].coords.isApprox(v.coords, 1e-10))
+		{
+			return i;
+		}
+	}
+	return 0;
+}
+
 
 // Function that checks if the new edge already exists in the Polyhedron
 bool checkEdge(const Polyhedron& P, const Edge& e)
 {
 	// Check if vertices exist
-	if(e.origin >= P.numVertices() || e.end >= P.numVertices())
+	if (e.origin >= P.numVertices() || e.end >= P.numVertices())
 	{
 		return false;
 	}
 		
 	// Check that the edge is valid
-	if(e.origin == e.end)
+	if (e.origin == e.end)
 	{
 		return false;
 	}
-		
+
 	// Iterate along edges to check if it doesn't exist yet
 	for(const auto& current : P.edges)
 	{
@@ -80,12 +93,57 @@ void addEdge(Polyhedron& P, Edge& e)
 }
 
 
+// Function that checks if the new face already exists in the Polyhedron
+bool checkFace(const Polyhedron& P, const Face& f)
+{
+	// Order the vertices ID of f
+	vector<unsigned int> id_Vertices = f.idVertices;
+	sort(id_Vertices.begin(), id_Vertices.end());
+	
+	// Iterate along faces to check if it doesn't exist yet
+	for (const auto& face : P.faces)
+	{
+		vector<unsigned int> existingVertices = face.idVertices;
+		sort(existingVertices.begin(), existingVertices.end());
+
+		if (existingVertices == id_Vertices)
+		{
+			return false; // The new face already exists
+		}
+	}
+
+	return true;
+}
+
+
+// Function that adds a new face to the polyhedron
+void addFace(Polyhedron& P, Face& f)
+{
+	// ID of new face is the first available natural number
+	f.id = P.faces.size();
+	
+	// Add the new face to P
+	P.faces.push_back(f);
+	
+	// Check if the polyhedron is still coherent
+	if (!P.checkFaces()) {
+		
+		// If not, remove the face from the polyhedron and print error
+		P.faces.pop_back();
+		cerr << "Errore: la faccia aggiunta ha reso il poliedro non valido" << endl;
+		
+		}
+}
+
+
+
+
 // Function for Class I triangulation of a polyhedron with parameter val (val > 0)
 Polyhedron TriangleClassI(const Polyhedron& P_old, const unsigned int& val)
 {
 	// Initialize a new polyhedron
 	Polyhedron P;
-
+	
 	// Allocate the correct amount of space for the polyhedron
 
 	// Temporary variable
@@ -112,7 +170,7 @@ Polyhedron TriangleClassI(const Polyhedron& P_old, const unsigned int& val)
 		P.edges.reserve(30 * T);
 		P.faces.reserve(20 * T);
 	}
-	
+
 	// Iterate along faces of the platonic solid
 	for(const auto& face : P_old.faces)
 	{
@@ -128,14 +186,11 @@ Polyhedron TriangleClassI(const Polyhedron& P_old, const unsigned int& val)
 		const Vertex& C = P_old.vertices[id_C];
 		
 		
+		
+		// Create new vertices
 
-		// Triangulation algorithm
-
-		// Number of vertices in each face
-		unsigned int N = (val + 1) * (val + 2) / 2;
-
-		// Matrix with ID of vertices and (i,j) indices
-		MatrixXi v_indices = MatrixXi::Zero(3, N);
+		// Map that associetes vertices' IDs with (i,j) indices
+		map<unsigned int, pair<unsigned int, unsigned int>> Vij;
 
 		for (size_t i = 0; i <= val; i++)
 		{
@@ -147,8 +202,6 @@ Polyhedron TriangleClassI(const Polyhedron& P_old, const unsigned int& val)
 				// Set the vertex's coordinates
 				V.coords = (i * A.coords + j * B.coords + (val - i - j) * C.coords) / val;
 
-				// da completare (fare edge i-j)
-
 				// Check if the vertex already exists
 				if (checkVertex(P,V))
 				{
@@ -156,17 +209,47 @@ Polyhedron TriangleClassI(const Polyhedron& P_old, const unsigned int& val)
 					addVertex(P,V);
 				}
 				
-				// Connect vertices with proper edges
-
-				// be careful about double edges
-
-				// Create new faces
-
-				// Check faces
-
-
+				// Fill the map with the ID of the vertex and its (i,j) indices
+				unsigned int id_V = findVertex(P, V);
+				Vij.insert({id_V, {i, j}});
 			}
 		}
+		
+		// Create new edges
+		
+		for (const auto& [id1, ij1] : Vij)
+		{
+			for (const auto& [id2, ij2] : Vij)
+			{
+				if (id1 >= id2) continue; // Avoid duplicates
+				
+				unsigned int i1 = ij1.first;
+				unsigned int j1 = ij1.second;
+				unsigned int i2 = ij2.first;
+				unsigned int j2 = ij2.second;
+
+				// Condizione di adiacenza (sono vicini sulla griglia triangolare)
+				if (abs((int)i1 - (int)i2) <= 1 && abs((int)j1 - (int)j2) <= 1)
+				{
+					Edge E = {0, id1, id2};
+					// Crea un edge tra id1 e id2
+					if(checkEdge(P, E))
+					{
+						addEdge(P, E);
+					}
+				}
+			}
+		}
+		
+		// Create new faces
+				
+				
+				
+
+				
+
+			
+		
 	}
 
 	return P;
