@@ -17,7 +17,7 @@ void exportPolyhedron(const Polyhedron& P);
 
 
 // Function that normalizes the vertices (Geometry.cpp)
-Vertex normalizeVertex(const Vertex& v);
+void normalizeVertex(Vertex& v);
 
 // Function which computes the barycenter of a face (Geometry.cpp)
 Vertex Barycenter(const Polyhedron& P, const unsigned int& f_id);

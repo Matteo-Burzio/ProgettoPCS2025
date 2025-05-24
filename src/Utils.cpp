@@ -11,8 +11,11 @@ Polyhedron Tetrahedron()
 	Polyhedron P;
 	P.id = 0;
 
+	// Allocate memory for vertices
+	P.vertices.reserve(4);
+
 	// Set (non normalized) vertices
-	vector<Vertex> nonNormalizedVertices = {
+	P.vertices = {
 		{0,{1,1,1}},
 		{1,{-1,-1,1}},
 		{2,{-1,1,-1}},
@@ -20,9 +23,9 @@ Polyhedron Tetrahedron()
 	};
 
 	// Normalize vertices to lie on unit sphere
-	for (const Vertex& v : nonNormalizedVertices)
+	for (Vertex& v : P.vertices)
 	{
-		P.vertices.push_back(normalizeVertex(v));
+		normalizeVertex(v);
 	}
 
 	// Set values of edges
@@ -91,7 +94,7 @@ Polyhedron Icosahedron()
 	using std::numbers::phi;
 
 	// Set (non normalized) vertices
-	vector<Vertex> nonNormalizedVertices = {
+	P.vertices = {
 		{0,{-1,phi,0}},
 		{1,{1,phi,0}},
 		{2,{-1,-phi,0}},
@@ -107,9 +110,9 @@ Polyhedron Icosahedron()
 	};
 
 	// Normalize vertices to lie on unit sphere
-	for (const Vertex& v : nonNormalizedVertices)
+	for (Vertex& v : P.vertices)
 	{
-		P.vertices.push_back(normalizeVertex(v));
+		normalizeVertex(v);
 	}
 
 	// Set values of edges

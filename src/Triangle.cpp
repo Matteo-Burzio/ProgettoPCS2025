@@ -11,16 +11,14 @@ bool checkVertex(const Polyhedron& P, const Vertex& v)
 	const double eps = numeric_limits<double>::epsilon();
 	
 	// Iterate along vertices to check if it doesn't exist yet
-	for (unsigned int i = 0; i < P.numVertices(); ++i)
+	for(const auto& existing : P.vertices)
 	{
-		// Get a reference to the current vertex
-		const Vertex& existing = P.vertices[i];
-
 		// Check if it's the same
 		if (v.coords.isApprox(existing.coords, eps))
 		{
 			return false; // The new vertex already exists
 		}
+
 	}
 
 	return true;
@@ -41,13 +39,25 @@ void addVertex(Polyhedron& P, Vertex& v)
 // Function that finds the ID of a vertex in a polyhedron
 unsigned int findVertex(const Polyhedron& P, const Vertex& v)
 {
-	for (unsigned int i = 0; i < P.vertices.size(); ++i)
+	// Get machine precision
+	const double eps = numeric_limits<double>::epsilon();
+
+	for(const auto& current : P.vertices)
 	{
-		if (P.vertices[i].coords.isApprox(v.coords, 1e-10))
+		if(current.coords.isApprox(v.coords, eps))
 		{
-			return i;
+			return current.id;
 		}
 	}
+
+	// for (unsigned int i = 0; i < P.vertices.size(); ++i)
+	// {
+	// 	if (P.vertices[i].coords.isApprox(v.coords, eps))
+	// 	{
+	// 		return i;
+	// 	}
+	// }
+
 	return 0;
 }
 
@@ -186,10 +196,9 @@ Polyhedron TriangleClassI(const Polyhedron& P_old, const unsigned int& val)
 		const Vertex& C = P_old.vertices[id_C];
 		
 		
-		
 		// Create new vertices
 
-		// Map that associetes vertices' IDs with (i,j) indices
+		// Map that associates vertices' IDs with (i,j) indices
 		map<unsigned int, pair<unsigned int, unsigned int>> Vij;
 
 		for (size_t i = 0; i <= val; i++)
@@ -205,28 +214,32 @@ Polyhedron TriangleClassI(const Polyhedron& P_old, const unsigned int& val)
 				// Check if the vertex already exists
 				if (checkVertex(P,V))
 				{
-					// Add the vertex to the polyhedron
+					// If not:
+					// Add the vertex to the polyhedron giving it a new ID
 					addVertex(P,V);
 				}
-				
-				// Fill the map with the ID of the vertex and its (i,j) indices
-				unsigned int id_V = findVertex(P, V);
-				Vij.insert({id_V, {i, j}});
+
+				// If the vertex already exists, give V its ID
+				V.id = findVertex(P, V);
+
+				Vij.insert({V.id, {i, j}});
 			}
 		}
 		
 		// Create new edges
 		
-		for (const auto& [id1, ij1] : Vij)
+		for (const auto& [id1, indices1] : Vij)
 		{
-			for (const auto& [id2, ij2] : Vij)
+			for (const auto& [id2, indices2] : Vij)
 			{
-				if (id1 >= id2) continue; // Avoid duplicates
+				// Avoid checking pairs of vertices twice
+				if (id1 >= id2) continue;
 				
-				unsigned int i1 = ij1.first;
-				unsigned int j1 = ij1.second;
-				unsigned int i2 = ij2.first;
-				unsigned int j2 = ij2.second;
+				// Read (i,j) indices for each vertex
+				unsigned int i1 = indices1.first;
+				unsigned int j1 = indices1.second;
+				unsigned int i2 = indices2.first;
+				unsigned int j2 = indices2.second;
 
 				// Condizione di adiacenza (sono vicini sulla griglia triangolare)
 				if (abs((int)i1 - (int)i2) <= 1 && abs((int)j1 - (int)j2) <= 1)

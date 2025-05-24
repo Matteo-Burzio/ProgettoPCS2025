@@ -5,13 +5,13 @@ using namespace Eigen;
 
 
 // Function that normalizes the coordinates of a vertex to lie on the unit sphere
-Vertex normalizeVertex(const Vertex& v)
+void normalizeVertex(Vertex& v)
 {
 	// Compute the Euclidean norm of the vector
 	double length = v.coords.norm();
 
-	// Return the vertex with normalized coordinates
-	return Vertex{v.id, v.coords / length};
+	// Normalize the coordinates
+	v.coords /= length;
 }
 
 

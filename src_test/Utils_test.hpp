@@ -47,10 +47,10 @@ TEST(GeometryTest, VertexNormalization)
 	Vertex v = {0, {4.3, 5.0, 6.8}};
 
 	// Normalize the vertex
-	Vertex v0 = normalizeVertex(v);
+	normalizeVertex(v);
 
 	// Check that the function worked correctly
-	double length = v0.coords.norm();
+	double length = v.coords.norm();
 	ASSERT_NEAR(length, 1.0, numeric_limits<double>::epsilon());
 }
 
