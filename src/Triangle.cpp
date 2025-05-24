@@ -3,169 +3,122 @@
 using namespace std;
 using namespace Eigen;
 
-//Function that check if values of input are correct
-bool check_input(int argc, char* argv[],
-                   unsigned int &p, unsigned int &q,
-                   unsigned int &b, unsigned int &c,
-                   unsigned int &val, unsigned int &flag)
-{
-    if ((argc != 7) && (argc != 5)) {
-        cerr << "Number of inputs is not compatible with program execution" << endl;
-        return false;
-    }
 
-    istringstream convert_p(argv[1]); 
-    if (!(convert_p >> p) || (p < 3) || (p > 5)) {
-        cerr << "Wrong value for p" << endl;
-        return false;
-    }
-
-    istringstream convert_q(argv[2]);
-    if (!(convert_q >> q) || (q < 3) || (q > 5)) {
-        cerr << "Wrong value for q" << endl;
-        return false;
-    }
-
-    if ((p == 3 && (q == 3 || q == 4 || q == 5)) ||
-        (q == 3 && (p == 3 || p == 4 || p == 5))) {
-        cout << "p: " << p << endl;
-        cout << "q: " << q << endl;
-    } else {
-        cerr << "p and q are not compatible" << endl;
-        return false;
-    }
-
-    istringstream convert_b(argv[3]);
-    if (!(convert_b >> b)) {
-        cerr << "Wrong value for b" << endl;
-        return false;
-    }
-
-    istringstream convert_c(argv[4]);
-    if (!(convert_c >> c)) {
-        cerr << "Wrong value for c" << endl;
-        return false;
-    }
-
-    if (((b == 0) && (c != 0)) || ((b != 0) && (c == 0))) {
-        cout << "b: " << b << endl;
-        cout << "c: " << c << endl;
-        val = (b != 0) ? b : c;
-        cout << "Class I with parameter: " << val << endl;
-        flag = 1;
-    }
-    else if ((b == c) && (b != 0)) {
-        cout << "b: " << b << endl;
-        cout << "c: " << c << endl;
-        val = b;
-        cout << "Class II with parameter: " << val << endl;
-        flag = 2;
-    }
-    else {
-        cerr << "b and c are not compatible" << endl;
-        return false;
-    }
-
-    return true;
-}
-// Function that checks if the new vertex already exists in the Polyhedron
-bool checkVertex(const Polyhedron& P, const Vertex& v)
+// Function which adds missing vertices
+unsigned int addVertexIfMissing(Polyhedron& P, const Vertex& v)
 {
 	// Get machine precision
 	const double eps = numeric_limits<double>::epsilon();
-	
-	// Iterate along vertices to check if it doesn't exist yet
+
+	// Iterate along existing vertices
 	for(const auto& existing : P.vertices)
 	{
-		// Check if it's the same
-		if (v.coords.isApprox(existing.coords, eps))
+		// Check if the vertex already exists
+		if(v.coords.isApprox(existing.coords, eps))
 		{
-			return false; // The new vertex already exists
-		}
-
-	}
-
-	return true;
-}
-
-
-// Function that adds a new vertex to the polyhedron
-void addVertex(Polyhedron& P, Vertex& v)
-{
-	// ID of new vertex is the first available natural number
-	v.id = P.numVertices();
-
-	// Add the new vertex to P
-	P.vertices.push_back(v);
-}
-
-
-// Function that finds the ID of a vertex in a polyhedron
-unsigned int findVertex(const Polyhedron& P, const Vertex& v)
-{
-	// Get machine precision
-	const double eps = numeric_limits<double>::epsilon();
-
-	for(const auto& current : P.vertices)
-	{
-		if(current.coords.isApprox(v.coords, eps))
-		{
-			return current.id;
+			// If yes, return its ID
+			return existing.id;
 		}
 	}
 
-	// for (unsigned int i = 0; i < P.vertices.size(); ++i)
-	// {
-	// 	if (P.vertices[i].coords.isApprox(v.coords, eps))
-	// 	{
-	// 		return i;
-	// 	}
-	// }
+	// Create the vertex if it doesn't exist yet
+	Vertex v_new = v;
 
-	return 0;
+	// Set correct ID (first available number)
+	v_new.id = P.numVertices();
+
+	// Add it to the polyhedron
+	P.vertices.push_back(v_new);
+
+	return v_new.id;
 }
 
 
-// Function that checks if the new edge already exists in the Polyhedron
-bool checkEdge(const Polyhedron& P, const Edge& e)
+// function which add missing edges
+void addEdgeIfMissing(Polyhedron& P, unsigned int id1, unsigned int id2)
 {
-	// Check if vertices exist
-	if (e.origin >= P.numVertices() || e.end >= P.numVertices())
+	for(const auto& existing : P.edges)
 	{
-		return false;
+		if(((existing.origin == id1) && (existing.end == id2)) ||
+			((existing.origin == id2) && (existing.end == id1)))
+		{
+			// Exit from the function (edge already exists)
+			return;
+		}
+
+		// Create the edge if it doesn't exist yet
+		Edge e_new;
+
+		// Set correct ID (first available number)
+		e_new.id = P.numEdges();
+
+		// Set origin and end to current vertices
+		e_new.origin = id1;
+		e_new.end = id2;
+
+		// Add it to the polyhedron
+		P.edges.push_back(e_new);
 	}
+}
+
+
+// // Function that checks if the new edge already exists in the Polyhedron
+// bool checkEdge(const Polyhedron& P, const Edge& e)
+// {
+// 	// Check if vertices exist
+// 	if (e.origin >= P.numVertices() || e.end >= P.numVertices())
+// 	{
+// 		return false;
+// 	}
 		
-	// Check that the edge is valid
-	if (e.origin == e.end)
-	{
-		return false;
-	}
+// 	// Check that the edge is valid
+// 	if (e.origin == e.end)
+// 	{
+// 		return false;
+// 	}
 
-	// Iterate along edges to check if it doesn't exist yet
-	for(const auto& current : P.edges)
-	{
-		// Check if it's the same
-		if ((current.origin == e.origin && current.end == e.end) ||
-			(current.origin == e.end && current.end == e.origin))
-		{
-			return false; // The new edge already exists
-		}
-	}
+// 	// Iterate along edges to check if it doesn't exist yet
+// 	for(const auto& current : P.edges)
+// 	{
+// 		// Check if it's the same
+// 		if ((current.origin == e.origin && current.end == e.end) ||
+// 			(current.origin == e.end && current.end == e.origin))
+// 		{
+// 			return false; // The new edge already exists
+// 		}
+// 	}
 	
-	return true;
-}
+// 	return true;
+// }
 
 
-// Function that adds a new edge to the polyhedron
-void addEdge(Polyhedron& P, Edge& e)
-{
-	// ID of new edge is the first available natural number
-	e.id = P.numEdges();
+// // Function that adds a new edge to the polyhedron
+// void addEdge(Polyhedron& P, Edge& e)
+// {
+// 	// ID of new edge is the first available natural number
+// 	e.id = P.numEdges();
 
-	// Add the new edge to P
-	P.edges.push_back(e);
-}
+// 	// Add the new edge to P
+// 	P.edges.push_back(e);
+// }
 
+
+// unsigned int findEdge(const Polyhedron& P, const Edge& e)
+// {
+// 	// Get machine precision
+// 	const double eps = numeric_limits<double>::epsilon();
+
+// 	for(const auto& current : P.edges)
+// 	{
+// 		if(((current.origin == e.origin) && (current.end == e.end)) ||
+// 		((current.origin == e.end) && (curren.end == e.origin)))
+// 		{
+// 			return current.id;
+// 		}
+// 	}
+
+// 	return 0;
+// }
 
 // Function that checks if the new face already exists in the Polyhedron
 bool checkFace(const Polyhedron& P, const Face& f)
@@ -210,8 +163,6 @@ void addFace(Polyhedron& P, Face& f)
 }
 
 
-
-
 // Function for Class I triangulation of a polyhedron with parameter val (val > 0)
 Polyhedron TriangleClassI(const Polyhedron& P_old, const unsigned int& val)
 {
@@ -245,6 +196,7 @@ Polyhedron TriangleClassI(const Polyhedron& P_old, const unsigned int& val)
 		P.faces.reserve(20 * T);
 	}
 
+
 	// Iterate along faces of the platonic solid
 	for(const auto& face : P_old.faces)
 	{
@@ -262,12 +214,13 @@ Polyhedron TriangleClassI(const Polyhedron& P_old, const unsigned int& val)
 		
 		// Create new vertices
 
-		// Map that associates vertices' IDs with (i,j) indices
-		map<unsigned int, pair<unsigned int, unsigned int>> Vij;
+		// Map that associates (i,j) indices with vertices' IDs
+		map<pair<unsigned int, unsigned int>, unsigned int> Vij;
 
-		for (size_t i = 0; i <= val; i++)
+		// (i,j) are the barycentric coordinates
+		for(unsigned int i = 0; i <= val; i++)
 		{
-			for (size_t j = 0; j <= val - i; j++)
+			for(unsigned int j = 0; j <= val - i; j++)
 			{
 				// Initialize a vertex
 				Vertex V;
@@ -275,48 +228,134 @@ Polyhedron TriangleClassI(const Polyhedron& P_old, const unsigned int& val)
 				// Set the vertex's coordinates
 				V.coords = (i * A.coords + j * B.coords + (val - i - j) * C.coords) / val;
 
-				// Check if the vertex already exists
-				if (checkVertex(P,V))
-				{
-					// If not:
-					// Add the vertex to the polyhedron giving it a new ID
-					addVertex(P,V);
-				}
-
-				// If the vertex already exists, give V its ID
-				V.id = findVertex(P, V);
-
-				Vij.insert({V.id, {i, j}});
+				// If the vertex doesn't exist, add it
+				V.id = addVertexIfMissing(P, V);
+				
+				// Save V's ID and indices
+				Vij.insert({{i, j}, V.id});
 			}
 		}
 		
 		// Create new edges
-		
-		for (const auto& [id1, indices1] : Vij)
-		{
-			for (const auto& [id2, indices2] : Vij)
-			{
-				// Avoid checking pairs of vertices twice
-				if (id1 >= id2) continue;
-				
-				// Read (i,j) indices for each vertex
-				unsigned int i1 = indices1.first;
-				unsigned int j1 = indices1.second;
-				unsigned int i2 = indices2.first;
-				unsigned int j2 = indices2.second;
 
-				// Condizione di adiacenza (sono vicini sulla griglia triangolare)
-				if (abs((int)i1 - (int)i2) <= 1 && abs((int)j1 - (int)j2) <= 1)
+		for(unsigned int i = 0; i <= val; i++)
+		{
+			for(unsigned int j = 0; j <= val - i; j++)
+			{
+				// Get IDs of the three vertices
+				unsigned int id0 = Vij[{i, j}];
+				unsigned int id1 = Vij[{i + 1, j}];
+				unsigned int id2 = Vij[{i, j + 1}];
+
+				// Initialize face
+				Face f1;
+
+				// ID is first available number
+				f1.id = P.numFaces();
+
+				// Add vertices
+				f1.idVertices = {id0, id1, id2};
+
+				P.faces.push_back(f1);
+
+				// Add the three edges
+				addEdgeIfMissing(P, id0, id1);
+				addEdgeIfMissing(P, id1, id2);
+				addEdgeIfMissing(P, id2, id0);
+
+				if (i + j < val - 1)
 				{
-					Edge E = {0, id1, id2};
-					// Crea un edge tra id1 e id2
-					if(checkEdge(P, E))
-					{
-						addEdge(P, E);
-					}
+					// Get ID of the vertex
+					unsigned int id3 = Vij[{i + 1, j + 1}];
+
+					// Initialize face
+					Face f2;
+
+					f2.id = P.numFaces();
+
+					f2.idVertices = {id1, id3, id2};
+
+					P.faces.push_back(f2);
+					addEdgeIfMissing(P, id1, id3);
+					addEdgeIfMissing(P, id3, id2);
+					addEdgeIfMissing(P, id2, id1);
+
+					// da sistemare/capire... 
 				}
 			}
 		}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+		
+		// for (const auto& [id1, indices1] : Vij)
+		// {
+		// 	for (const auto& [id2, indices2] : Vij)
+		// 	{
+		// 		// Avoid checking pairs of vertices twice
+		// 		if (id1 >= id2) continue;
+				
+		// 		// Read (i,j) indices for each vertex
+		// 		unsigned int i1 = indices1.first;
+		// 		unsigned int j1 = indices1.second;
+		// 		unsigned int i2 = indices2.first;
+		// 		unsigned int j2 = indices2.second;
+
+		// 		// Check if the vertices are adjacent on the triangular grid
+		// 		if (abs((int)i1 - (int)i2) <= 1 && abs((int)j1 - (int)j2) <= 1)
+		// 		{
+		// 			// Initialize an edge
+		// 			Edge E;
+
+		// 			// Set its origin and end as current pair of vertices
+		// 			E.origin = id1;
+		// 			E.end = id2;
+
+		// 			// // Check if the edge already exists
+		// 			// if(checkEdge(P, E))
+		// 			// {
+		// 			// 	// If not:
+		// 			// 	// Add the edge to the polyhedron giving it a new ID
+		// 			// 	addEdge(P, E);
+		// 			// }
+
+
+		// 			// Check if the edge already exists
+	
+		// 			// valid? end == origin?
+		
+		// 			// Iterate along edges to check if it doesn't exist yet
+		// 			for(const auto& current : P.edges)
+		// 			{
+		// 				// Check if it's the same
+		// 				if (!((current.origin == E.origin && current.end == E.end) ||
+		// 					(current.origin == E.end && current.end == E.origin)))
+		// 				{
+		// 					//If not:
+		// 					// ID of new edge is the first available natural number
+		// 					E.id = P.numEdges();
+							
+		// 					// Add the new edge to P
+		// 					P.edges.push_back(E);
+		// 				}
+		// 			}
+		// 		}
+		// 	}
+		// }
 		
 		// Create new faces
 				
@@ -330,8 +369,8 @@ Polyhedron TriangleClassI(const Polyhedron& P_old, const unsigned int& val)
 	}
 
 	return P;
-}
 
+}
 
 
 

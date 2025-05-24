@@ -12,42 +12,47 @@ using namespace std;
 int main(int argc, char *argv[])
 {
 
-	
-	// // Initialize variables
-	// unsigned int p; // number of edges of each face of the chosen platonic solid
-	// unsigned int q; // number of faces which meet in each vertex of the solid
-	// unsigned int b; // subdivision parameter
-	// unsigned int c; // subdivision parameter
-	// unsigned int id_path_start; // ID of starting vertex
-	// unsigned int id_path_end; // ID of ending vertex
-	unsigned int p, q, b, c, val, flag;
-	unsigned int id_path_start, id_path_end; 
+	// Initialize variables
+	unsigned int p; // number of edges of each face of the chosen platonic solid
+	unsigned int q; // number of faces which meet in each vertex of the solid
+	unsigned int b; // subdivision parameter
+	unsigned int c; // subdivision parameter
+	unsigned int id_path_start; // ID of starting vertex
+	unsigned int id_path_end; // ID of ending vertex
+
+	// Auxiliary variables
+	unsigned int val;
+	unsigned int flag;
+
+	// Check input
 	if (!check_input(argc, argv, p, q, b, c, val, flag))
-		{
+	{
         return 1;
-		}
+	}
+
 
 	// Initialize the polyhedron
+	Polyhedron initial_P;
 	Polyhedron P;
 
 	// Create the correct platonic solid to start from
 	if((p == 3) && (q == 3))
 	{
-		P = Tetrahedron();
+		initial_P = Tetrahedron();
 	} 
 	else if(((p == 3) && (q == 4)) || ((p == 4) && (q == 3)))
 	{
-		P = Octahedron();
+		initial_P = Octahedron();
 	} 
 	else if(((p == 3) && (q == 5)) || ((p == 5) && (q == 3)))
 	{
-		P = Icosahedron();
+		initial_P = Icosahedron();
 	}
 
 	// Triangulate the faces of the polyhedron 
 	if(flag == 1)
 	{
-		// TriangleClassI(P, val);
+		P = TriangleClassI(initial_P, val);
 	}
 	else if (flag == 2)
 	{
@@ -60,7 +65,7 @@ int main(int argc, char *argv[])
 	}
 
 
-	// Create the dual polyhedron
+	// Create the dual polyhedron, if needed
 	if(p != 3)
 	{
 		// dual function

@@ -4,6 +4,92 @@ using namespace std;
 using namespace Eigen;
 
 
+//Function that checks input values
+bool check_input(int argc, char* argv[],
+                   unsigned int &p, unsigned int &q,
+                   unsigned int &b, unsigned int &c,
+                   unsigned int &val, unsigned int &flag)
+{
+
+	// Get correct number of in puts
+    if((argc != 7) && (argc != 5))
+	{
+        cerr << "Number of inputs is not compatible with program execution" << endl;
+        return false;
+    }
+
+	// Get value of p and check if it's allowed
+    istringstream convert_p(argv[1]); 
+    if(!(convert_p >> p) || (p < 3) || (p > 5))
+	{
+        cerr << "Wrong value for p" << endl;
+        return false;
+    }
+
+	// Get value of q and check if it's allowed
+    istringstream convert_q(argv[2]);
+    if(!(convert_q >> q) || (q < 3) || (q > 5))
+	{
+        cerr << "Wrong value for q" << endl;
+        return false;
+    }
+
+	// Check if p and q are compatible
+    if((p == 3 && (q == 3 || q == 4 || q == 5)) ||
+        (q == 3 && (p == 3 || p == 4 || p == 5)))
+		{
+        cout << "p: " << p << endl;
+        cout << "q: " << q << endl;
+    }
+	else
+	{
+        cerr << "p and q are not compatible" << endl;
+        return false;
+    }
+
+	// Get value of b
+    istringstream convert_b(argv[3]);
+    if(!(convert_b >> b))
+	{
+        cerr << "Wrong value for b" << endl;
+        return false;
+    }
+
+	// Get value of c
+    istringstream convert_c(argv[4]);
+    if(!(convert_c >> c))
+	{
+        cerr << "Wrong value for c" << endl;
+        return false;
+    }
+
+	// Check which triangulation class is requested
+    if(((b == 0) && (c != 0)) || ((b != 0) && (c == 0)))
+	{
+        cout << "b: " << b << endl;
+        cout << "c: " << c << endl;
+        val = (b != 0) ? b : c; // val is the the non-zero value between b and c
+        cout << "Class I with parameter: " << val << endl;
+        flag = 1;
+    }
+    else if((b == c) && (b != 0))
+	{
+        cout << "b: " << b << endl;
+        cout << "c: " << c << endl;
+        val = b;
+        cout << "Class II with parameter: " << val << endl;
+        flag = 2;
+    }
+    else
+	{
+        cerr << "b and c are not compatible" << endl;
+        return false;
+    }
+
+    return true;
+}
+
+
 // Function that constructs a tetrahedron represented as a Polyhedron
 Polyhedron Tetrahedron()
 {
@@ -23,7 +109,7 @@ Polyhedron Tetrahedron()
 	};
 
 	// Normalize vertices to lie on unit sphere
-	for (Vertex& v : P.vertices)
+	for(Vertex& v : P.vertices)
 	{
 		normalizeVertex(v);
 	}
@@ -110,7 +196,7 @@ Polyhedron Icosahedron()
 	};
 
 	// Normalize vertices to lie on unit sphere
-	for (Vertex& v : P.vertices)
+	for(Vertex& v : P.vertices)
 	{
 		normalizeVertex(v);
 	}
