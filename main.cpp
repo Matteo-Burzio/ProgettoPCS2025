@@ -11,112 +11,21 @@ using namespace std;
 
 int main(int argc, char *argv[])
 {
-	// Print number of arguments
-	cout << "Number of arguments: " << argc << endl;
 
-	// Check number of inputs
-	if ((argc != 7) && (argc != 5))
-	{
-		cerr << "Number of inputs is not compatible with program execution" << endl;
-		return 1;
-	}
 	
-	// Initialize variables
-	unsigned int p; // number of edges of each face of the chosen platonic solid
-	unsigned int q; // number of faces which meet in each vertex of the solid
-	unsigned int b; // subdivision parameter
-	unsigned int c; // subdivision parameter
-	unsigned int id_path_start; // ID of starting vertex
-	unsigned int id_path_end; // ID of ending vertex
-
-	// (da completare: spostare dentro una funzione il check degli input)
-
-	// Get value of p 
-	istringstream convert_p(argv[1]);
-	if(!(convert_p >> p) || (p < 3) || (p > 5))
-	{
-		cerr << "Wrong value for p" << endl;
-		return 1;
-	}
-	
-	// Get value of q
-	istringstream convert_q(argv[2]);
-	if(!(convert_q >> q) || (q < 3) || (q > 5))
-	{
-		cerr << "Wrong value for q" << endl;
-		return 1;
-	}
-
-	// Check if p and q are compatible
-	if( (p == 3) && ((q == 3) || (q == 4) || (q == 5)))
-	{
-		cout << "p: " << p << endl;
-		cout << "q: " << q << endl;
-	} 
-	else if((q == 3) && ((p == 3) || (p == 4) || (p == 5)))
-	{
-		cout << "p: " << p << endl;
-		cout << "q: " << q << endl;
-	} 
-	else
-	{
-		cerr << "p and q are not compatible" << endl;
-		return 1;
-	}
-
-	// Get value of b
-	istringstream convert_b(argv[3]);
-	if(!(convert_b >> b))
-	{
-		cerr << "Wrong value for b" << endl;
-		return 1;
-	}
-
-	// Get value of c
-	istringstream convert_c(argv[4]);
-	if(!(convert_c >> c))
-	{
-		cerr << "Wrong value for c" << endl;
-		return 1;
-	}
-
-	// Check if b and c are compatible
-	unsigned int val; // get the non-null value between b and c
-	unsigned int flag = 0; // flag which distinguishes class I & II
-
-	if(((b == 0) && (c != 0)) || ((b != 0) && (c == 0)))
-	{
-		cout << "b: " << b << endl;
-		cout << "c: " << c << endl;
-
-		// val is the non-null parameter
-		if(b != 0)
+	// // Initialize variables
+	// unsigned int p; // number of edges of each face of the chosen platonic solid
+	// unsigned int q; // number of faces which meet in each vertex of the solid
+	// unsigned int b; // subdivision parameter
+	// unsigned int c; // subdivision parameter
+	// unsigned int id_path_start; // ID of starting vertex
+	// unsigned int id_path_end; // ID of ending vertex
+	unsigned int p, q, b, c, val, flag;
+	unsigned int id_path_start, id_path_end; 
+	if (!check_input(argc, argv, p, q, b, c, val, flag))
 		{
-			val = b;
+        return 1;
 		}
-		else
-		{
-			val = c;
-		}
-		cout << "Class I with parameter: " << val << endl;
-		flag = 1;
-	}
-	else if((b == c) && (b != 0))
-	{
-		cout << "b: " << b << endl;
-		cout << "c: " << c << endl;
-
-		// val is the value of b=c
-		val = b;
-		cout << "Class II with parameter: " << val << endl;
-		flag = 2;
-	}
-	else
-	{
-		cerr << "b and c are not compatible" << endl;
-		return 1;
-	}
-
 
 	// Initialize the polyhedron
 	Polyhedron P;

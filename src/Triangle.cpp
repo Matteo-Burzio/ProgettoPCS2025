@@ -3,7 +3,71 @@
 using namespace std;
 using namespace Eigen;
 
+//Function that check if values of input are correct
+bool check_input(int argc, char* argv[],
+                   unsigned int &p, unsigned int &q,
+                   unsigned int &b, unsigned int &c,
+                   unsigned int &val, unsigned int &flag)
+{
+    if ((argc != 7) && (argc != 5)) {
+        cerr << "Number of inputs is not compatible with program execution" << endl;
+        return false;
+    }
 
+    istringstream convert_p(argv[1]); 
+    if (!(convert_p >> p) || (p < 3) || (p > 5)) {
+        cerr << "Wrong value for p" << endl;
+        return false;
+    }
+
+    istringstream convert_q(argv[2]);
+    if (!(convert_q >> q) || (q < 3) || (q > 5)) {
+        cerr << "Wrong value for q" << endl;
+        return false;
+    }
+
+    if ((p == 3 && (q == 3 || q == 4 || q == 5)) ||
+        (q == 3 && (p == 3 || p == 4 || p == 5))) {
+        cout << "p: " << p << endl;
+        cout << "q: " << q << endl;
+    } else {
+        cerr << "p and q are not compatible" << endl;
+        return false;
+    }
+
+    istringstream convert_b(argv[3]);
+    if (!(convert_b >> b)) {
+        cerr << "Wrong value for b" << endl;
+        return false;
+    }
+
+    istringstream convert_c(argv[4]);
+    if (!(convert_c >> c)) {
+        cerr << "Wrong value for c" << endl;
+        return false;
+    }
+
+    if (((b == 0) && (c != 0)) || ((b != 0) && (c == 0))) {
+        cout << "b: " << b << endl;
+        cout << "c: " << c << endl;
+        val = (b != 0) ? b : c;
+        cout << "Class I with parameter: " << val << endl;
+        flag = 1;
+    }
+    else if ((b == c) && (b != 0)) {
+        cout << "b: " << b << endl;
+        cout << "c: " << c << endl;
+        val = b;
+        cout << "Class II with parameter: " << val << endl;
+        flag = 2;
+    }
+    else {
+        cerr << "b and c are not compatible" << endl;
+        return false;
+    }
+
+    return true;
+}
 // Function that checks if the new vertex already exists in the Polyhedron
 bool checkVertex(const Polyhedron& P, const Vertex& v)
 {

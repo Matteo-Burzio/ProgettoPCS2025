@@ -5,6 +5,11 @@
 
 using namespace std;
 
+//Function that check if values of input are correct
+bool check_input(int argc, char* argv[],
+                   unsigned int &p, unsigned int &q,
+                   unsigned int &b, unsigned int &c,
+                   unsigned int &val, unsigned int &flag);
 
 // Functions that create tetrahedron, octahedron and icosahedron (Utils.cpp)
 Polyhedron Tetrahedron();
