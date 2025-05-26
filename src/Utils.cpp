@@ -6,9 +6,9 @@ using namespace Eigen;
 
 //Function that checks input values
 bool check_input(int argc, char* argv[],
-                   unsigned int &p, unsigned int &q,
-                   unsigned int &b, unsigned int &c,
-                   unsigned int &val, unsigned int &flag)
+                 unsigned int &p, unsigned int &q,
+                 unsigned int &b, unsigned int &c,
+                 unsigned int &val, unsigned int &flag)
 {
 
 	// Get correct number of in puts
@@ -96,9 +96,6 @@ Polyhedron Tetrahedron()
 	// Initialize polyhedron struct and set the ID
 	Polyhedron P;
 	P.id = 0;
-
-	// Allocate memory for vertices
-	P.vertices.reserve(4);
 
 	// Set (non normalized) vertices
 	P.vertices = {

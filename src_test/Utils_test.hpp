@@ -8,6 +8,15 @@
 using namespace std;
 
 
+
+// Input TEST
+
+TEST(InputTest, InputCheck)
+{
+	
+}
+
+
 // Polyhedron TEST
 
 TEST(PolyhedronTest, ValidTetrahedron)
@@ -85,162 +94,97 @@ TEST(GeometryTest, DualComputation)
 }
 
 
-
 // Triangle TEST
 
-// TEST(TriangleTest, VertexCheck)
-// {
-// 	// Create a polyhedron object
-// 	Polyhedron P;
+TEST(TriangleTest, VertexAddition)
+{
+	// Create a polyhedron object
+	Polyhedron P;
 	
-// 	// Create a vertex object ad add it to the polyhedron
-// 	Vertex v0 = {0, {1,2,3}};
-// 	P.vertices.push_back(v0);
-
-// 	// Compare the vertex with a duplicate
-// 	Vertex v1 = {0, {1,2,3}};
-// 	ASSERT_FALSE(checkVertex(P, v1));
-
-// 	// Compare the vertex with a near duplicate
-// 	Vertex v2 = {0, {1 + numeric_limits<double>::epsilon(),
-// 					 2 + numeric_limits<double>::epsilon(),
-// 					 3 + numeric_limits<double>::epsilon()}};
-// 	ASSERT_FALSE(checkVertex(P, v2));
-
-// 	// Compare the vertex with a different one
-// 	Vertex v3 = {0, {4,5,6}};
-// 	ASSERT_TRUE(checkVertex(P, v3));
-// }
-
-
-// TEST(TriangleTest, VertexAddition)
-// {
-// 	// Create a polyhedron object
-// 	Polyhedron P;
+	// Add a vertex
+	Vector3d v0_coords = {1,2,3};
+	unsigned int id0 = addVertexIfMissing(P, v0_coords);
+	ASSERT_EQ(id0, 0);
+	ASSERT_EQ(P.numVertices(), 1);
 	
-// 	// Create a vertex object
-// 	Vertex v;
-// 	v.coords = {1,2,3};
-
-// 	// Add the vertex to the polyhedron
-// 	addVertex(P, v);
-
-// 	// Check that the vertex has been added
-// 	ASSERT_EQ(P.numVertices(), 1);
-
-// 	// Check that the ID is the correct value
-// 	ASSERT_EQ(v.id, 0);
-// 	ASSERT_EQ(P.vertices[0].id, 0);
-
-// 	// Check if the added vertex is the correct one
-// 	ASSERT_TRUE(P.vertices[0].coords.isApprox(v.coords));
-// }
-
-
-// TEST(TriangleTest, VertexResearch)
-// {
-// 	// Create a polyhedron object
-// 	Polyhedron P;
+	// Add a near duplicate
+	Vector3d v1_coords = {1 + numeric_limits<double>::epsilon(),
+						  2 + numeric_limits<double>::epsilon(),
+						  3 + numeric_limits<double>::epsilon()};
+	unsigned int id1 = addVertexIfMissing(P, v1_coords);
+	ASSERT_EQ(id1, 0);
+	ASSERT_EQ(P.numVertices(), 1);
 	
-// 	// Create a vertex object
-// 	Vertex v = {0, {1,2,3}};
-
-// 	// Add the vertex to the polyhedron
-// 	addVertex(P, v);
-
-// 	// Check that the function return the correct ID
-// 	ASSERT_EQ(P.vertices[0].id, 0);
-// }
+	// Add a different vertex
+	Vector3d v2_coords = {4,5,6};
+	unsigned int id2 = addVertexIfMissing(P, v2_coords);
+	ASSERT_EQ(id2, 1);
+	ASSERT_EQ(P.numVertices(), 2);
+}
 
 
-// TEST(TriangleTest, EdgeCheck)
-// {
-// 	// Create a polyhedron with 3 vertices
-// 	Polyhedron P;
-// 	P.vertices = {{0, {0,0,1}}, {1, {1,0,0}}, {2, {0,1,0}}};
+TEST(TriangleTest, EdgeAddition)
+{
+	// Create a polyhedron with 3 vertices
+	Polyhedron P;
+	P.vertices = {{0, {0,0,0}}, {1, {1,0,0}}, {2, {0,1,0}}};
 
-// 	// Create ad edge object and add it to the polyhedron
-// 	Edge e0 = {0,0,1};
-// 	P.edges = {e0};
-
-// 	// Try to add an edge connected to a non-existing vertex
-// 	Edge e1 = {0,2,3};
-// 	ASSERT_FALSE(checkEdge(P, e1));
-
-// 	// Try to add a duplicate edge (same order)
-// 	Edge e2 = {0,0,1};
-// 	ASSERT_FALSE(checkEdge(P, e2));
-
-// 	// Try to add a duplicate edge (different order)
-// 	Edge e3 = {0,1,0};
-// 	ASSERT_FALSE(checkEdge(P, e3));
-
-// 	// Try to add a different edge
-// 	Edge e4 = {0,1,2};
-// 	ASSERT_TRUE(checkEdge(P, e4));
-// }
-
-
-// TEST(TriangleTest, EdgeAddition)
-// {
-// 	// Create a polyhedron object with 2 vertices
-// 	Polyhedron P;
-// 	P.vertices = {{0, {0,0,1}}, {1, {1,0,0}}};
-
-// 	// Create an edge object
-// 	Edge e = {0,0,1};
+	// Add a valid edge
+	unsigned int id0 = addEdgeIfMissing(P, 0, 1);
+	ASSERT_EQ(id0, 0);
+	ASSERT_EQ(P.numEdges(), 1);
 	
-// 	// Add the edge to the polyhedron
-// 	addEdge(P, e);
+	// Add a duplicate (different order)
+	unsigned int id1 = addEdgeIfMissing(P, 1, 0);
+	ASSERT_EQ(id1, 0);
+	ASSERT_EQ(P.numEdges(), 1);
 	
-// 	// Check that the edge has been added
-// 	ASSERT_EQ(P.numEdges(), 1);
+	// Add invalid edges
+	unsigned int id2 = addEdgeIfMissing(P, 1, 1);
+	unsigned int id3 = addEdgeIfMissing(P, 1, 4);
+	ASSERT_EQ(id2, static_cast<unsigned int>(-1)); // quello che esce se metto -1 a un unsigned int
+	ASSERT_EQ(id3, static_cast<unsigned int>(-1)); // quello che esce se metto -1 a un unsigned int
+	ASSERT_EQ(P.numEdges(), 1);
 	
-// 	// Check that the ID is the correct value
-// 	ASSERT_EQ(e.id, 0);
-// 	ASSERT_EQ(P.edges[0].id, 0);
+	// Add a different edge
+	unsigned int id4 = addEdgeIfMissing(P, 1, 2);
+	ASSERT_EQ(id4, 1);
+	ASSERT_EQ(P.numEdges(), 2);
+}
+
+
+TEST(TriangleTest, ClassI)
+{
+	// Create a tetrahedron and perform Class I Triangulation
+	Polyhedron P_old = Tetrahedron();
+
+	// Perform Class I triangulation with val = 2
+	Polyhedron P = TriangleClassI(P_old, 2);
+
+	// We expect 10 vertices, 24 edges and 16 faces
+	ASSERT_EQ(P.numVertices(), 10);
+	ASSERT_EQ(P.numEdges(), 24);
+	ASSERT_EQ(P.numFaces(), 16);
+
+	// Check that all faces have 3 vertices and 3 edges
+	for (const auto& f : P.faces)
+	{
+		ASSERT_EQ(f.idVertices.size(), 3);
+		ASSERT_EQ(f.idEdges.size(), 3);
+	}
+
+	// Check that there are no invalid edges
+	for (const auto& e : P.edges)
+	{
+		ASSERT_NE(e.origin, e.end);            // NE = Not Equal
+		ASSERT_LT(e.origin, P.numVertices());  // LT = Less Than
+		ASSERT_LT(e.end, P.numVertices());
+	}
+}
+
+
+TEST(TriangleTest, ClassII)
+{
 	
-// 	// Check if the added edge is the correct one
-// 	ASSERT_EQ(P.edges[0].origin, e.origin);
-// 	ASSERT_EQ(P.edges[0].end, e.end);
-// }
+}
 
-
-// TEST(TriangleTest, FaceCheck)
-// {
-// 	// Create a polyhedron object
-// 	Polyhedron P;
-	
-// 	// Create a face object and add it to the polyhedron
-// 	Face f0;
-// 	f0.idVertices = {0, 1, 2};
-// 	P.faces.push_back(f0);
-	
-// 	// Try to add a duplicate face (different order)
-// 	Face f1;
-// 	f1.idVertices = {2, 0, 1};
-// 	ASSERT_FALSE(checkFace(P, f1));
-
-// 	// Try to add a different face
-// 	Face f2;
-// 	f2.idVertices = {3,4,5};
-// 	ASSERT_TRUE(checkFace(P, f2));
-// }
-
-
-// TEST(TriangleTest, FaceAddition)
-// {
-	
-// }
-
-
-// TEST(TriangleTest, ClassI)
-// {
-	
-// }
-
-
-// TEST(TriangleTest, ClassII)
-// {
-	
-// }

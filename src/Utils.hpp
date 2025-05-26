@@ -5,11 +5,11 @@
 
 using namespace std;
 
-//Function that check if values of input are correct
+//Function that check if values of input are correct (Utils.cpp)
 bool check_input(int argc, char* argv[],
-                   unsigned int &p, unsigned int &q,
-                   unsigned int &b, unsigned int &c,
-                   unsigned int &val, unsigned int &flag);
+				 unsigned int &p, unsigned int &q,
+				 unsigned int &b, unsigned int &c,
+				 unsigned int &val, unsigned int &flag);
 
 // Functions that create tetrahedron, octahedron and icosahedron (Utils.cpp)
 Polyhedron Tetrahedron();
@@ -33,16 +33,10 @@ Polyhedron Dual(const Polyhedron& P);
 
 
 // Functions that checks if the new vertex already exists (Triangle.cpp)
-unsigned int addVertexIfMissing(Polyhedron& P, const Vertex& v);
+unsigned int addVertexIfMissing(Polyhedron& P, const Vector3d coords_V);
 
 // Functions that check if the new edge already exists and add it to P(Triangle.cpp)
-//bool checkEdge(const Polyhedron& P, const Edge& e);
-//void addEdge(Polyhedron& P, Edge& e);
-void addEdgeIfMissing(Polyhedron& P, unsigned int id1, unsigned int id2);
-
-// Functions that check if the new face already exists and add it to P(Triangle.cpp)
-bool checkFace(const Polyhedron& P, const Face& f);
-void addFace(Polyhedron& P, Face& f);
+unsigned int addEdgeIfMissing(Polyhedron& P, unsigned int id1, unsigned int id2);
 
 
 // Functions for Class I and Class II triangulation of a polyhedron (Triangle.cpp)
