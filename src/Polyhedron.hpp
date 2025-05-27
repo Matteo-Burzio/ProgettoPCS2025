@@ -8,7 +8,9 @@
 #include <cmath>
 #include <numbers>
 #include <map>
+#include <list>
 #include <utility>
+#include <algorithm>
 
 #include <Eigen/Dense>
 
@@ -85,7 +87,7 @@ struct Polyhedron
 	bool checkFaces() const
 	{
 		// Iterate through all faces of the polyhedron
-		for (const Face& face : faces)
+		for (const auto& face : faces)
 		{
 			// Get number of edges and vertices
 			// (for this project we expect this value to be always 3)

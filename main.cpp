@@ -61,16 +61,25 @@ int main(int argc, char *argv[])
 		cerr << "Something went wrong... (flag error)" << endl;
 		return 1;
 	}
-
-
+	
+	// Projection on the sphere
+	for(auto& v : P.vertices)
+	{
+		normalizeVertex(v);
+	}
+	
 	// Create the dual polyhedron, if needed
 	if(p != 3)
 	{
-		// dual function
+		Polyhedron Q = Dual(P);
 	}
 	
 
 	// Shortest path
+	
+	// Create graph
+	
+	
 
 	// Initialize variables
 	unsigned int id_path_start; // ID of starting vertex

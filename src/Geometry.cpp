@@ -43,6 +43,54 @@ Vertex Barycenter(const Polyhedron& P, const unsigned int& f_id)
 // Function that creates the dual of the polyhedron
 Polyhedron Dual(const Polyhedron& P)
 {
-	Polyhedron dual = P;
-	return dual;
+	// Initialize dual polyhedron
+	Polyhedron Q;
+	
+	// Assign its ID
+	Q.id = P.id + 2;
+	
+	// Reserve correct amount of space
+	Q.vertices.reserve(P.numFaces());
+	Q.edges.reserve(P.numEdges());
+	Q.faces.reserve(P.numVertices());
+	
+	// Create vertices of the dual polyhedron
+	// They are the barycenters of P's faces
+	
+	// Iterate along faces to create Q's vertices
+	for(const auto& f : P.faces)
+	{
+		// Initialize dual's vertex
+		Vertex v_dual = Barycenter(P, f.id);
+		
+		// Normalize the vertex
+		normalizeVertex(v_dual);
+		
+		// Add vertex to Q
+		Q.vertices.push_back(v_dual);
+	}
+	
+	//
+	for(const auto& v : P.vertices)
+	{
+		// Initialize dual's face
+		Face f_dual;
+		
+		// Set the correct ID
+		f_dual.id = v.id;
+
+		// Get IDs of vertices of the dual's face
+		for(const auto& f : P.faces)
+		{
+			if(find(f.idVertices.begin(), f.idVertices.end(), v.id) != f.idVertices.end())
+			{
+				f_dual.idVertices.push_back(f.id);
+			}				
+		}
+		
+		
+	}
+		
+	
+	return Q;
 }
