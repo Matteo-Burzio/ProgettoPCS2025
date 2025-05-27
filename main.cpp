@@ -17,8 +17,6 @@ int main(int argc, char *argv[])
 	unsigned int q; // number of faces which meet in each vertex of the solid
 	unsigned int b; // subdivision parameter
 	unsigned int c; // subdivision parameter
-	unsigned int id_path_start; // ID of starting vertex
-	unsigned int id_path_end; // ID of ending vertex
 
 	// Auxiliary variables
 	unsigned int val;
@@ -72,6 +70,14 @@ int main(int argc, char *argv[])
 	}
 	
 
+	// Shortest path
+
+	// Initialize variables
+	unsigned int id_path_start; // ID of starting vertex
+	unsigned int id_path_end; // ID of ending vertex
+	
+	// (da spostare dentro la funzione)
+
 	// Get ID of starting vertex for shortest path
 	if(argc == 7)
 	{
@@ -97,7 +103,7 @@ int main(int argc, char *argv[])
 	}
 
 
-	// Export for Paraview
+	// Export for Paraview and write output files
 	exportPolyhedron(P);
 
 

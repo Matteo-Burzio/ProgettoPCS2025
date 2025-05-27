@@ -1,5 +1,6 @@
 #include "Utils.hpp"
 
+
 using namespace std;
 using namespace Eigen;
 
@@ -153,7 +154,7 @@ Polyhedron TriangleClassI(const Polyhedron& P_old, const unsigned int& val)
 				// If the vertex doesn't exist, add it
 				unsigned int id_V = addVertexIfMissing(P, coords_V);
 				
-				// Save V's ID and indices
+				// Save V's ID and indices in the map
 				Vij.insert({{i, j}, id_V});
 			}
 		}
