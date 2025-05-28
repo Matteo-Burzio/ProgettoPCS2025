@@ -3,6 +3,8 @@
 #include <gtest/gtest.h>
 
 #include "Utils.hpp"
+#include "Geometry.hpp"
+#include "Triangle.hpp"
 
 
 using namespace std;

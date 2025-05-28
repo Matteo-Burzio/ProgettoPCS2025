@@ -1,4 +1,6 @@
 #include "Utils.hpp"
+#include "Triangle.hpp"
+#include "Geometry.hpp"
 
 
 using namespace std;
@@ -68,14 +70,14 @@ int main(int argc, char *argv[])
 		normalizeVertex(v);
 	}
 	
-	// Get neighbours of each vertex and edge
-	getNeighbours(P);
+	// // Get neighbours of each vertex and edge
+	// getNeighbours(P);
 
 	// Create the dual polyhedron, if needed
-	if(p != 3)
-	{
-		Polyhedron Q = Dual(P);
-	}
+	// if(p != 3)
+	// {
+		// Polyhedron Q = Dual(P);   finchè la funzione non è scritta in file cpp non può essere eseguita
+	// }
 	
 
 	// Shortest path
