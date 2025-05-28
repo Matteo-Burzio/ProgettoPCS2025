@@ -9,6 +9,7 @@
 #include <cmath>
 #include <numbers>
 #include <map>
+#include <set>
 #include <list>
 #include <utility>
 #include <algorithm>
@@ -26,7 +27,7 @@ struct Vertex
 	Vector3d coords;
 	vector<unsigned int> edgeNeighbours; // IDs of adjacent edges
 	vector<unsigned int> faceNeighbours; // IDs of adjacent faces
-	bool shortPath = 0;
+	bool shortPath = false;
 };
 
 // Struct which stores the ID of an edge and the IDs of its extrema
@@ -36,7 +37,7 @@ struct Edge
 	unsigned int origin;
 	unsigned int end;
 	vector<unsigned int> faceNeighbours; // IDs of adjacent faces
-	bool shortPath = 0;
+	bool shortPath = false;
 };
 
 // Struct which stores the ID of a face, the IDs of its vertices and edges

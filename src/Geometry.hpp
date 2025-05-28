@@ -1,7 +1,7 @@
 #pragma once
 
 #include "Polyhedron.hpp"
-#include "UCDUtilities.hpp"
+
 
 // Function that normalizes the vertices (Geometry.cpp)
 void normalizeVertex(Vertex& v);

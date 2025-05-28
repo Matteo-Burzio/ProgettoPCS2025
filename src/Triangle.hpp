@@ -1,7 +1,6 @@
 #pragma once
 
 #include "Polyhedron.hpp"
-#include "UCDUtilities.hpp"
 
 
 // Functions that checks if the new vertex already exists (Triangle.cpp)

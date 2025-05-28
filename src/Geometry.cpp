@@ -39,12 +39,94 @@ Vertex Barycenter(const Polyhedron& P, const unsigned int& f_id)
 	return bc;
 }
 
-// // Function which finds the neighbours of each vertex and edge
-// void getNeighbours(Polyhedron& P)
-// {
-	// // iterate along vertices of the polyhedron
-	// for(const auto& v : P.vertices)
-	// {
+// Function which finds the neighbours of each vertex and edge
+void getNeighbours(Polyhedron& P)
+{
+	// iterate along vertices of the polyhedron
+	for(auto& v : P.vertices)
+	{
+		// Initialize a list of IDs of faces
+		list<unsigned int> adjacentFaces_id;
+
+		// Find all faces containing the vertex
+		for(const auto& f: P.faces)
+		{
+			if (find(f.idVertices.begin(), f.idVertices.end(), v.id) != f.idVertices.end())
+			{
+				adjacentFaces_id.push_back(f.id);
+			}
+		}
+
+		// Get first element in the list (arbitrary)
+		unsigned int currentFace_id = adjacentFaces_id.pop_front();
+		v.faceNeighbours.push_back(currentFace_id);
+
+		// Set a flag to know if to keeping iterating
+		// Set to true to enter the while loop
+		bool foundNext = true;
+
+		// Iterate until the list is empty
+		while(!adjacentFaces_id.empty() && foundNext)
+		{
+			foundNext = false; // set to false
+
+			// Iterate along current face's edges
+			for(unsigned int e_id : P.faces[currentFace_id].idEdges)
+			{
+				// If both origin and end are not the current vertex,
+				// skip to next edge of current face
+				if((P.edges[e_id].origin != v.id) && (P.edges[e_id].end))
+				{
+					continue;
+				}
+
+				// Find another face in the list that has both vertex v and edge e
+				for(const auto& f_id : adjacentFaces_id)
+				{
+					if((find(P.faces[f_id].idVertices.begin(), P.faces[f_id].idVertices.end(), v.id) != P.faces[f_id].idVertices.end()) &&
+						(find(P.faces[f_id].idEdges.begin(), P.faces[f_id].idEdges.end(), e_id) != P.faces[f_id].idEdges.end()))
+						{
+							// Update current face
+							currentFace_id = f_id;
+
+							// Add the vertex ID to v's neighbours
+							v.edgeNeighbours.push_back(e_id);
+
+							// Add the face ID to v's neighbors
+							v.faceNeighbours.push_back(f_id);
+
+							// Remove the face from the list
+							adjacentFaces_id.remove(f_id);
+
+							// Set flag to true
+							foundNext = true;
+
+							break;
+						}
+
+				}
+
+				// Stopiterating along edges when next face is found
+				if(foundNext)
+				{
+					break;
+				}
+			}
+		}
+
+		// Last edge???? (da finire)
+
+
+
+
+
+
+
+
+
+
+		////////////////////////////////// Scritto in classe:
+		
 		// for(const auto& f : P.faces)
 		// {
 			// if(find(f.idVertices.begin(), f.idVertices.end(), v.id) != f.idVertices.end())
@@ -77,64 +159,60 @@ Vertex Barycenter(const Polyhedron& P, const unsigned int& f_id)
 					// v.edgeNeighbours.push_back(id_e);
 				// }
 			// }
-
-
-
-
-
-
 			// i++;
 		// }
-
-	// }
-// }
+		////////////////////////////////////////////
 
 
-// // Function that creates the dual of the polyhedron
-// Polyhedron Dual(const Polyhedron& P)
-// {
-	// // Initialize dual polyhedron
-	// Polyhedron Q;
-	
-	// // Assign its ID
-	// Q.id = P.id + 2;
-	
-	// // Reserve correct amount of space
-	// Q.vertices.reserve(P.numFaces());
-	// Q.edges.reserve(P.numEdges());
-	// Q.faces.reserve(P.numVertices());
-	
-	// // Create vertices of the dual polyhedron
-	// // They are the barycenters of P's faces
-
-	
-	// // Iterate along faces to create Q's vertices
-	// for(const auto& f : P.faces)
-	// {
-		// // Initialize dual's vertex
-		// Vertex v_dual = Barycenter(P, f.id);
-		
-		// // Normalize the vertex
-		// normalizeVertex(v_dual);
-		
-		// // Add vertex to Q
-		// Q.vertices.push_back(v_dual);
-	// }
-	
-	// // Iterate along P's vertices
-	// for(auto& v : P.vertices)
-	// {
-		// // Initialize dual's face
-		// Face f_dual;
-		
-		// // Set the correct ID
-		// f_dual.id = v.id;
+	}
+}
 
 
+// Function that creates the dual of the polyhedron
+Polyhedron Dual(const Polyhedron& P)
+{
+	// Initialize dual polyhedron
+	Polyhedron Q;
+	
+	// Assign its ID
+	Q.id = P.id + 2;
+	
+	// Reserve correct amount of space
+	Q.vertices.reserve(P.numFaces());
+	Q.edges.reserve(P.numEdges());
+	Q.faces.reserve(P.numVertices());
+	
+	// Create vertices of the dual polyhedron
+	// They are the barycenters of P's faces
+
+	
+	// Iterate along faces to create Q's vertices
+	for(const auto& f : P.faces)
+	{
+		// Initialize dual's vertex
+		Vertex v_dual = Barycenter(P, f.id);
+		
+		// Normalize the vertex
+		normalizeVertex(v_dual);
+		
+		// Add vertex to Q
+		Q.vertices.push_back(v_dual);
+	}
+	
+	// Iterate along P's vertices
+	for(auto& v : P.vertices)
+	{
+		// Initialize dual's face
+		Face f_dual;
+		
+		// Set the correct ID
+		f_dual.id = v.id;
+
+
 		
 		
-	// }
+	}
 		
 	
-	// return Q;
-// }
+	return Q;
+}
