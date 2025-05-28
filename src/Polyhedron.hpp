@@ -1,6 +1,7 @@
 #pragma once
 
 #include <iostream>
+#include <fstream>
 #include <vector>
 #include <iostream>
 #include <sstream>
@@ -23,6 +24,8 @@ struct Vertex
 {
 	unsigned int id;
 	Vector3d coords;
+	vector<unsigned int> edgeNeighbours; // IDs of adjacent edges
+	vector<unsigned int> faceNeighbours; // IDs of adjacent faces
 	bool shortPath = 0;
 };
 
@@ -32,6 +35,7 @@ struct Edge
 	unsigned int id;
 	unsigned int origin;
 	unsigned int end;
+	vector<unsigned int> faceNeighbours; // IDs of adjacent faces
 	bool shortPath = 0;
 };
 

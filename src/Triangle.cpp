@@ -45,7 +45,7 @@ unsigned int addEdgeIfMissing(Polyhedron& P, unsigned int id1, unsigned int id2)
 	if (id1 >= P.numVertices() || id2 >= P.numVertices())
 	{
 		cerr << "Error: invalid edge" << endl;
-		return -1;
+		return -1; // max unsigned int
 	}
 	
 	// Check if the edge is valid
@@ -140,7 +140,7 @@ Polyhedron TriangleClassI(const Polyhedron& P_old, const unsigned int& val)
 		
 		// Create new vertices
 
-		// Map that associates (i,j) indices with vertices' IDs
+		// Auxiliary map that associates (i,j) indices with vertices' IDs
 		map<pair<unsigned int, unsigned int>, unsigned int> Vij;
 
 		// (i,j) are the barycentric coordinates

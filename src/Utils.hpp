@@ -21,6 +21,7 @@ Polyhedron Icosahedron();
 // Function that exports the polyhedron for Paraview (Utils.cpp)
 void exportPolyhedron(const Polyhedron& P);
 
+bool writeOutput(const Polyhedron& P);
 
 ///// Geometry.cpp /////
 
@@ -29,6 +30,9 @@ void normalizeVertex(Vertex& v);
 
 // Function which computes the barycenter of a face (Geometry.cpp)
 Vertex Barycenter(const Polyhedron& P, const unsigned int& f_id);
+
+// Function which finds the neighbours of each vertex and edge
+void getNeighbours(Polyhedron& P);
 
 // Function that creates the dual of the polyhedron (Geometry.cpp)
 Polyhedron Dual(const Polyhedron& P);

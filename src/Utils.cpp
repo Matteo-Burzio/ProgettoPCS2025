@@ -276,3 +276,112 @@ void exportPolyhedron(const Polyhedron& P)
 
 }
 
+
+// Function which writes output files in the requested format
+bool writeOutput(const Polyhedron& P)
+{
+	// Cells 0D
+
+	// Initialize output file stream
+	ofstream ofs_cell0D("Cell0Ds.txt");
+
+	// Check if it was created correctly
+	if(ofs_cell0D.fail())
+	{
+		cerr << "File \"Cell0Ds.txt\" cannot be created." << endl;
+		return false;
+	}
+
+	// Write first line in the file
+	ofs_cell0D << "id;X;Y;Z;SP" << endl;
+
+	// Iterate along vertices of the polyhedron
+	for(const auto& v : P.vertices)
+	{
+		ofs_cell0D << v.id << ";"
+					<< v.coords[0] << ";"
+					<< v.coords[1] << ";"
+					<< v.coords[2] << ";"
+					<< v.shortPath << endl;
+	}
+
+	// Close file
+	ofs_cell0D.close();
+
+
+	// Cells 1D
+
+	// Initialize output file stream
+	ofstream ofs_cell1D("Cell1Ds.txt");
+
+	// Check if it was created correctly
+	if(ofs_cell1D.fail())
+	{
+		cerr << "File \"Cell1Ds.txt\" cannot be created." << endl;
+		return false;
+	}
+
+	// Write first line in the file
+	ofs_cell1D << "id;origin;end;SP" << endl;
+
+	// Iterate along edges of the polyhedron
+	for(const auto& e : P.edges)
+	{
+		ofs_cell1D << e.id << ";"
+					<< e.origin << ";"
+					<< e.end << ";"
+					<< e.shortPath << endl;
+	}
+	
+	// Close file
+	ofs_cell1D.close();
+
+
+	//Cells 2D
+
+	// Initialize output file stream
+	ofstream ofs_cell2D("Cell2Ds.txt");
+
+	// Check if it was created correctly
+	if(ofs_cell2D.fail())
+	{
+		cerr << "File \"Cell2Ds.txt\" cannot be created." << endl;
+		return false;
+	}
+
+	// Write first line in the file
+	ofs_cell2D << "id;NumVertices;Vertices;NumEdges;Edges" << endl;
+
+	// da completare
+
+	// Close file
+	ofs_cell2D.close();
+
+
+	//Cells 3D
+
+	// Initialize output file stream
+	ofstream ofs_cell3D("Cell3Ds.txt");
+
+	// Check if it was created correctly
+	if(ofs_cell3D.fail())
+	{
+		cerr << "File \"Cell3Ds.txt\" cannot be created." << endl;
+		return false;
+	}
+
+	// da completare
+
+	// Close file
+	ofs_cell3D.close();
+
+
+
+
+
+
+	
+
+	return true;
+
+}

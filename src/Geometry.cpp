@@ -39,6 +39,56 @@ Vertex Barycenter(const Polyhedron& P, const unsigned int& f_id)
 	return bc;
 }
 
+// Function which finds the neighbours of each vertex and edge
+void getNeighbours(Polyhedron& P)
+{
+	// iterate along vertices of the polyhedron
+	for(const auto& v : P.vertices)
+	{
+		for(const auto& f : P.faces)
+		{
+			if(find(f.idVertices.begin(), f.idVertices.end(), v.id) != f.idVertices.end())
+			{
+				v.faceNeighbours.push_back(f.id);
+			}
+		}
+
+		// Get an arbitrary face to start from
+		unsigned int id_f0 = v.faceNeighbours[0];
+
+		for(const auto& id_e : P.faces[id_f0].idEdges)
+		{
+			if((v.id == P.edges[id_e].origin) || (v.id == P.edges[id_e].end))
+			{
+				v.edgeNeighbours.push_back(id_e);
+			}
+		}
+
+		unsigned int i=1;
+		while (v.edgeNeighbours[i] != v.edgeNeighbours[0])
+		{
+			unsigned int id_fi = v.faceNeighbours[i];
+
+			for(const auto& id_e : P.faces[id_fi].idEdges)
+			{
+				if((v.id == P.edges[id_e].origin) || (v.id == P.edges[id_e].end))
+				{
+					if (find(v.adgeNeighbours.begin(), v.edgeNeighbours.end(), id_e) == v.edgeNeighbours.end())
+					v.edgeNeighbours.push_back(id_e);
+				}
+			}
+
+
+
+
+
+
+			i++;
+		}
+
+	}
+}
+
 
 // Function that creates the dual of the polyhedron
 Polyhedron Dual(const Polyhedron& P)
@@ -56,6 +106,7 @@ Polyhedron Dual(const Polyhedron& P)
 	
 	// Create vertices of the dual polyhedron
 	// They are the barycenters of P's faces
+
 	
 	// Iterate along faces to create Q's vertices
 	for(const auto& f : P.faces)
@@ -70,7 +121,7 @@ Polyhedron Dual(const Polyhedron& P)
 		Q.vertices.push_back(v_dual);
 	}
 	
-	//
+	// Iterate along P's vertices
 	for(const auto& v : P.vertices)
 	{
 		// Initialize dual's face
@@ -79,14 +130,7 @@ Polyhedron Dual(const Polyhedron& P)
 		// Set the correct ID
 		f_dual.id = v.id;
 
-		// Get IDs of vertices of the dual's face
-		for(const auto& f : P.faces)
-		{
-			if(find(f.idVertices.begin(), f.idVertices.end(), v.id) != f.idVertices.end())
-			{
-				f_dual.idVertices.push_back(f.id);
-			}				
-		}
+
 		
 		
 	}

@@ -68,6 +68,9 @@ int main(int argc, char *argv[])
 		normalizeVertex(v);
 	}
 	
+	// Get neighbours of each vertex and edge
+	getNeighbours(P);
+
 	// Create the dual polyhedron, if needed
 	if(p != 3)
 	{
@@ -112,9 +115,14 @@ int main(int argc, char *argv[])
 	}
 
 
-	// Export for Paraview and write output files
+	// Export for Paraview
 	exportPolyhedron(P);
 
+	// Write output files
+	if(!writeOutput(P))
+	{
+		return 1;
+	}
 
 	return 0;
 	
