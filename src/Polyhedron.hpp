@@ -25,8 +25,8 @@ struct Vertex
 {
 	unsigned int id;
 	Vector3d coords;
-	vector<unsigned int> edgeNeighbours; // IDs of adjacent edges
-	vector<unsigned int> faceNeighbours; // IDs of adjacent faces
+	vector<unsigned int> edgeNeighbors; // IDs of adjacent edges
+	vector<unsigned int> faceNeighbors; // IDs of adjacent faces
 	bool shortPath = false;
 };
 
@@ -36,7 +36,7 @@ struct Edge
 	unsigned int id;
 	unsigned int origin;
 	unsigned int end;
-	vector<unsigned int> faceNeighbours; // IDs of adjacent faces
+	vector<unsigned int> faceNeighbors; // IDs of adjacent faces
 	bool shortPath = false;
 };
 

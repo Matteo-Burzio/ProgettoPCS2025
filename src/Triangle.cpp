@@ -39,20 +39,20 @@ unsigned int addVertexIfMissing(Polyhedron& P, const Vector3d coords_V)
 
 
 // Function which adds missing edges
-unsigned int addEdgeIfMissing(Polyhedron& P, unsigned int id1, unsigned int id2)
+unsigned int addEdgeIfMissing(Polyhedron& P, unsigned int id1, unsigned int id2, unsigned int id_e)
 {
 	// Check if vertices exists in the polyhedron
 	if (id1 >= P.numVertices() || id2 >= P.numVertices())
 	{
 		cerr << "Error: invalid edge" << endl;
-		return -1; // max unsigned int
+		return numeric_limits<unsigned int>::max(); // max unsigned int
 	}
 	
 	// Check if the edge is valid
 	if (id1 == id2)
 	{
 		cerr << "Error: invalid edge" << endl;
-		return -1;
+		return numeric_limits<unsigned int>::max();
 	}
 	
 	
@@ -72,9 +72,27 @@ unsigned int addEdgeIfMissing(Polyhedron& P, unsigned int id1, unsigned int id2)
 
 	// Create the edge if it doesn't exist yet
 	Edge e_new;
-
-	// Set correct ID (first available number)
-	e_new.id = P.numEdges();
+	
+	// Assign the correct ID
+	if (id_e != numeric_limits<unsigned int>::max())
+	{
+		// Check if the ID is already used
+		for (const auto& existing : P.edges)
+		{
+			if (existing.id == id_e)
+			{
+				cerr << "Error: forced ID already used" << endl;
+				return numeric_limits<unsigned int>::max();
+			}
+		}
+		// Set the requested ID
+		e_new.id = id_e;
+	}
+	else
+	{
+		// Set the first available number
+		e_new.id = P.numEdges();
+	}
 
 	// Set origin and end to current vertices
 	e_new.origin = id1;
@@ -101,14 +119,14 @@ Polyhedron TriangleClassI(const Polyhedron& P_old, const unsigned int& val)
 	unsigned int T = val * val;
 
 	// Tetrahedron
-	if(P_old.numVertices() == 4)
+	if(P_old.id == 0)
 	{
 		P.vertices.reserve(2 * T + 2);
 		P.edges.reserve(6 * T);
 		P.faces.reserve(4 * T);
 	}
 	// Octahedron
-	else if (P_old.numVertices() == 6)
+	else if (P_old.id == 1)
 	{
 		P.vertices.reserve(4 * T + 2);
 		P.edges.reserve(12 * T);

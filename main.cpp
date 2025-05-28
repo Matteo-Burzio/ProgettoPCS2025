@@ -70,14 +70,9 @@ int main(int argc, char *argv[])
 		normalizeVertex(v);
 	}
 	
-	// // Get neighbours of each vertex and edge
-	// getNeighbours(P);
+	// // Get neighbors of each vertex and edge
+	// getNeighbors(P);
 
-	// Create the dual polyhedron, if needed
-	// if(p != 3)
-	// {
-		// Polyhedron Q = Dual(P);   finchè la funzione non è scritta in file cpp non può essere eseguita
-	// }
 	
 
 	// Shortest path
@@ -117,8 +112,21 @@ int main(int argc, char *argv[])
 	}
 
 
-	// Export for Paraview
-	exportPolyhedron(P);
+	
+	
+	// Create the dual polyhedron, if needed
+	if(p != 3)
+	{
+		Polyhedron Q = Dual(P);
+		exportPolyhedron(Q);
+	}
+	else
+	{
+		// Export the polyhedron
+		exportPolyhedron(P);
+	}
+
+
 
 	// Write output files
 	if(!writeOutput(P))
