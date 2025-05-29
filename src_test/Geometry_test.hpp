@@ -53,7 +53,7 @@ TEST(GeometryTest, BarycenterComputation)
 
 TEST(DualTest, NeighborsComputation)
 {
-
+	
 }
 
 
@@ -61,6 +61,8 @@ TEST(DualTest, DualComputation)
 {
 	// Create a polyhedron object
 	Polyhedron P = Tetrahedron();
+	getVertexNeighbors(P);
+	getEdgeNeighbors(P);
 	
 	// Compute the dual (tetrahedron)
 	Polyhedron Q = Dual(P);

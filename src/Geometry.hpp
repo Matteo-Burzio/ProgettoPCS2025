@@ -10,7 +10,8 @@ void normalizeVertex(Vertex& v);
 Vertex Barycenter(const Polyhedron& P, const unsigned int& f_id);
 
 // Function which finds the neighbors of each vertex and edge
-void getNeighbors(Polyhedron& P);
+void getVertexNeighbors(Polyhedron& P);
+void getEdgeNeighbors(Polyhedron& P);
 
 // Function that creates the dual of the polyhedron (Geometry.cpp)
 Polyhedron Dual(const Polyhedron& P);

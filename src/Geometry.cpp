@@ -40,134 +40,134 @@ Vertex Barycenter(const Polyhedron& P, const unsigned int& f_id)
 	return bc;
 }
 
-// Function which finds the neighbors of each vertex and edge
-void getNeighbors(Polyhedron& P)
-{
-	// iterate along vertices of the polyhedron
-	for(auto& v : P.vertices)
-	{
-		// Initialize a list of IDs of faces
-		list<unsigned int> adjacentFaces_id;
 
-		// Find all faces containing the vertex
-		for(const auto& f: P.faces)
+/////////////////////////////////////////////////////////////////////////////
+
+
+void getVertexNeighbors(Polyhedron& P)
+{
+	// Iterate along the vertices of the Polyhedron
+	for (auto& v : P.vertices)
+	{
+		// Initilize the vector for the faces that contain the vertex (not in order)
+		vector<unsigned int> incidentFaces;
+
+		// reserve per incidentFaces ??
+		
+		// Find all the faces that contain the vertex
+		for (const auto& f : P.faces)
 		{
 			if (find(f.idVertices.begin(), f.idVertices.end(), v.id) != f.idVertices.end())
 			{
-				adjacentFaces_id.push_back(f.id);
+				// Add the face to the vector
+				incidentFaces.push_back(f.id);
 			}
 		}
 
-		// Get first element in the list (arbitrary)
-		unsigned int currentFace_id = adjacentFaces_id.front();
-		adjacentFaces_id.pop_front();
-		v.faceNeighbors.push_back(currentFace_id);
+		// Initialize vectors for the faces and adges that contain the vertex (in order)
+		vector<unsigned int> orderedFaces;
+		vector<unsigned int> orderedEdges;
 
-		// Set a flag to know if to keeping iterating
-		// Set to true to enter the while loop
-		bool foundNext = true;
+		// Choose an arbitrary face to start with and add it to the ordered faces
+		orderedFaces.push_back(incidentFaces.front()); //////////////////////////////////
+		
+		// Delete the face from the unordered faces
+		incidentFaces.erase(incidentFaces.begin()); /////////////////////////////////////
 
-		// Iterate until the list is empty
-		while(!adjacentFaces_id.empty() && foundNext)
+		// Iterate until the vector of the unorderes faces is empty
+		while (!incidentFaces.empty())
 		{
-			foundNext = false; // set to false
+			// l'ultima faccia che ho messo in quello ordinato
+			Face& currentFace = P.faces[orderedFaces.back()];
 
-			// Iterate along current face's edges
-			for(unsigned int e_id : P.faces[currentFace_id].idEdges)
+			// cerco la prossima faccia adiacente che condivide un edge e contiene il vertice
+			for (auto it = incidentFaces.begin(); it != incidentFaces.end(); ++it)
 			{
-				// If both origin and end are not the current vertex,
-				// skip to next edge of current face
-				if((P.edges[e_id].origin != v.id) && (P.edges[e_id].end))
+				// faccia che devo controllare
+				Face& candidate = P.faces[*it];
+
+				// devono condividere un edge che contiene v.id
+				for (unsigned int e_id : currentFace.idEdges)
 				{
-					continue;
+					// lato che devo controllare
+					Edge& edge = P.edges[e_id];
+
+					// edge deve contenere v
+					if (edge.origin != v.id && edge.end != v.id)
+					{
+						continue;
+					}
+
+					if (find(candidate.idEdges.begin(), candidate.idEdges.end(), e_id)
+						!= candidate.idEdges.end() &&
+						find(candidate.idVertices.begin(), candidate.idVertices.end(), v.id)
+						!= candidate.idVertices.end())
+					{
+
+						// aggiungo faccia e lato
+						orderedFaces.push_back(*it);
+						orderedEdges.push_back(e_id);
+						incidentFaces.erase(it);
+						break;
+					}
 				}
+			}
+		}
 
-				// Find another face in the list that has both vertex v and edge e
-				for(const auto& f_id : adjacentFaces_id)
-				{
-					if((find(P.faces[f_id].idVertices.begin(), P.faces[f_id].idVertices.end(), v.id) != P.faces[f_id].idVertices.end()) &&
-						(find(P.faces[f_id].idEdges.begin(), P.faces[f_id].idEdges.end(), e_id) != P.faces[f_id].idEdges.end()))
-						{
-							// Update current face
-							currentFace_id = f_id;
+		// aggiungo l'ultimo lato che serve per chiudere il cerchio (collega la prima e l'ultima faccia)
+		Face& firstFace = P.faces[orderedFaces.front()];
+		Face& lastFace = P.faces[orderedFaces.back()];
+		for (unsigned int e_id : firstFace.idEdges)
+		{
+			Edge& edge = P.edges[e_id];
+			if ((edge.origin == v.id || edge.end == v.id) &&
+				find(lastFace.idEdges.begin(), lastFace.idEdges.end(), e_id) != lastFace.idEdges.end())
+			{
+				orderedEdges.push_back(e_id);
+				break;
+			}
+		}
 
-							// Add the vertex ID to v's neighbors
-							v.edgeNeighbors.push_back(e_id);
+		// salvo gli ID ordinati
+		v.faceNeighbors = orderedFaces;
+		v.edgeNeighbors = orderedEdges;
+	}
+}
 
-							// Add the face ID to v's neighbors
-							v.faceNeighbors.push_back(f_id);
 
-							// Remove the face from the list
-							adjacentFaces_id.remove(f_id);
 
-							// Set flag to true
-							foundNext = true;
 
-							break;
-						}
-
-				}
-
-				// Stopiterating along edges when next face is found
-				if(foundNext)
+void getEdgeNeighbors(Polyhedron& P)
+{
+	for (auto& e : P.edges)
+	{
+		// controllo le facce
+		for (const auto& f : P.faces)
+		{
+			if (find(f.idEdges.begin(), f.idEdges.end(), e.id) != f.idEdges.end())
+			{
+				e.faceNeighbors.push_back(f.id);
+				// devo trovare 2 facce e evito che faccia cicli inutili
+				if (e.faceNeighbors.size() == 2)
 				{
 					break;
 				}
 			}
 		}
-
-		// Last edge???? (da finire)
-
-
-
-
-
-
-
-
-
-
-		////////////////////////////////// Scritto in classe:
-		
-		// for(const auto& f : P.faces)
-		// {
-			// if(find(f.idVertices.begin(), f.idVertices.end(), v.id) != f.idVertices.end())
-			// {
-				// v.faceNeighbors.push_back(f.id);
-			// }
-		// }
-
-		// // Get an arbitrary face to start from
-		// unsigned int id_f0 = v.faceNeighbors[0];
-
-		// for(const auto& id_e : P.faces[id_f0].idEdges)
-		// {
-			// if((v.id == P.edges[id_e].origin) || (v.id == P.edges[id_e].end))
-			// {
-				// v.edgeNeighbors.push_back(id_e);
-			// }
-		// }
-
-		// unsigned int i=1;
-		// while (v.edgeNeighbors[i] != v.edgeNeighbors[0])
-		// {
-			// unsigned int id_fi = v.faceNeighbors[i];
-
-			// for(const auto& id_e : P.faces[id_fi].idEdges)
-			// {
-				// if((v.id == P.edges[id_e].origin) || (v.id == P.edges[id_e].end))
-				// {
-					// if (find(v.edgeNeighbors.begin(), v.edgeNeighbors.end(), id_e) == v.edgeNeighbors.end())
-					// v.edgeNeighbors.push_back(id_e);
-				// }
-			// }
-			// i++;
-		// }
-		////////////////////////////////////////////
-
-
 	}
 }
+
+
+
+
+
+
+
+
+
+
+
+/////////////////////////////////////////////////////////////////////////////
 
 
 // Function that creates the dual of a polyhedron
