@@ -70,8 +70,9 @@ int main(int argc, char *argv[])
 		normalizeVertex(v);
 	}
 	
-	// // Get neighbors of each vertex and edge
-	// getNeighbors(P);
+	// Get neighbors of each vertex and edge
+	//getVertexNeighbors(P);
+	//getEdgeNeighbors(P);
 
 	
 
@@ -112,8 +113,6 @@ int main(int argc, char *argv[])
 	}
 
 
-	
-	
 	// Create the dual polyhedron, if needed
 	if(p != 3)
 	{
