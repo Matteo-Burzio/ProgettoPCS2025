@@ -267,10 +267,10 @@ void exportPolyhedron(const Polyhedron& P)
 
 	// Export in the correct format
 	Gedim::UCDUtilities utilities;
-	utilities.ExportPoints("./Cell0Ds.inp",
+	utilities.ExportPoints("./aaaCell0Ds.inp",
 						   coordsCell0D);
 
-	utilities.ExportSegments("./Cell1Ds.inp",
+	utilities.ExportSegments("./aaaCell1Ds.inp",
 							 coordsCell0D,
 							 extremaCell1D);
 
