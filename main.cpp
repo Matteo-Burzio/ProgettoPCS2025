@@ -74,9 +74,9 @@ int main(int argc, char *argv[])
 	// Get neighbors of each vertex and edge
 	getVertexNeighbors(P);
 	getEdgeNeighbors(P);
-
 	
 
+	
 	// Shortest path
 	
 	// Create graph

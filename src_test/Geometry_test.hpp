@@ -53,7 +53,44 @@ TEST(GeometryTest, BarycenterComputation)
 
 TEST(DualTest, NeighborsComputation)
 {
-	
+	// Create a tetrahedron
+	Polyhedron P = Tetrahedron();
+
+	// Get vertex neighbors
+	getVertexNeighbors(P);
+
+	// Test vertex 0's neighbors
+	ASSERT_EQ(P.vertices[0].edgeNeighbors, vector<unsigned int>({0, 2, 3}));
+	ASSERT_EQ(P.vertices[0].faceNeighbors, vector<unsigned int>({0, 1, 2}));
+
+	// Test vertex 1's neighbors
+	ASSERT_EQ(P.vertices[1].edgeNeighbors, vector<unsigned int>({0, 1, 4}));
+	ASSERT_EQ(P.vertices[1].faceNeighbors, vector<unsigned int>({0, 2, 3}));
+
+	// Test vertex 2's neighbors
+	ASSERT_EQ(P.vertices[2].edgeNeighbors, vector<unsigned int>({1, 2, 5}));
+	ASSERT_EQ(P.vertices[2].faceNeighbors, vector<unsigned int>({0, 1, 3}));
+
+	// Test vertex 3's neighbors
+	ASSERT_EQ(P.vertices[3].edgeNeighbors, vector<unsigned int>({3, 4, 5}));
+	ASSERT_EQ(P.vertices[3].faceNeighbors, vector<unsigned int>({1, 2, 3}));
+}
+
+
+TEST(DualTest, EdgeNeighborsComputation)
+{
+	// Create a polyhedron
+	Polyhedron P = Tetrahedron();
+
+	// Get vertex neighbors
+	getVertexNeighbors(P);
+	getEdgeNeighbors(P);
+
+	// Test edge neighbors
+	for (const auto& e : P.edges)
+	{
+		ASSERT_EQ(e.faceNeighbors.size(), 2);
+	}
 }
 
 
@@ -85,6 +122,4 @@ TEST(DualTest, DualComputation)
 		ASSERT_EQ(f.idVertices.size(), 3);
 		ASSERT_EQ(f.idEdges.size(), 3);
 	}
-
-	// Check the neighbors
 }

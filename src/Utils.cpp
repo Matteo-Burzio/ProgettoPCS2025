@@ -293,7 +293,7 @@ bool writeOutput(const Polyhedron& P)
 	}
 
 	// Write first line in the file
-	ofs_cell0D << "id;X;Y;Z;SP" << endl;
+	ofs_cell0D << "id;X;Y;Z" << endl;
 
 	// Iterate along vertices of the polyhedron
 	for(const auto& v : P.vertices)
@@ -301,8 +301,7 @@ bool writeOutput(const Polyhedron& P)
 		ofs_cell0D << v.id << ";"
 					<< v.coords[0] << ";"
 					<< v.coords[1] << ";"
-					<< v.coords[2] << ";"
-					<< v.shortPath << endl;
+					<< v.coords[2] << endl;
 	}
 
 	// Close file
@@ -322,15 +321,14 @@ bool writeOutput(const Polyhedron& P)
 	}
 
 	// Write first line in the file
-	ofs_cell1D << "id;origin;end;SP" << endl;
+	ofs_cell1D << "id;origin;end" << endl;
 
 	// Iterate along edges of the polyhedron
 	for(const auto& e : P.edges)
 	{
 		ofs_cell1D << e.id << ";"
 					<< e.origin << ";"
-					<< e.end << ";"
-					<< e.shortPath << endl;
+					<< e.end << endl;
 	}
 	
 	// Close file
@@ -352,7 +350,27 @@ bool writeOutput(const Polyhedron& P)
 	// Write first line in the file
 	ofs_cell2D << "id;NumVertices;Vertices;NumEdges;Edges" << endl;
 
-	// da completare
+	// Iterate along faces of the polyhedron
+	for(const auto& f : P.faces)
+	{
+		ofs_cell2D << f.id << ";"
+					<< f.numVertices() << ";";
+		
+		for(unsigned int i = 0; i < f.numVertices(); i++)
+		{
+			ofs_cell2D << f.idVertices[i] << ";";
+		}
+
+		ofs_cell2D << f.numEdges() << ";";
+
+		for(unsigned int i = 0; i < f.numEdges() - 1; i++)
+		{
+			ofs_cell2D << f.idEdges[i] << ";";
+		}
+
+		// Last one is inserted separately to not put ";" afterwards
+		ofs_cell2D << f.idEdges[f.numEdges() - 1] << endl;
+	}
 
 	// Close file
 	ofs_cell2D.close();
@@ -370,16 +388,30 @@ bool writeOutput(const Polyhedron& P)
 		return false;
 	}
 
-	// da completare
+	// Write first line in the file
+	ofs_cell3D << "id;NumVertices;Vertices;NumEdges;Edges;NumFaces;Faces" << endl;
+
+	// Iterate along the polyhedron
+	ofs_cell3D << P.id << ";"
+				<< P.numVertices() << ";";
+	
+	for(unsigned int i = 0; i < P.numVertices(); i++)
+	{
+		ofs_cell3D << P.vertices[i].id << ";";
+	}
+
+	ofs_cell3D << P.numEdges() << ";";
+
+	for(unsigned int i = 0; i < P.numEdges() - 1; i++)
+	{
+		ofs_cell3D << P.edges[i].id << ";";
+	}
+
+	// Last one is inserted separately to not put ";" afterwards
+	ofs_cell3D << P.edges[P.numEdges() - 1].id << endl;
 
 	// Close file
 	ofs_cell3D.close();
-
-
-
-
-
-
 	
 
 	return true;

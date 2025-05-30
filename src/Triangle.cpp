@@ -51,7 +51,7 @@ unsigned int addEdgeIfMissing(Polyhedron& P, unsigned int id1, unsigned int id2,
 	// Check if the edge is valid
 	if (id1 == id2)
 	{
-		cerr << "Error: invalid edge" << endl;
+		cerr << "Error: degenerate edge" << endl;
 		return numeric_limits<unsigned int>::max();
 	}
 	
