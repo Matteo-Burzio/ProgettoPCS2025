@@ -49,6 +49,7 @@ int main(int argc, char *argv[])
 		initial_P = Icosahedron();
 	}
 
+
 	// Triangulate the faces of the polyhedron 
 	if(flag == 1)
 	{
@@ -71,8 +72,8 @@ int main(int argc, char *argv[])
 	}
 	
 	// Get neighbors of each vertex and edge
-	//getVertexNeighbors(P);
-	//getEdgeNeighbors(P);
+	getVertexNeighbors(P);
+	getEdgeNeighbors(P);
 
 	
 

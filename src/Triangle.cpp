@@ -106,12 +106,17 @@ unsigned int addEdgeIfMissing(Polyhedron& P, unsigned int id1, unsigned int id2,
 
 
 
-
 // Function for Class I triangulation of a polyhedron with parameter val (val > 0)
 Polyhedron TriangleClassI(const Polyhedron& P_old, const unsigned int& val)
 {
 	// Initialize a new polyhedron
 	Polyhedron P;
+
+	// If val = 1, no triangulation is needed
+	if(val == 1)
+	{
+		return P_old;
+	}
 	
 	// Allocate the correct amount of space for the polyhedron
 

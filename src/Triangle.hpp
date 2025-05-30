@@ -3,6 +3,9 @@
 #include "Polyhedron.hpp"
 
 
+
+// versioni nuove
+
 // Functions that checks if the new vertex already exists (Triangle.cpp)
 unsigned int addVertexIfMissing(Polyhedron& P, const Vector3d coords_V);
 
