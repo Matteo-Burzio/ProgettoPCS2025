@@ -155,8 +155,8 @@ void getVertexNeighbors(Polyhedron& P)
 	// Iterate along the vertices of the Polyhedron
 	for (auto& v : P.vertices)
 	{
-		// Initilize a list of faces that contain the vertex (not in order)
-		list<unsigned int> incidentFaces;
+		// Initilize a vector of faces that contain the vertex (not in order)
+		vector<unsigned int> incidentFaces;
 
 		// reserve per incidentFaces ??
 		
@@ -178,11 +178,10 @@ void getVertexNeighbors(Polyhedron& P)
 		{
 			// Add first face to neighbors and remove it from the list
 			v.faceNeighbors.push_back(incidentFaces.front());
-			incidentFaces.pop_front();
 		}
 
-		// Iterate until the list of the unorderes faces is empty
-		while (!incidentFaces.empty())
+		// Iterate along adjacent faces
+		for(unsigned int i = 0; i < incidentFaces.size(); i++)
 		{
 			// Get a reference to the last neighboring face
 			Face& currentFace = P.faces[v.faceNeighbors.back()];
@@ -207,17 +206,20 @@ void getVertexNeighbors(Polyhedron& P)
 					}
 
 					// If the edge is in the current face and the vertex is in the current edge
-					if (find(candidate.idEdges.begin(), candidate.idEdges.end(), e_id)
-						!= candidate.idEdges.end() &&
-						find(candidate.idVertices.begin(), candidate.idVertices.end(), v.id)
-						!= candidate.idVertices.end())
+					if ((find(candidate.idEdges.begin(), candidate.idEdges.end(), e_id)
+						!= candidate.idEdges.end()) &&
+						(find(candidate.idVertices.begin(), candidate.idVertices.end(), v.id)
+						!= candidate.idVertices.end()))
 					{
 
-						// Add the face and the edge to the vectors
-						v.faceNeighbors.push_back(f_id);
-						v.edgeNeighbors.push_back(e_id);
-						incidentFaces.remove(f_id);
-
+						// Add the face and the edge to the vectors, if not already there
+						if ((find(v.faceNeighbors.begin(), v.faceNeighbors.end(), f_id) != v.faceNeighbors.end()) &&
+						(find(v.edgeNeighbors.begin(), v.edgeNeighbors.end(), e_id) != v.edgeNeighbors.end() ))
+						{
+							v.faceNeighbors.push_back(f_id);
+							v.edgeNeighbors.push_back(e_id);
+						}
+						
 						// If found, stop iterating
 						break;
 					}
