@@ -402,13 +402,20 @@ bool writeOutput(const Polyhedron& P)
 
 	ofs_cell3D << P.numEdges() << ";";
 
-	for(unsigned int i = 0; i < P.numEdges() - 1; i++)
+	for(unsigned int i = 0; i < P.numEdges(); i++)
 	{
 		ofs_cell3D << P.edges[i].id << ";";
 	}
+	
+	ofs_cell3D << P.numFaces() << ";";
+
+	for(unsigned int i = 0; i < P.numFaces() - 1; i++)
+	{
+		ofs_cell3D << P.faces[i].id << ";";
+	}
 
 	// Last one is inserted separately to not put ";" afterwards
-	ofs_cell3D << P.edges[P.numEdges() - 1].id << endl;
+	ofs_cell3D << P.faces[P.numFaces() - 1].id << endl;
 
 	// Close file
 	ofs_cell3D.close();

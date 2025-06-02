@@ -121,20 +121,28 @@ int main(int argc, char *argv[])
 	{
 		Polyhedron Q = Dual(P);
 		exportPolyhedron(Q);
+		
+		// Write output files
+		if(!writeOutput(Q))
+		{
+			return 1;
+		}
 	}
 	else
 	{
 		// Export the polyhedron
 		exportPolyhedron(P);
+		
+		// Write output files
+		if(!writeOutput(P))
+		{
+			return 1;
+		}
 	}
 
 
 
-	// Write output files
-	if(!writeOutput(P))
-	{
-		return 1;
-	}
+
 
 	return 0;
 	
