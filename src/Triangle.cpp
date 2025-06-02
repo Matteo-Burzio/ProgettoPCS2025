@@ -146,6 +146,9 @@ Polyhedron TriangleClassI(const Polyhedron& P_old, const unsigned int& val)
 	}
 
 
+	// Assign the same ID as the old polyhedron
+	P.id = P_old.id;
+
 	// Iterate along faces of the platonic solid
 	for(const auto& face : P_old.faces)
 	{

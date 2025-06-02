@@ -27,7 +27,7 @@ int main(int argc, char *argv[])
 	// Check input
 	if (!check_input(argc, argv, p, q, b, c, val, flag))
 	{
-        return 1;
+		return 1;
 	}
 
 
@@ -71,9 +71,11 @@ int main(int argc, char *argv[])
 		normalizeVertex(v);
 	}
 	
+	
 	// Get neighbors of each vertex and edge
-	getVertexNeighbors(P);
 	getEdgeNeighbors(P);
+	getVertexNeighbors(P);
+
 	
 
 	

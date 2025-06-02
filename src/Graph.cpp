@@ -1,12 +1,6 @@
-#include "Utils.hpp"
+#include "Graph.hpp"
 
 
 using namespace std;
+using namespace Eigen;
 
-
-// Create the Graph struct
-
-struct Graph
-{
-	// da completare
-};

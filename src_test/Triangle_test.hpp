@@ -104,6 +104,8 @@ TEST(TriangleTest, ClassI)
 		ASSERT_LT(e.origin, P.numVertices());  // LT = Less Than
 		ASSERT_LT(e.end, P.numVertices());
 	}
+	
+	ASSERT_TRUE(P.checkFaces());
 }
 
 
