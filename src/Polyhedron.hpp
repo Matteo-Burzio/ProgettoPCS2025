@@ -13,6 +13,7 @@
 #include <list>
 #include <utility>
 #include <algorithm>
+#include <queue>
 
 #include <Eigen/Dense>
 

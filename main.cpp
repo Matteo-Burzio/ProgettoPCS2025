@@ -145,15 +145,18 @@ int main(int argc, char *argv[])
 	{
 		Graph graph = createGraph(P);
 		//Initialize weight matrix 
-		MatrixXi weights = createWeights(graph,P);
+		MatrixXi weights = createWeights(graph, P);
 		
 	}
 	else
 	{
 		Graph graph = createGraph(Q);
 		//Initialize weight matrix 
-		MatrixXi weights = createWeights(graph,Q);
+		MatrixXi weights = createWeights(graph, Q);
 	}
+
+	// Dijkstra algorithm 
+	vector<unsigned int> path = Dijkstra(graph, id_path_start, id_path_end, weights);
 
 	
 	
