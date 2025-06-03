@@ -1,4 +1,5 @@
 #include "Triangle.hpp"
+#include "Geometry.hpp"
 
 
 using namespace std;
@@ -111,6 +112,9 @@ Polyhedron TriangleClassI(const Polyhedron& P_old, const unsigned int& val)
 {
 	// Initialize a new polyhedron
 	Polyhedron P;
+	
+	// Assign the same ID as the old polyhedron
+	P.id = P_old.id;
 
 	// If val = 1, no triangulation is needed
 	if(val == 1)
@@ -145,9 +149,6 @@ Polyhedron TriangleClassI(const Polyhedron& P_old, const unsigned int& val)
 		P.faces.reserve(20 * T);
 	}
 
-
-	// Assign the same ID as the old polyhedron
-	P.id = P_old.id;
 
 	// Iterate along faces of the platonic solid
 	for(const auto& face : P_old.faces)
@@ -273,18 +274,114 @@ Polyhedron TriangleClassI(const Polyhedron& P_old, const unsigned int& val)
 
 
 
-
-
-/*
-
-
-// Function for Class II triangulation of a polyhedron with parameter a (b = c =: a > 0)
+// Function for Class II triangulation of a polyhedron with parameter a (b = c =: val > 0)
 Polyhedron TriangleClassII(const Polyhedron& P_old, const unsigned int& val)
 {
+	// Initialize a new polyhedron
+	Polyhedron P;
+	
+	// Assign the same ID as the old polyhedron
+	P.id = P_old.id;
+	
+	// Allocate the correct amount of space for the polyhedron
+
+	// Temporary variable
+	unsigned int T = 3 * val * val;
+
+	// Tetrahedron
+	if(P_old.id == 0)
+	{
+		P.vertices.reserve(2 * T + 2);
+		P.edges.reserve(6 * T);
+		P.faces.reserve(4 * T);
+	}
+	// Octahedron
+	else if (P_old.id == 1)
+	{
+		P.vertices.reserve(4 * T + 2);
+		P.edges.reserve(12 * T);
+		P.faces.reserve(8 * T);
+	}
+	// Icosahedron
+	else
+	{
+		P.vertices.reserve(10 * T + 2);
+		P.edges.reserve(30 * T);
+		P.faces.reserve(20 * T);
+	}
+
+	// Execute class I triangulation of the old polyhedron
+	Polyhedron P_I = TriangleClassI(P_old, val);
+	
+	// Get the face neighbors of the edges
+	getEdgeNeighbors(P_I);
+
+
+	// Create new vertices
+	
+	// Copy the vertices of the class I triangulation
+	P.vertices = P_I.vertices;
+	
+	// Auxiliary map that associates the face of the original polyhedron with their barycenters
+	unordered_map<unsigned int, unsigned int> f_bc;
+	
+	// Add the barycenters to the vertices of the polyhedron
+	for (const auto& f : P_I.faces)
+	{
+		// Compute the barycenters of the original polyhedron's faces
+		Vertex bc = Barycenter(P_I, f.id);
+		
+		// Assign the next available number as the ID
+		bc.id = P.numVertices();
+		
+		// Add the barycenter to the map
+		f_bc[f.id] = bc.id;
+		
+		// Add the barycenter to the polyhedron
+		P.vertices.push_back(bc);
+	}
+	
+	
+	// Create new edges and faces
+	
+	// Iterate along the edges of the original polyhedron
+	for (const auto& e : P_I.edges)
+	{
+		// Get its extrema (same IDs as the new polyhedron)
+		unsigned int idV0 = e.origin;
+		unsigned int idV1 = e.end;
+		
+		// Get the barycenters of the neighbor faces
+		unsigned int idBC0 = f_bc[e.faceNeighbors[0]];
+		unsigned int idBC1 = f_bc[e.faceNeighbors[1]];
+		
+		
+		// First triangle: v0 - BC0 - BC1
+		
+		// Add the new edges
+		unsigned int idE0 = addEdgeIfMissing(P, idV0, idBC0);
+		unsigned int idE1 = addEdgeIfMissing(P, idBC0, idBC1);
+		unsigned int idE2 = addEdgeIfMissing(P, idBC1, idV0);
+		
+		// Define the new face
+		Face f0 = {P.numFaces(), {idV0, idBC0, idBC1}, {idE0, idE1, idE2}};
+		
+		// Add the new face
+		P.faces.push_back(f0);
+		
+		
+		// Second triangle: v1 - BC0 - BC1
+		
+		// Add the new edges
+		unsigned int idE3 = addEdgeIfMissing(P, idBC0, idV1);
+		unsigned int idE4 = addEdgeIfMissing(P, idV1, idBC1);
+		
+		// Define the new face
+		Face f1 = {P.numFaces(), {idBC0, idV1, idBC1}, {idE3, idE4, idE1}};
+		
+		// Add the new face
+		P.faces.push_back(f1);
+	}
 
 	return P;
 }
-
-
-
-*/

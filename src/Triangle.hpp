@@ -13,4 +13,4 @@ unsigned int addEdgeIfMissing(Polyhedron& P, unsigned int id1, unsigned int id2,
 
 // Functions for Class I and Class II triangulation of a polyhedron (Triangle.cpp)
 Polyhedron TriangleClassI(const Polyhedron& P_old, const unsigned int& val);
-//Polyhedron TriangleClassII(const Polyhedron& P_old, const unsigned int& val);
+Polyhedron TriangleClassII(const Polyhedron& P_old, const unsigned int& val);

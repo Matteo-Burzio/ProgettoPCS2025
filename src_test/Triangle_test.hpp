@@ -79,7 +79,7 @@ TEST(AdditionTest, EdgeAddition)
 
 TEST(TriangleTest, ClassI)
 {
-	// Create a tetrahedron and perform Class I Triangulation
+	// Create a tetrahedron
 	Polyhedron P_old = Tetrahedron();
 
 	// Perform Class I triangulation with val = 2
@@ -111,5 +111,32 @@ TEST(TriangleTest, ClassI)
 
 TEST(TriangleTest, ClassII)
 {
+	// Create a tetrahedron
+	Polyhedron P_old = Tetrahedron();
+
+	// Perform Class II triangulation with val = 2
+	Polyhedron P = TriangleClassII(P_old, 2);
+
+	// We expect 26 vertices, 72 edges and 48 faces
+	ASSERT_EQ(P.numVertices(), 26);
+	ASSERT_EQ(P.numEdges(), 72);
+	ASSERT_EQ(P.numFaces(), 48);
+
+	// Check that all faces have 3 vertices and 3 edges
+	for (const auto& f : P.faces)
+	{
+		ASSERT_EQ(f.idVertices.size(), 3);
+		ASSERT_EQ(f.idEdges.size(), 3);
+	}
+
+	// Check that there are no invalid edges
+	for (const auto& e : P.edges)
+	{
+		ASSERT_NE(e.origin, e.end);            // NE = Not Equal
+		ASSERT_LT(e.origin, P.numVertices());  // LT = Less Than
+		ASSERT_LT(e.end, P.numVertices());
+	}
+
+	ASSERT_TRUE(P.checkFaces());
 	
 }
