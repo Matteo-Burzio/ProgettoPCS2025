@@ -1,6 +1,7 @@
 #include "Utils.hpp"
 #include "Triangle.hpp"
 #include "Geometry.hpp"
+#include "Graph.hpp"
 
 
 using namespace std;
@@ -76,14 +77,36 @@ int main(int argc, char *argv[])
 	getEdgeNeighbors(P);
 	getVertexNeighbors(P);
 
-	
 
+	// Initialize dual polyhedron (filled only if needed)
+	Polyhedron Q;
 	
+	// Create the dual polyhedron, if needed
+	if(p != 3)
+	{
+		Polyhedron Q = Dual(P);
+		exportPolyhedron(Q);
+		
+		// Write output files
+		if(!writeOutput(Q))
+		{
+			return 1;
+		}
+	}
+	else
+	{
+		// Export the polyhedron
+		exportPolyhedron(P);
+		
+		// Write output files
+		if(!writeOutput(P))
+		{
+			return 1;
+		}
+	}
+
+
 	// Shortest path
-	
-	// Create graph
-	
-	
 
 	// Initialize variables
 	unsigned int id_path_start; // ID of starting vertex
@@ -116,31 +139,22 @@ int main(int argc, char *argv[])
 	}
 
 
-	// Create the dual polyhedron, if needed
-	if(p != 3)
+	// Create the graph from either P or Q
+
+	if (Q.numVertices() == 0)
 	{
-		Polyhedron Q = Dual(P);
-		exportPolyhedron(Q);
-		
-		// Write output files
-		if(!writeOutput(Q))
-		{
-			return 1;
-		}
+		Graph graph = createGraph(P);
 	}
 	else
 	{
-		// Export the polyhedron
-		exportPolyhedron(P);
-		
-		// Write output files
-		if(!writeOutput(P))
-		{
-			return 1;
-		}
+		Graph graph = createGraph(Q);
 	}
 
 
+	// Fill the graph's adjacency list
+	
+	
+	
 
 
 
