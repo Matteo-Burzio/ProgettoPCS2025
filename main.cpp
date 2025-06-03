@@ -144,14 +144,17 @@ int main(int argc, char *argv[])
 	if (Q.numVertices() == 0)
 	{
 		Graph graph = createGraph(P);
+		//Initialize weight matrix 
+		MatrixXi weights = createWeights(graph,P);
+		
 	}
 	else
 	{
 		Graph graph = createGraph(Q);
+		//Initialize weight matrix 
+		MatrixXi weights = createWeights(graph,Q);
 	}
 
-
-	// Fill the graph's adjacency list
 	
 	
 	
