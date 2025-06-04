@@ -67,13 +67,13 @@ MatrixXi createWeights(const Graph& graph, const Polyhedron& pol)
 
 // Dijkstra algorithm, returns vector of IDs of visited vertices
 vector<unsigned int> Dijkstra(const Graph& graph,
-                                    unsigned int id_path_start,
-                                    unsigned int id_path_end,
-                                    MatrixXi weights)
+                                const unsigned int& id_path_start,
+                                const unsigned int& id_path_end,
+                                const MatrixXi& weights)
 {
     
     // Initialize vectors 
-    vector<unsigned int> pred;
+    vector<int> pred; // needs sign to be initialized to be -1
     vector<unsigned int> dist;
 
     unsigned int N = graph.adjacencyList.size();
@@ -102,10 +102,9 @@ vector<unsigned int> Dijkstra(const Graph& graph,
                     greater<>> PQ;
 
 
-   for (unsigned int i = 0; i < N; i++)
-   {
-    PQ.push({dist[i], i});
-   }
+   // Add first pair to the priority list
+   PQ.push({0, id_path_start});
+
 
    while(!PQ.empty())
    {
@@ -119,6 +118,11 @@ vector<unsigned int> Dijkstra(const Graph& graph,
         // Then, dequeue it
         PQ.pop();
 
+        // Stop the algorithm as soon as the end node is reached
+        if (u == id_path_end)
+        {
+            break;
+        }
         // If the node was already reached with a shorter path, skip
         if (current_dist > dist[u])
         {
@@ -135,7 +139,6 @@ vector<unsigned int> Dijkstra(const Graph& graph,
                 PQ.push({dist[w], w});
             }
         }
-
     }
 
     // Initialize requested path
@@ -148,7 +151,7 @@ vector<unsigned int> Dijkstra(const Graph& graph,
     }
 
     // Iterate following the sequence in the pred vector
-    for (unsigned int i = id_path_end; i != id_path_start; i = pred[i])
+    for (int i = id_path_end; i != id_path_start; i = pred[i])
     {
         path.push_back(i);
     }

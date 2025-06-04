@@ -94,60 +94,43 @@ int main(int argc, char *argv[])
 	// Initialize variables
 	unsigned int id_path_start; // ID of starting vertex
 	unsigned int id_path_end; // ID of ending vertex
-	
-	// (da spostare dentro la funzione)
 
-	// Get ID of starting vertex for shortest path
+
+	// Shortest path
+
 	if(argc == 7)
 	{
-		// Get value of id_path_start
-		istringstream convert_start(argv[5]);
-		if(!(convert_start >> id_path_start))
+		// Check input
+		if (!checkGraphInput(argv, id_path_start, id_path_end, P_new))
 		{
-			cerr << "Wrong value for starting ID" << endl;
 			return 1;
 		}
 
-		// Get value of id_path_end
-		istringstream convert_end(argv[6]);
-		if(!(convert_end >> id_path_end))
-		{
-			cerr << "Wrong value for ending ID" << endl;
-			return 1;
-		}
-
-		// Check if the IDs are valid
-		// (da completare)
-
-
+		// Initialize graph and weight matrix
 		Graph graph = createGraph(P_new);
-		//Initialize weight matrix 
 		MatrixXi weights = createWeights(graph, P_new);
 
-		// Dijkstra algorithm
+		// Run Dijkstra algorithm
 		vector<unsigned int> path = Dijkstra(graph, id_path_start, id_path_end, weights);
 
-		for(const auto& i : path)
+		for(unsigned int i = 0; i < path.size(); i++)
 		{
 			cout << path[i] << " ";
 		}
 		cout << endl;
-
 	}
 
 
-
-	// Export the polyhedron
+	// Export the polyhedron for Paraview
 	exportPolyhedron(P_new);
 		
-	// Write output files
+	// Write .txt output files
 	if(!writeOutput(P_new))
 	{
 		return 1;
 	}
 
 	
-
 	return 0;
 	
 }

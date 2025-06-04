@@ -12,8 +12,9 @@ bool checkPolyhedronInput(int argc, char* argv[],
 				 unsigned int &val, unsigned int &flag);
 
 // Function that check if values of graph input are correct
-bool checkInputGraph(const unsigned int& id_path_start, 
-					const unsigned int& id_path_end, 
+bool checkGraphInput(char* argv[],
+					unsigned int& id_path_start, 
+					unsigned int& id_path_end, 
 					const Polyhedron& P);
 
 // Functions that create tetrahedron, octahedron and icosahedron

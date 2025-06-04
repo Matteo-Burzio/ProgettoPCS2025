@@ -17,8 +17,8 @@ MatrixXi createWeights(const Graph& graph, const Polyhedron& pol);
 
 // Function which finds the shortest path using Diskstra's algorithm
 vector<unsigned int> Dijkstra(const Graph& graph,
-                                    unsigned int id_path_start,
-                                    unsigned int id_path_end,
-                                    MatrixXi weights);
+                                const unsigned int& id_path_start,
+                                const unsigned int& id_path_end,
+                                const MatrixXi& weights);
 
 

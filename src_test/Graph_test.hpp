@@ -70,23 +70,56 @@ TEST(TestGraph, CreateWeightsMatrix)
     
 }
 
-TEST(TestGraph, Dijkstra)
+// TEST(TestGraph, Dijkstra)
+// {
+//     // Create octahedron
+// 	Polyhedron P = Octahedron();
+// 	getEdgeNeighbors(P);
+// 	getVertexNeighbors(P);
+
+// 	// Create the graph
+// 	Graph graph = createGraph(P);
+
+//     MatrixXi weights = createWeights(graph, P);
+
+//     unsigned int id_path_start = 0;
+//     unsigned int id_path_end = 5;
+
+//     vector<unsigned int> path = Dijkstra(graph, id_path_start, id_path_end, weights);
+
+//     vector<unsigned int> v = {0, 5};
+//     ASSERT_EQ(path, v);
+// }
+
+TEST(TestGraph, Dijkstra_ShortestPath)
 {
-    // Create octahedron
-	Polyhedron P = Octahedron();
-	getEdgeNeighbors(P);
-	getVertexNeighbors(P);
+    // Create a simple polyhedron (octahedron)
+    Polyhedron P = Octahedron();
+    
+    // Initialize edge and vertex neighbor relations
+    getEdgeNeighbors(P);
+    getVertexNeighbors(P);
 
-	// Create the graph
-	Graph graph = createGraph(P);
-
+    // Build graph and weight matrix
+    Graph graph = createGraph(P);
     MatrixXi weights = createWeights(graph, P);
 
+    // Define start and end nodes
     unsigned int id_path_start = 0;
     unsigned int id_path_end = 5;
 
+    // Run Dijkstra algorithm
     vector<unsigned int> path = Dijkstra(graph, id_path_start, id_path_end, weights);
 
-    vector<unsigned int> v = {0, 5};
-    ASSERT_EQ(path, v);
+    // Expected path
+    vector<unsigned int> expected_path = {0, 5};
+
+    // Check total size of path
+    ASSERT_EQ(path.size(), expected_path.size()) << "Path size mismatch.";
+
+    // Check each individual node in the path
+    for (size_t i = 0; i < path.size(); ++i) {
+        EXPECT_EQ(path[i], expected_path[i]) << "Mismatch at index " << i;
+    }
+
 }

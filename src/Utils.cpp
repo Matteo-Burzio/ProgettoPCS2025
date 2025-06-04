@@ -92,11 +92,43 @@ bool checkPolyhedronInput(int argc, char* argv[],
 
 
 // Function that checks graph input values
-bool checkInputGraph(const unsigned int& id_path_start, 
-					const unsigned int& id_path_end, 
+bool checkGraphInput(char* argv[],
+					unsigned int& id_path_start, 
+					unsigned int& id_path_end, 
 					const Polyhedron& P)
 {
-	// da completare
+	// Get value of id_path_start
+	istringstream convert_start(argv[5]);
+	if(!(convert_start >> id_path_start))
+	{
+		cerr << "Wrong value for starting ID" << endl;
+		return false;
+	}
+
+	// Get value of id_path_end
+	istringstream convert_end(argv[6]);
+	if(!(convert_end >> id_path_end))
+	{
+		cerr << "Wrong value for ending ID" << endl;
+		return false;
+	}
+
+	// Check if inputs are coherent
+	if ((id_path_start > P.numVertices()) || (id_path_end > P.numVertices()))
+	{
+		cerr << "Out of bounds IDs" << endl;
+		return false;
+	}
+	else if(id_path_start == id_path_end)
+	{
+		cerr << "Error: starting and ending IDs are equal" << endl;
+		return false;
+	}
+
+	// Print input values
+	cout << "Starting ID: " << id_path_start <<endl;
+	cout << "Ending ID: " << id_path_end << endl;
+
 
 	return true;
 }
