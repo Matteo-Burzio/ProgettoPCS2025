@@ -5,7 +5,7 @@
 // Graph struct containing the adjacency matrix
 struct Graph
 {
-    vector<list<unsigned int>> adjacencyList;
+    vector<vector<unsigned int>> adjacencyList;
 };
 
 

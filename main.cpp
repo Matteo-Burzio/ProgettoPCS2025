@@ -58,7 +58,7 @@ int main(int argc, char *argv[])
 	}
 	else if (flag == 2)
 	{
-		// TriangleClassII(P, val);
+		//P = TriangleClassII(initial_P, val);
 	}
 	else
 	{
@@ -141,29 +141,31 @@ int main(int argc, char *argv[])
 
 	// Create the graph from either P or Q
 
-	if (Q.numVertices() == 0)
+	// Initialize variables
+	Graph graph;
+	MatrixXi weights;
+
+
+	if (Q.vertices.empty())
 	{
-		Graph graph = createGraph(P);
+		graph = createGraph(P);
 		//Initialize weight matrix 
-		MatrixXi weights = createWeights(graph, P);
+		weights = createWeights(graph, P);
 		
 	}
 	else
 	{
-		Graph graph = createGraph(Q);
+		graph = createGraph(Q);
 		//Initialize weight matrix 
-		MatrixXi weights = createWeights(graph, Q);
+		weights = createWeights(graph, Q);
 	}
 
 	// Dijkstra algorithm 
-	vector<unsigned int> path = Dijkstra(graph, id_path_start, id_path_end, weights);
+	//vector<unsigned int> path = Dijkstra(graph, id_path_start, id_path_end, weights);
 
 	
 	
 	
-
-
-
 	return 0;
 	
 }

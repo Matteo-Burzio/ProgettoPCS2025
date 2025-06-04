@@ -63,15 +63,17 @@ vector<unsigned int> Dijkstra(const Graph& graph,
                                     unsigned int id_path_end,
                                     MatrixXi weights)
 {
+    
     // Initialize vectors 
-   vector<unsigned int> pred;
-   vector<unsigned int> dist;
+    vector<unsigned int> pred;
+    vector<unsigned int> dist;
 
     unsigned int N = graph.adjacencyList.size();
 
-   // Reserve correct amount of space
-   pred.reserve(N);
-   dist.reserve(N);
+    // Reserve correct amount of space
+    // Use resize since we access the elements, they need to be  initialized
+    pred.resize(N);
+    dist.resize(N);
 
    // Fill the vectors with initial values
    for (unsigned int i = 0; i < N; i++)
@@ -91,87 +93,64 @@ vector<unsigned int> Dijkstra(const Graph& graph,
                     vector<pair<unsigned int, unsigned int>>,
                     greater<>> PQ;
 
+
    for (unsigned int i = 0; i < N; i++)
    {
-    PQ.push(dist[i], i);
+    PQ.push({dist[i], i});
    }
 
    while(!PQ.empty())
    {
         // Access element with lowest priority (distance)
-        pair<unsigned int, unsigned int> d_v = PQ.top()
+        pair<unsigned int, unsigned int> d_v = PQ.top();
 
-        // Get closest node
+        // Get current distance and node
+        unsigned int current_dist = d_v.first;
         unsigned int u = d_v.second;
 
         // Then, dequeue it
-        PQ.pop()
+        PQ.pop();
+
+        // If the node was already reached with a shorter path, skip
+        if (current_dist > dist[u])
+        {
+            continue;
+        }
 
         // For each node adjacent to u
-        for (const auto& w : graph.adjacentList[u])
+        for (const auto& w : graph.adjacencyList[u])
         {
             if (dist[w] > dist[u] + weights(u, w))
             {
                 dist[w] = dist[u] + weights(u, w);
                 pred[w] = u;
-                // decrease key
+                PQ.push({dist[w], w});
             }
         }
 
-   }
+    }
+
+    // Initialize requested path
+    vector<unsigned int> path;
+
+    // If node was not reached
+    if (dist[id_path_end] == numeric_limits<unsigned int>::max())
+    {
+        return path; // no path found
+    }
+
+    // Iterate following the sequence in the pred vector
+    for (unsigned int i = id_path_end; i != id_path_start; i = pred[i])
+    {
+        path.push_back(i);
+    }
+
+    // Add final node and reverse the order
+    path.push_back(id_path_start);
+    reverse(path.begin(), path.end());
+
+    return path;
+
 }
 
 
-// Versione da integrare
-
-// vector<unsigned int> Dijkstra(const Graph& graph,
-//                               unsigned int id_path_start,
-//                               unsigned int id_path_end,
-//                               const MatrixXi& weights)
-// {
-//     unsigned int N = graph.adjacencyList.size();
-
-//     // Initialize vectors
-//     vector<unsigned int> pred(N, -1);
-//     vector<unsigned int> dist(N, numeric_limits<unsigned int>::max());
-//     vector<bool> visited(N, false);  // To track processed nodes
-
-//     // Initialize source node
-//     pred[id_path_start] = id_path_start;
-//     dist[id_path_start] = 0;
-
-//     // Priority queue: (distance, vertex)
-//     priority_queue<pair<unsigned int, unsigned int>,
-//                    vector<pair<unsigned int, unsigned int>>,
-//                    greater<>> PQ;
-
-//     PQ.push({0, id_path_start});
-
-//     while (!PQ.empty()) {
-//         auto [curr_dist, u] = PQ.top();
-//         PQ.pop();
-
-//         // Skip already visited nodes
-//         if (visited[u]) continue;
-//         visited[u] = true;
-
-//         // Early exit if we reached the end
-//         if (u == id_path_end) break;
-
-//         // For each neighbor w of u
-//         for (unsigned int w : graph.adjacencyList[u]) {
-//             if (dist[w] > dist[u] + weights(u, w)) {
-//                 dist[w] = dist[u] + weights(u, w);
-//                 pred[w] = u;
-//                 PQ.push({dist[w], w});  // Simulate decrease-key
-//             }
-//         }
-//     }
-
-//     // Reconstruct the path (or just return visited if that's the goal)
-//     vector<unsigned int> visited_nodes;
-//     for (unsigned int i = 0; i < N; ++i) {
-//         if (visited[i]) visited_nodes.push_back(i);
-//     }
-//     return visited_nodes;
-// }
