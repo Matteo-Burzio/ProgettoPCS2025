@@ -11,25 +11,26 @@ Graph createGraph(const Polyhedron& pol)
     Graph graph;
 
     // Allocate correct amount of space
-    graph.adjacencyList.reserve(pol.numVertices());
+    // Use resize to avoid accessing invalid memory
+    graph.adjacencyList.resize(pol.numVertices());
 
     // Iterate along vertices to fill the adjacency list
     for (const auto& v : pol.vertices)
     {
         // Iterate along the vertex's neighbors
-        for (const auto& neighbour_e : v.edgeNeighbors)
+        for (unsigned int i = 0; i < v.edgeNeighbors.size(); ++i)
         {
             // If the current vertex is the edge's origin
-            if (pol.edges[neighbour_e].origin == v.id)
+            if (pol.edges[v.edgeNeighbors[i]].origin == v.id)
             {
                 // Add the edge's end
-				unsigned int tmp= pol.edges[neighbour_e].end;
+				unsigned int tmp = pol.edges[v.edgeNeighbors[i]].end;
                 graph.adjacencyList[v.id].push_back(tmp);
             }
             else
             {
                 // Add the edge's origin
-                unsigned int tmp=pol.edges[neighbour_e].origin;
+                unsigned int tmp = pol.edges[v.edgeNeighbors[i]].origin;
 				graph.adjacencyList[v.id].push_back(tmp);
             }
         }
@@ -41,18 +42,25 @@ Graph createGraph(const Polyhedron& pol)
 // Create the weights matrix
 MatrixXi createWeights(const Graph& graph, const Polyhedron& pol)
 {
-	MatrixXi weights = MatrixXi::Constant(pol.numVertices(), pol.numVertices(), numeric_limits<unsigned int>::max());
-	//
-	for(const auto& e: pol.edges)
-		{
-			// Set to 1 the weight
-			weights(e.origin, e.end) = 1;
-			
-			/////////// Alternative: get edge length
-			
-			// The matrix is symmetric
-			weights(e.end, e.origin) = weights(e.origin, e.end);	
-		}
+	MatrixXi weights = MatrixXi::Constant(pol.numVertices(), pol.numVertices(), numeric_limits<int>::max());
+	
+	// Initialize diagonal elements (distance to self = 0)
+	for(unsigned int i = 0; i < pol.numVertices(); ++i)
+    {
+        weights(i, i) = 0;
+    }
+		
+	// Use the adjacency list to set weights
+	for(unsigned int i = 0; i < graph.adjacencyList.size(); ++i)
+    {
+        for(const auto& neighbor : graph.adjacencyList[i])
+        {
+            // Set to 1 the weight for connected vertices
+            weights(i, neighbor) = 1;
+            // The matrix is symmetric
+            weights(neighbor, i) = 1;
+        }
+    }
 
     return weights;
 }

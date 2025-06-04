@@ -1,0 +1,30 @@
+@startuml
+title Compute Polygon Area
+
+package "PolygonLibrary" <<Folder>> {
+  
+  class Polygon {
+    + 	unsigned int id;
+    +   vector<Vertex> vertices;
+    +   vector<Edge> edges;
+    +   vector<Face> faces;
+listVertices
+
+    + Polygon()
+    + Polygon(MatrixXd VerticesCoordinates, std::vector<std::vector<unsigned int>> listVertices)
+
+    + void GedimInterface(std::vector<std::vector<unsigned int>> triangles, VectorXi materials)
+    + std::vector<double> computePolygonsArea()
+    + std::vector<std::vector<std::vector<unsigned int>>> TriangulatePolygons()
+  }
+
+  ' Funzione non membro
+  class Utils {
+    + void importPolygonsList(std::string filepath, Polygon& polygons)
+  }
+
+  ' Classi di test
+  class TestComputePolygonsArea
+  class TestGedimInterface
+}
+@enduml

@@ -5,8 +5,8 @@ using namespace std;
 using namespace Eigen;
 
 
-//Function that checks input values
-bool check_input(int argc, char* argv[],
+//Function that checks polyhedron input values
+bool checkPolyhedronInput(int argc, char* argv[],
 				 unsigned int &p, unsigned int &q,
 				 unsigned int &b, unsigned int &c,
 				 unsigned int &val, unsigned int &flag)
@@ -86,6 +86,17 @@ bool check_input(int argc, char* argv[],
 		cerr << "b and c are not compatible" << endl;
 		return false;
 	}
+
+	return true;
+}
+
+
+// Function that checks graph input values
+bool checkInputGraph(const unsigned int& id_path_start, 
+					const unsigned int& id_path_end, 
+					const Polyhedron& P)
+{
+	// da completare
 
 	return true;
 }

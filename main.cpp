@@ -26,7 +26,7 @@ int main(int argc, char *argv[])
 	unsigned int flag;
 
 	// Check input
-	if (!check_input(argc, argv, p, q, b, c, val, flag))
+	if (!checkPolyhedronInput(argc, argv, p, q, b, c, val, flag))
 	{
 		return 1;
 	}
@@ -88,15 +88,6 @@ int main(int argc, char *argv[])
 		P_new = Dual(P);
 	}
 
-	// Export the polyhedron
-	exportPolyhedron(P_new);
-		
-	// Write output files
-	if(!writeOutput(P_new))
-	{
-		return 1;
-	}
-
 
 	// Shortest path
 
@@ -128,20 +119,35 @@ int main(int argc, char *argv[])
 		// Check if the IDs are valid
 		// (da completare)
 
+
+		Graph graph = createGraph(P_new);
+		//Initialize weight matrix 
+		MatrixXi weights = createWeights(graph, P_new);
+
+		// Dijkstra algorithm
+		vector<unsigned int> path = Dijkstra(graph, id_path_start, id_path_end, weights);
+
+		for(const auto& i : path)
+		{
+			cout << path[i] << " ";
+		}
+		cout << endl;
+
 	}
 
 
-	// Graph graph = createGraph(P_new);
-	// //Initialize weight matrix 
-	// MatrixXi weights = createWeights(graph, P_new);
 
-
-	// Dijkstra algorithm 
-	//vector<unsigned int> path = Dijkstra(graph, id_path_start, id_path_end, weights);
+	// Export the polyhedron
+	exportPolyhedron(P_new);
+		
+	// Write output files
+	if(!writeOutput(P_new))
+	{
+		return 1;
+	}
 
 	
-	
-	
+
 	return 0;
 	
 }
