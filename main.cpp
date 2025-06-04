@@ -77,32 +77,24 @@ int main(int argc, char *argv[])
 	getEdgeNeighbors(P);
 	getVertexNeighbors(P);
 
+	//
+	Polyhedron P_new;
+	P_new = P;
 
-	// Initialize dual polyhedron (filled only if needed)
-	Polyhedron Q;
-	
+
 	// Create the dual polyhedron, if needed
 	if(p != 3)
 	{
-		Polyhedron Q = Dual(P);
-		exportPolyhedron(Q);
-		
-		// Write output files
-		if(!writeOutput(Q))
-		{
-			return 1;
-		}
+		P_new = Dual(P);
 	}
-	else
-	{
-		// Export the polyhedron
-		exportPolyhedron(P);
+
+	// Export the polyhedron
+	exportPolyhedron(P_new);
 		
-		// Write output files
-		if(!writeOutput(P))
-		{
-			return 1;
-		}
+	// Write output files
+	if(!writeOutput(P_new))
+	{
+		return 1;
 	}
 
 
@@ -139,26 +131,10 @@ int main(int argc, char *argv[])
 	}
 
 
-	// Create the graph from either P or Q
+	// Graph graph = createGraph(P_new);
+	// //Initialize weight matrix 
+	// MatrixXi weights = createWeights(graph, P_new);
 
-	// Initialize variables
-	Graph graph;
-	MatrixXi weights;
-
-
-	if (Q.vertices.empty())
-	{
-		graph = createGraph(P);
-		//Initialize weight matrix 
-		weights = createWeights(graph, P);
-		
-	}
-	else
-	{
-		graph = createGraph(Q);
-		//Initialize weight matrix 
-		weights = createWeights(graph, Q);
-	}
 
 	// Dijkstra algorithm 
 	//vector<unsigned int> path = Dijkstra(graph, id_path_start, id_path_end, weights);
