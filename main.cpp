@@ -58,7 +58,7 @@ int main(int argc, char *argv[])
 	}
 	else if (flag == 2)
 	{
-		//P = TriangleClassII(initial_P, val);
+		P = TriangleClassII(initial_P, val);
 	}
 	else
 	{
