@@ -22,3 +22,5 @@ vector<unsigned int> Dijkstra(const Graph& graph,
                                 const MatrixXi& weights);
 
 
+// Function which draws the path on the polyhedron
+void drawPath(Polyhedron& pol, const vector<unsigned int> path);

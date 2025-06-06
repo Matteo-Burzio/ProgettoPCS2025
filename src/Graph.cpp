@@ -160,8 +160,32 @@ vector<unsigned int> Dijkstra(const Graph& graph,
     path.push_back(id_path_start);
     reverse(path.begin(), path.end());
 
+
+
     return path;
 
 }
 
 
+// Function which draws the path on the polyhedron
+void drawPath(Polyhedron& pol, const vector<unsigned int> path)
+{
+    // Set short path flag to 1 for visited nodes and edges
+    for(unsigned int i = 0; i < path.size(); i++)
+    {
+        pol.vertices[i].shortPath = true;
+    }
+
+    // Iterate along edges
+    for(auto& e : pol.edges)
+    {
+        // if both extrema of the edge are crossed
+        if((pol.vertices[e.origin].shortPath == 1) && 
+        (pol.vertices[e.end].shortPath == 1))
+        {
+            // Set the path flag to 1
+            e.shortPath = true;
+        }
+
+    }
+}

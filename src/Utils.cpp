@@ -284,8 +284,8 @@ Polyhedron Icosahedron()
 void exportPolyhedron(const Polyhedron& P)
 {
 	// Initialize matrix of vertex coordinates
-	MatrixXd coordsCell0D;
-	coordsCell0D = MatrixXd::Zero(3, P.numVertices());
+	MatrixXd coordsCell0D = MatrixXd::Zero(3, P.numVertices());
+	
 
 	// Fill the matrix with the correct values
 	for(const auto& v : P.vertices)
@@ -294,8 +294,8 @@ void exportPolyhedron(const Polyhedron& P)
 	}
 
 	// Initialize matrix of edge IDs
-	MatrixXi extremaCell1D;
-	extremaCell1D = MatrixXi::Zero(2, P.numEdges());
+	MatrixXi extremaCell1D = MatrixXi::Zero(2, P.numEdges());
+	
 
 	// Fill the matrix with the correct values
 	for(const auto& e : P.edges)
@@ -308,8 +308,33 @@ void exportPolyhedron(const Polyhedron& P)
 		extremaCell1D(1, id) = e.end;
 	}
 
+	// Highlight path on the polyhedron
+
+	// Create a vector containing for each vertex the value of shortPath
+	vector<bool> visitedNodes;
+
+	// Allocate correct amount of memory
+	visitedNodes.reserve(P.numVertices());
+
+	// Iterate along vertices
+	for (unsigned int i = 0; i < P.numVertices(); i++)
+	{
+		visitedNodes[i] = P.vertices[i].shortPath;
+	}
+
+	// Initialize vector of UCDProperty struct and the struct itself
+	vector<Gedim::UCDProperty<double>> points_properties;
+
+	//UCDProperty.Data = 
+	
+
+	// Add prop
+	//points_properties.push_back();
+
+
+
 	// Export in the correct format
-	Gedim::UCDUtilities utilities;
+	Gedim::UCDUtilities utilities
 	utilities.ExportPoints("./aaaCell0Ds.inp",
 						   coordsCell0D);
 

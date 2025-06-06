@@ -67,10 +67,10 @@ int main(int argc, char *argv[])
 	}
 	
 	// Projection on the sphere
-	for(auto& v : P.vertices)
-	{
-		normalizeVertex(v);
-	}
+	// for(auto& v : P.vertices)
+	// {
+	// 	normalizeVertex(v);
+	// }
 	
 	
 	// Get neighbors of each vertex and edge
@@ -118,6 +118,9 @@ int main(int argc, char *argv[])
 			cout << path[i] << " ";
 		}
 		cout << endl;
+
+		// Draw path on the polyhedron
+		drawPath(P_new, path);
 	}
 
 

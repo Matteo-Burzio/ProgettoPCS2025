@@ -283,32 +283,6 @@ Polyhedron TriangleClassII(const Polyhedron& P_old, const unsigned int& val)
 	// Assign the same ID as the old polyhedron
 	P.id = P_old.id;
 	
-	// Allocate the correct amount of space for the polyhedron
-
-	// Temporary variable
-	unsigned int T = 3 * val * val;
-
-	// Tetrahedron
-	if(P_old.id == 0)
-	{
-		P.vertices.reserve(2 * T + 2);
-		P.edges.reserve(6 * T);
-		P.faces.reserve(4 * T);
-	}
-	// Octahedron
-	else if (P_old.id == 1)
-	{
-		P.vertices.reserve(4 * T + 2);
-		P.edges.reserve(12 * T);
-		P.faces.reserve(8 * T);
-	}
-	// Icosahedron
-	else
-	{
-		P.vertices.reserve(10 * T + 2);
-		P.edges.reserve(30 * T);
-		P.faces.reserve(20 * T);
-	}
 
 	// Execute class I triangulation of the old polyhedron
 	Polyhedron P_I = TriangleClassI(P_old, val);
