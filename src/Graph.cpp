@@ -55,10 +55,13 @@ MatrixXi createWeights(const Graph& graph, const Polyhedron& pol)
     {
         for(const auto& neighbor : graph.adjacencyList[i])
         {
-            // Set to 1 the weight for connected vertices
-            weights(i, neighbor) = 1;
-            // The matrix is symmetric
-            weights(neighbor, i) = 1;
+            if (i != neighbor)
+            {  
+                // Set to 1 the weight for connected vertices
+                weights(i, neighbor) = 1;
+                // The matrix is symmetric
+                weights(neighbor, i) = 1;
+            }
         }
     }
 
@@ -161,7 +164,6 @@ vector<unsigned int> Dijkstra(const Graph& graph,
     reverse(path.begin(), path.end());
 
 
-
     return path;
 
 }
@@ -173,15 +175,15 @@ void drawPath(Polyhedron& pol, const vector<unsigned int> path)
     // Set short path flag to 1 for visited nodes and edges
     for(unsigned int i = 0; i < path.size(); i++)
     {
-        pol.vertices[i].shortPath = true;
+        pol.vertices[path[i]].shortPath = true;
     }
 
     // Iterate along edges
     for(auto& e : pol.edges)
     {
         // if both extrema of the edge are crossed
-        if((pol.vertices[e.origin].shortPath == 1) && 
-        (pol.vertices[e.end].shortPath == 1))
+        if((pol.vertices[e.origin].shortPath == true) && 
+        (pol.vertices[e.end].shortPath == true))
         {
             // Set the path flag to 1
             e.shortPath = true;

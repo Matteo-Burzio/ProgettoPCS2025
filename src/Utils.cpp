@@ -310,37 +310,91 @@ void exportPolyhedron(const Polyhedron& P)
 
 	// Highlight path on the polyhedron
 
-	// Create a vector containing for each vertex the value of shortPath
-	vector<bool> visitedNodes;
+	// Create a vector to store the flag shortPath of each vertex
+	vector<double> visitedNodes;
 
 	// Allocate correct amount of memory
-	visitedNodes.reserve(P.numVertices());
+	visitedNodes.resize(P.numVertices());
 
 	// Iterate along vertices
 	for (unsigned int i = 0; i < P.numVertices(); i++)
 	{
-		visitedNodes[i] = P.vertices[i].shortPath;
+		// If the vertex is non the path
+		if (P.vertices[i].shortPath == true)
+		{
+			// Set the property to 1
+			visitedNodes[i] = 1.0;
+		}
+		else
+		{
+			visitedNodes[i] = 0.0;
+		}
 	}
 
-	// Initialize vector of UCDProperty struct and the struct itself
-	vector<Gedim::UCDProperty<double>> points_properties;
+	// Initialize UCDProperty struct
+	Gedim::UCDProperty<double> visitedNodes_UCD;
+	visitedNodes_UCD.NumComponents = 1;
 
-	//UCDProperty.Data = 
+	// Set the attributes
+	const double* ptr1 = visitedNodes.data();
+	visitedNodes_UCD.Data = ptr1;
+	visitedNodes_UCD.Label = "Visited Nodes";
+
 	
 
-	// Add prop
-	//points_properties.push_back();
+	// Initialize vector of UCDProperty struct and the struct itself
+	vector<Gedim::UCDProperty<double>> points_properties = { visitedNodes_UCD };
 
 
+	// Repeat for segments
 
-	// Export in the correct format
-	Gedim::UCDUtilities utilities
+	// Create a vector to store the flag shortPath of each vertex
+	vector<double> visitedEdges;
+
+	// Allocate correct amount of memory
+	visitedEdges.resize(P.numEdges());
+
+	// Iterate along vertices
+	for (unsigned int i = 0; i < P.numEdges(); i++)
+	{
+		// If the vertex is non the path
+		if (P.edges[i].shortPath == true)
+		{
+			// Set the property to 1
+			visitedEdges[i] = 1.0;
+		}
+		else
+		{
+			visitedEdges[i] = 0.0;
+		}
+	}
+
+	// Initialize UCDProperty struct
+	Gedim::UCDProperty<double> visitedEdges_UCD;
+	visitedEdges_UCD.NumComponents = 1;
+
+	// Set the attributes
+	const double* ptr2 = visitedEdges.data();
+	visitedEdges_UCD.Data = ptr2;
+	visitedEdges_UCD.Label = "Visited edges";
+	
+
+	// Initialize vector of UCDProperty struct and the struct itself
+	vector<Gedim::UCDProperty<double>> segments_properties = { visitedEdges_UCD };
+
+
+	// Create UCDUtilities struct
+	Gedim::UCDUtilities utilities;
+
+	// Call export functions
 	utilities.ExportPoints("./aaaCell0Ds.inp",
-						   coordsCell0D);
+							coordsCell0D,
+							points_properties);
 
 	utilities.ExportSegments("./aaaCell1Ds.inp",
 							 coordsCell0D,
-							 extremaCell1D);
+							 extremaCell1D,
+							 segments_properties);
 
 }
 

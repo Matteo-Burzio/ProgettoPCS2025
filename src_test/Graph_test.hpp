@@ -70,26 +70,6 @@ TEST(TestGraph, CreateWeightsMatrix)
     
 }
 
-// TEST(TestGraph, Dijkstra)
-// {
-//     // Create octahedron
-// 	Polyhedron P = Octahedron();
-// 	getEdgeNeighbors(P);
-// 	getVertexNeighbors(P);
-
-// 	// Create the graph
-// 	Graph graph = createGraph(P);
-
-//     MatrixXi weights = createWeights(graph, P);
-
-//     unsigned int id_path_start = 0;
-//     unsigned int id_path_end = 5;
-
-//     vector<unsigned int> path = Dijkstra(graph, id_path_start, id_path_end, weights);
-
-//     vector<unsigned int> v = {0, 5};
-//     ASSERT_EQ(path, v);
-// }
 
 TEST(TestGraph, Dijkstra_ShortestPath)
 {
