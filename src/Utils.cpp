@@ -319,13 +319,13 @@ void exportPolyhedron(const Polyhedron& P)
 	// Iterate along vertices
 	for (unsigned int i = 0; i < P.numVertices(); i++)
 	{
-		// If the vertex is non the path
+		// If the vertex is on the path
 		if (P.vertices[i].shortPath == true)
 		{
 			// Set the property to 1
 			visitedNodes[i] = 1.0;
 		}
-		else
+		else if (P.vertices[i].shortPath == false)
 		{
 			visitedNodes[i] = 0.0;
 		}
@@ -354,16 +354,16 @@ void exportPolyhedron(const Polyhedron& P)
 	// Allocate correct amount of memory
 	visitedEdges.resize(P.numEdges());
 
-	// Iterate along vertices
+	// Iterate along edges
 	for (unsigned int i = 0; i < P.numEdges(); i++)
 	{
-		// If the vertex is non the path
+		// If the edge is on the path
 		if (P.edges[i].shortPath == true)
 		{
 			// Set the property to 1
 			visitedEdges[i] = 1.0;
 		}
-		else
+		else if (P.edges[i].shortPath == false)
 		{
 			visitedEdges[i] = 0.0;
 		}

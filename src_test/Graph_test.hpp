@@ -85,21 +85,21 @@ TEST(TestGraph, Dijkstra_ShortestPath)
     MatrixXi weights = createWeights(graph, P);
 
     // Define start and end nodes
-    unsigned int id_path_start = 0;
-    unsigned int id_path_end = 5;
+    unsigned int id_path_start = 5;
+    unsigned int id_path_end = 6;
 
     // Run Dijkstra algorithm
     vector<unsigned int> path = Dijkstra(graph, id_path_start, id_path_end, weights);
 
     // Expected path
-    vector<unsigned int> expected_path = {0, 5};
+    vector<unsigned int> expected_path = {5, 6};
 
     // Check total size of path
-    ASSERT_EQ(path.size(), expected_path.size()) << "Path size mismatch.";
+    ASSERT_EQ(path.size(), expected_path.size());
 
     // Check each individual node in the path
     for (size_t i = 0; i < path.size(); ++i) {
-        EXPECT_EQ(path[i], expected_path[i]) << "Mismatch at index " << i;
+        EXPECT_EQ(path[i], expected_path[i]);
     }
 
 }
