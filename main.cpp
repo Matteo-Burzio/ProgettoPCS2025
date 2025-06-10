@@ -14,7 +14,6 @@ using namespace std;
 
 int main(int argc, char *argv[])
 {
-
 	// Initialize variables
 	unsigned int p; // number of edges of each face of the chosen platonic solid
 	unsigned int q; // number of faces which meet in each vertex of the solid
@@ -32,7 +31,7 @@ int main(int argc, char *argv[])
 	}
 
 
-	// Initialize the polyhedron
+	// Initialize the polyhedrons
 	Polyhedron initial_P;
 	Polyhedron P;
 
@@ -62,25 +61,25 @@ int main(int argc, char *argv[])
 	}
 	else
 	{
-		cerr << "Something went wrong... (flag error)" << endl;
+		cerr << "Something went wrong (flag error)" << endl;
 		return 1;
 	}
 	
 	// Projection on the sphere
-	// for(auto& v : P.vertices)
-	// {
-	// 	normalizeVertex(v);
-	// }
+	for(auto& v : P.vertices)
+	{
+		normalizeVertex(v);
+	}
 	
 	
 	// Get neighbors of each vertex and edge
 	getEdgeNeighbors(P);
 	getVertexNeighbors(P);
 
-	//
+
+	// Create another polyhedron
 	Polyhedron P_new;
 	P_new = P;
-
 
 	// Create the dual polyhedron, if needed
 	if(p != 3)
@@ -89,17 +88,13 @@ int main(int argc, char *argv[])
 	}
 
 
-	// Shortest path
-
-	// Initialize variables
-	unsigned int id_path_start; // ID of starting vertex
-	unsigned int id_path_end; // ID of ending vertex
-
-
-	// Shortest path
-
+	// Shortest path 
 	if(argc == 7)
 	{
+		// Initialize variables
+		unsigned int id_path_start; // ID of starting vertex
+		unsigned int id_path_end; // ID of ending vertex
+
 		// Check input
 		if (!checkGraphInput(argv, id_path_start, id_path_end, P_new))
 		{
@@ -108,17 +103,14 @@ int main(int argc, char *argv[])
 
 		// Initialize graph and weight matrix
 		Graph graph = createGraph(P_new);
-		MatrixXi weights = createWeights(graph, P_new);
+		MatrixXd weights = createWeights(graph, P_new);
 
 		// Run Dijkstra algorithm
 		vector<unsigned int> path = Dijkstra(graph, id_path_start, id_path_end, weights);
 
-		for(unsigned int i = 0; i < path.size(); i++)
-		{
-			cout << path[i] << " ";
-		}
-		cout << endl;
-
+		// Uncomment to print path
+		printPath(P_new, path);
+	
 		// Draw path on the polyhedron
 		drawPath(P_new, path);
 	}

@@ -17,7 +17,7 @@ Graph createGraph(const Polyhedron& pol)
     // Iterate along vertices to fill the adjacency list
     for (const auto& v : pol.vertices)
     {
-        // Iterate along the vertex's neighbors
+        // Iterate along the vertex's edge neighbors
         for (unsigned int i = 0; i < v.edgeNeighbors.size(); ++i)
         {
             // If the current vertex is the edge's origin
@@ -40,29 +40,35 @@ Graph createGraph(const Polyhedron& pol)
 }
 
 // Create the weights matrix
-MatrixXi createWeights(const Graph& graph, const Polyhedron& pol)
+MatrixXd createWeights(const Graph& graph, const Polyhedron& pol)
 {
-	MatrixXi weights = MatrixXi::Constant(pol.numVertices(), pol.numVertices(), numeric_limits<int>::max());
+	MatrixXd weights = MatrixXd::Constant(pol.numVertices(), pol.numVertices(), numeric_limits<double>::max());
 	
 	// Initialize diagonal elements (distance to self = 0)
 	for(unsigned int i = 0; i < pol.numVertices(); ++i)
     {
-        weights(i, i) = 0;
+        weights(i, i) = 0.0;
     }
-		
-	// Use the adjacency list to set weights
-	for(unsigned int i = 0; i < graph.adjacencyList.size(); ++i)
+
+    // Iterate along edges to set the weights
+    for (const auto& e: pol.edges)
     {
-        for(const auto& neighbor : graph.adjacencyList[i])
-        {
-            if (i != neighbor)
-            {  
-                // Set to 1 the weight for connected vertices
-                weights(i, neighbor) = 1;
-                // The matrix is symmetric
-                weights(neighbor, i) = 1;
-            }
-        }
+        // Weighted graph
+        // Get extrema of current edge
+        Vertex v1 = pol.vertices[e.origin];
+        Vertex v2 = pol.vertices[e.end];
+
+        // Compute the edge's length
+        double length = (v1.coords - v2.coords).norm();
+
+        // Set the weight equal to the length
+        weights(e.origin, e.end) = length;
+        weights(e.end, e.origin) = length;
+
+
+        // Unweighted graph
+        // weights(e.origin, e.end) = 1.0;
+        // weights(e.end, e.origin) = 1.0;
     }
 
     return weights;
@@ -72,12 +78,12 @@ MatrixXi createWeights(const Graph& graph, const Polyhedron& pol)
 vector<unsigned int> Dijkstra(const Graph& graph,
                                 const unsigned int& id_path_start,
                                 const unsigned int& id_path_end,
-                                const MatrixXi& weights)
+                                const MatrixXd& weights)
 {
     
     // Initialize vectors 
-    vector<int> pred; // needs sign to be initialized to be -1
-    vector<unsigned int> dist;
+    vector<int> pred; // signed int to be initialized to be -1
+    vector<double> dist;
 
     unsigned int N = graph.adjacencyList.size();
 
@@ -90,29 +96,26 @@ vector<unsigned int> Dijkstra(const Graph& graph,
    for (unsigned int i = 0; i < N; i++)
    {
     pred[i] = -1;
-    dist[i] = numeric_limits<unsigned int>::max();
+    dist[i] = numeric_limits<double>::max();
    }
-
-   // Initialize source node
-   pred[id_path_start] = id_path_start;
-   dist[id_path_start] = 0;
 
    // Initialize a priority queue
    // Each element is a pair (distance, vertex)
    // When .top() is called it returns the pair with shortest distance
-    priority_queue<pair<unsigned int, unsigned int>,
-                    vector<pair<unsigned int, unsigned int>>,
+    priority_queue<pair<double, unsigned int>,
+                    vector<pair<double, unsigned int>>,
                     greater<>> PQ;
 
-
-   // Add first pair to the priority list
-   PQ.push({0, id_path_start});
+    // Initialize source node
+    pred[id_path_start] = id_path_start;
+    dist[id_path_start] = 0.0;
+    PQ.push({0.0, id_path_start});
 
 
    while(!PQ.empty())
    {
         // Access element with lowest priority (distance)
-        pair<unsigned int, unsigned int> d_v = PQ.top();
+        pair<double, unsigned int> d_v = PQ.top();
 
         // Get current distance and node
         unsigned int current_dist = d_v.first;
@@ -135,9 +138,10 @@ vector<unsigned int> Dijkstra(const Graph& graph,
         // For each node adjacent to u
         for (const auto& w : graph.adjacencyList[u])
         {
-            if (dist[w] > dist[u] + weights(u, w))
+            double new_dist = dist[u] + weights(u, w);
+            if (dist[w] > new_dist)
             {
-                dist[w] = dist[u] + weights(u, w);
+                dist[w] = new_dist;
                 pred[w] = u;
                 PQ.push({dist[w], w});
             }
@@ -148,9 +152,10 @@ vector<unsigned int> Dijkstra(const Graph& graph,
     vector<unsigned int> path;
 
     // If node was not reached
-    if (dist[id_path_end] == numeric_limits<unsigned int>::max())
+    if (dist[id_path_end] == numeric_limits<double>::max())
     {
         return path; // no path found
+        cout << "Something went wrong" << endl;
     }
 
     // Iterate following the sequence in the pred vector
@@ -168,6 +173,25 @@ vector<unsigned int> Dijkstra(const Graph& graph,
 
 }
 
+// Function which prints the path in the terminal
+void printPath(Polyhedron& pol, const vector<unsigned int> path)
+{
+cout << "The path crosses " << path.size() << " nodes." << endl;
+    for (unsigned int i = 0; i + 1 < path.size(); i++)
+    {
+        
+        // Iterate along edges
+        for (const auto& e : pol.edges)
+        {
+            if (((e.origin == path[i]) && (e.end == path[i + 1])) || 
+                ((e.origin == path[i + 1]) && (e.end == path[i])))
+            {
+                cout << "Travelled across edge " << e.id 
+                << " which connects nodes " << path[i] << " and " << path[i + 1] << endl;
+            }
+        }
+    }
+}
 
 // Function which draws the path on the polyhedron
 void drawPath(Polyhedron& pol, const vector<unsigned int> path)

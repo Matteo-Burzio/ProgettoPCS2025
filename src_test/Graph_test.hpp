@@ -33,7 +33,6 @@ TEST(TestGraph, CreateGraph)
         sort(graph.adjacencyList[i].begin(), graph.adjacencyList[i].end());
 	}
 
-
     ASSERT_EQ(graph.adjacencyList[0], vector<unsigned int>({1, 2, 3}));
     ASSERT_EQ(graph.adjacencyList[1], vector<unsigned int>({0, 2, 3}));
     ASSERT_EQ(graph.adjacencyList[2], vector<unsigned int>({0, 1, 3}));
@@ -51,7 +50,7 @@ TEST(TestGraph, CreateWeightsMatrix)
 	// Create the graph
 	Graph graph = createGraph(P);
 
-    MatrixXi weights = createWeights(graph, P);
+    MatrixXd weights = createWeights(graph, P);
 
     // Check if the matrix is symmetric
     for(unsigned int i = 0; i < weights.rows(); i++)
@@ -62,6 +61,7 @@ TEST(TestGraph, CreateWeightsMatrix)
             ASSERT_EQ(weights(i,j), weights(j,i)); 
         }
 
+        // This tests the unweighted case
         ASSERT_EQ(weights(0,1), 1);
         ASSERT_EQ(weights(1,2), 1);
         ASSERT_EQ(weights(2,3), 1);
@@ -82,7 +82,7 @@ TEST(TestGraph, Dijkstra_ShortestPath)
 
     // Build graph and weight matrix
     Graph graph = createGraph(P);
-    MatrixXi weights = createWeights(graph, P);
+    MatrixXd weights = createWeights(graph, P);
 
     // Define start and end nodes
     unsigned int id_path_start = 5;
