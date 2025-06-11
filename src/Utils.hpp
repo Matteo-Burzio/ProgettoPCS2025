@@ -1,17 +1,23 @@
 #pragma once
 
+#include <fstream>
+#include <sstream>
+#include <numbers>
+
 #include "Polyhedron.hpp"
 #include "UCDUtilities.hpp"
 
+
 using namespace std;
 
-// Function that check if values of polyhedron input are correct
+
+// Function which checks if values of polyhedron input are correct
 bool checkPolyhedronInput(int argc, char* argv[],
 				 unsigned int &p, unsigned int &q,
 				 unsigned int &b, unsigned int &c,
 				 unsigned int &val, unsigned int &flag);
 
-// Function that check if values of graph input are correct
+// Function which checks if values of graph input are correct
 bool checkGraphInput(char* argv[],
 					unsigned int& id_path_start, 
 					unsigned int& id_path_end, 
@@ -22,9 +28,8 @@ Polyhedron Tetrahedron();
 Polyhedron Octahedron();
 Polyhedron Icosahedron();
 
-// Function that exports the polyhedron for Paraview
+// Function which exports the polyhedron for Paraview
 void exportPolyhedron(const Polyhedron& P);
 
-// Function that writes the output
+// Function which writes the output
 bool writeOutput(const Polyhedron& P);
-

@@ -7,13 +7,12 @@ using namespace Eigen;
 
 //Function that checks polyhedron input values
 bool checkPolyhedronInput(int argc, char* argv[],
-				 unsigned int &p, unsigned int &q,
-				 unsigned int &b, unsigned int &c,
-				 unsigned int &val, unsigned int &flag)
+				 			unsigned int &p, unsigned int &q,
+				 			unsigned int &b, unsigned int &c,
+				 			unsigned int &val, unsigned int &flag)
 {
-
-	// Get correct number of in puts
-	if((argc != 7) && (argc != 5))
+	// Get correct number of inputs
+	if ((argc != 7) && (argc != 5))
 	{
 		cerr << "Number of inputs is not compatible with program execution" << endl;
 		return false;
@@ -21,7 +20,7 @@ bool checkPolyhedronInput(int argc, char* argv[],
 
 	// Get value of p and check if it's allowed
 	istringstream convert_p(argv[1]); 
-	if(!(convert_p >> p) || (p < 3) || (p > 5))
+	if (!(convert_p >> p) || (p < 3) || (p > 5))
 	{
 		cerr << "Wrong value for p" << endl;
 		return false;
@@ -29,14 +28,14 @@ bool checkPolyhedronInput(int argc, char* argv[],
 
 	// Get value of q and check if it's allowed
 	istringstream convert_q(argv[2]);
-	if(!(convert_q >> q) || (q < 3) || (q > 5))
+	if (!(convert_q >> q) || (q < 3) || (q > 5))
 	{
 		cerr << "Wrong value for q" << endl;
 		return false;
 	}
 
 	// Check if p and q are compatible
-	if((p == 3 && (q == 3 || q == 4 || q == 5)) ||
+	if ((p == 3 && (q == 3 || q == 4 || q == 5)) ||
 	   (q == 3 && (p == 3 || p == 4 || p == 5)))
 	{
 		cout << "p: " << p << endl;
@@ -50,7 +49,7 @@ bool checkPolyhedronInput(int argc, char* argv[],
 
 	// Get value of b
 	istringstream convert_b(argv[3]);
-	if(!(convert_b >> b))
+	if (!(convert_b >> b))
 	{
 		cerr << "Wrong value for b" << endl;
 		return false;
@@ -58,14 +57,14 @@ bool checkPolyhedronInput(int argc, char* argv[],
 
 	// Get value of c
 	istringstream convert_c(argv[4]);
-	if(!(convert_c >> c))
+	if (!(convert_c >> c))
 	{
 		cerr << "Wrong value for c" << endl;
 		return false;
 	}
 
 	// Check which triangulation class is requested
-	if(((b == 0) && (c != 0)) || ((b != 0) && (c == 0)))
+	if (((b == 0) && (c != 0)) || ((b != 0) && (c == 0)))
 	{
 		cout << "b: " << b << endl;
 		cout << "c: " << c << endl;
@@ -73,7 +72,7 @@ bool checkPolyhedronInput(int argc, char* argv[],
 		cout << "Class I with parameter: " << val << endl;
 		flag = 1;
 	}
-	else if((b == c) && (b != 0))
+	else if ((b == c) && (b != 0))
 	{
 		cout << "b: " << b << endl;
 		cout << "c: " << c << endl;
@@ -91,7 +90,7 @@ bool checkPolyhedronInput(int argc, char* argv[],
 }
 
 
-// Function that checks graph input values
+// Function which checks graph input values
 bool checkGraphInput(char* argv[],
 					unsigned int& id_path_start, 
 					unsigned int& id_path_end, 
@@ -99,7 +98,7 @@ bool checkGraphInput(char* argv[],
 {
 	// Get value of id_path_start
 	istringstream convert_start(argv[5]);
-	if(!(convert_start >> id_path_start))
+	if (!(convert_start >> id_path_start))
 	{
 		cerr << "Wrong value for starting ID" << endl;
 		return false;
@@ -107,7 +106,7 @@ bool checkGraphInput(char* argv[],
 
 	// Get value of id_path_end
 	istringstream convert_end(argv[6]);
-	if(!(convert_end >> id_path_end))
+	if (!(convert_end >> id_path_end))
 	{
 		cerr << "Wrong value for ending ID" << endl;
 		return false;
@@ -119,7 +118,7 @@ bool checkGraphInput(char* argv[],
 		cerr << "Out of bounds IDs" << endl;
 		return false;
 	}
-	else if(id_path_start == id_path_end)
+	else if (id_path_start == id_path_end)
 	{
 		cerr << "Error: starting and ending IDs are equal" << endl;
 		return false;
@@ -134,7 +133,7 @@ bool checkGraphInput(char* argv[],
 }
 
 
-// Function that constructs a tetrahedron represented as a Polyhedron
+// Function which constructs a tetrahedron represented as a Polyhedron
 Polyhedron Tetrahedron()
 {
 	// Initialize polyhedron struct and set the ID
@@ -150,7 +149,7 @@ Polyhedron Tetrahedron()
 	};
 
 	// Normalize vertices to lie on unit sphere
-	for(Vertex& v : P.vertices)
+	for (Vertex& v : P.vertices)
 	{
 		normalizeVertex(v);
 	}
@@ -172,7 +171,7 @@ Polyhedron Tetrahedron()
 	return P;
 }       
 
-// Function that constructs an octahedron represented as a Polyhedron
+// Function which constructs an octahedron represented as a Polyhedron
 Polyhedron Octahedron()
 {
 	// Initialize polyhedron struct and set the ID
@@ -211,14 +210,15 @@ Polyhedron Octahedron()
 	return P;
 }
 
-// Function that constructs an icosahedron represented as a Polyhedron
+// Function which constructs an icosahedron represented as a Polyhedron
 Polyhedron Icosahedron()
 {
 	// Initialize polyhedron struct and set the ID
 	Polyhedron P;
 	P.id = 2;
 
-	using std::numbers::phi;
+	// Golden ratio
+	using numbers::phi;
 
 	// Set (non normalized) vertices
 	P.vertices = {
@@ -237,7 +237,7 @@ Polyhedron Icosahedron()
 	};
 
 	// Normalize vertices to lie on unit sphere
-	for(Vertex& v : P.vertices)
+	for (Vertex& v : P.vertices)
 	{
 		normalizeVertex(v);
 	}
@@ -286,9 +286,8 @@ void exportPolyhedron(const Polyhedron& P)
 	// Initialize matrix of vertex coordinates
 	MatrixXd coordsCell0D = MatrixXd::Zero(3, P.numVertices());
 	
-
-	// Fill the matrix with the correct values
-	for(const auto& v : P.vertices)
+	// Fill the matrix column-wise
+	for (const auto& v : P.vertices)
 	{
 		coordsCell0D.col(v.id) << v.coords;
 	}
@@ -296,9 +295,8 @@ void exportPolyhedron(const Polyhedron& P)
 	// Initialize matrix of edge IDs
 	MatrixXi extremaCell1D = MatrixXi::Zero(2, P.numEdges());
 	
-
 	// Fill the matrix with the correct values
-	for(const auto& e : P.edges)
+	for (const auto& e : P.edges)
 	{
 		// Use the ID of the edge as the index
 		unsigned int id = e.id;
@@ -311,6 +309,7 @@ void exportPolyhedron(const Polyhedron& P)
 	// Highlight path on the polyhedron
 
 	// Create a vector to store the flag shortPath of each vertex
+	// The type is double to be compatible with UCDUtilities
 	vector<double> visitedNodes;
 
 	// Allocate correct amount of memory
@@ -340,15 +339,11 @@ void exportPolyhedron(const Polyhedron& P)
 	visitedNodes_UCD.Data = ptr1;
 	visitedNodes_UCD.Label = "Visited Nodes";
 
-	
-
-	// Initialize vector of UCDProperty struct and the struct itself
+	// Initialize vector of UCDProperty structs and the struct itself
 	vector<Gedim::UCDProperty<double>> points_properties = { visitedNodes_UCD };
 
 
-	// Repeat for segments
-
-	// Create a vector to store the flag shortPath of each vertex
+	// Create a vector to store the flag shortPath of each edge
 	vector<double> visitedEdges;
 
 	// Allocate correct amount of memory
@@ -378,7 +373,6 @@ void exportPolyhedron(const Polyhedron& P)
 	visitedEdges_UCD.Data = ptr2;
 	visitedEdges_UCD.Label = "Visited edges";
 	
-
 	// Initialize vector of UCDProperty struct and the struct itself
 	vector<Gedim::UCDProperty<double>> segments_properties = { visitedEdges_UCD };
 
@@ -395,7 +389,6 @@ void exportPolyhedron(const Polyhedron& P)
 							 coordsCell0D,
 							 extremaCell1D,
 							 segments_properties);
-
 }
 
 
@@ -408,7 +401,7 @@ bool writeOutput(const Polyhedron& P)
 	ofstream ofs_cell0D("Cell0Ds.txt");
 
 	// Check if it was created correctly
-	if(ofs_cell0D.fail())
+	if (ofs_cell0D.fail())
 	{
 		cerr << "File \"Cell0Ds.txt\" cannot be created." << endl;
 		return false;
@@ -418,7 +411,7 @@ bool writeOutput(const Polyhedron& P)
 	ofs_cell0D << "id;X;Y;Z" << endl;
 
 	// Iterate along vertices of the polyhedron
-	for(const auto& v : P.vertices)
+	for (const auto& v : P.vertices)
 	{
 		ofs_cell0D << v.id << ";"
 					<< v.coords[0] << ";"
@@ -436,7 +429,7 @@ bool writeOutput(const Polyhedron& P)
 	ofstream ofs_cell1D("Cell1Ds.txt");
 
 	// Check if it was created correctly
-	if(ofs_cell1D.fail())
+	if (ofs_cell1D.fail())
 	{
 		cerr << "File \"Cell1Ds.txt\" cannot be created." << endl;
 		return false;
@@ -446,7 +439,7 @@ bool writeOutput(const Polyhedron& P)
 	ofs_cell1D << "id;origin;end" << endl;
 
 	// Iterate along edges of the polyhedron
-	for(const auto& e : P.edges)
+	for (const auto& e : P.edges)
 	{
 		ofs_cell1D << e.id << ";"
 					<< e.origin << ";"
@@ -463,7 +456,7 @@ bool writeOutput(const Polyhedron& P)
 	ofstream ofs_cell2D("Cell2Ds.txt");
 
 	// Check if it was created correctly
-	if(ofs_cell2D.fail())
+	if (ofs_cell2D.fail())
 	{
 		cerr << "File \"Cell2Ds.txt\" cannot be created." << endl;
 		return false;
@@ -473,19 +466,19 @@ bool writeOutput(const Polyhedron& P)
 	ofs_cell2D << "id;NumVertices;Vertices;NumEdges;Edges" << endl;
 
 	// Iterate along faces of the polyhedron
-	for(const auto& f : P.faces)
+	for (const auto& f : P.faces)
 	{
 		ofs_cell2D << f.id << ";"
 					<< f.numVertices() << ";";
 		
-		for(unsigned int i = 0; i < f.numVertices(); i++)
+		for (unsigned int i = 0; i < f.numVertices(); i++)
 		{
 			ofs_cell2D << f.idVertices[i] << ";";
 		}
 
 		ofs_cell2D << f.numEdges() << ";";
 
-		for(unsigned int i = 0; i < f.numEdges() - 1; i++)
+		for (unsigned int i = 0; i < f.numEdges() - 1; i++)
 		{
 			ofs_cell2D << f.idEdges[i] << ";";
 		}
@@ -504,7 +497,7 @@ bool writeOutput(const Polyhedron& P)
 	ofstream ofs_cell3D("Cell3Ds.txt");
 
 	// Check if it was created correctly
-	if(ofs_cell3D.fail())
+	if (ofs_cell3D.fail())
 	{
 		cerr << "File \"Cell3Ds.txt\" cannot be created." << endl;
 		return false;
@@ -517,21 +510,21 @@ bool writeOutput(const Polyhedron& P)
 	ofs_cell3D << P.id << ";"
 				<< P.numVertices() << ";";
 	
-	for(unsigned int i = 0; i < P.numVertices(); i++)
+	for (unsigned int i = 0; i < P.numVertices(); i++)
 	{
 		ofs_cell3D << P.vertices[i].id << ";";
 	}
 
 	ofs_cell3D << P.numEdges() << ";";
 
-	for(unsigned int i = 0; i < P.numEdges(); i++)
+	for (unsigned int i = 0; i < P.numEdges(); i++)
 	{
 		ofs_cell3D << P.edges[i].id << ";";
 	}
 	
 	ofs_cell3D << P.numFaces() << ";";
 
-	for(unsigned int i = 0; i < P.numFaces() - 1; i++)
+	for (unsigned int i = 0; i < P.numFaces() - 1; i++)
 	{
 		ofs_cell3D << P.faces[i].id << ";";
 	}

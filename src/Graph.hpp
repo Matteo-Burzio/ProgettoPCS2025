@@ -1,5 +1,7 @@
 #pragma once
 
+#include <queue>
+
 #include "Polyhedron.hpp"
 
 // Graph struct containing the adjacency matrix

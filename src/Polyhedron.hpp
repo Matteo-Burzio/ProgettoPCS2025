@@ -1,21 +1,9 @@
 #pragma once
 
 #include <iostream>
-#include <fstream>
 #include <vector>
-#include <iostream>
-#include <sstream>
-#include <limits>
-#include <cmath>
-#include <numbers>
-#include <map>
-#include <set>
-#include <list>
-#include <utility>
-#include <algorithm>
-#include <queue>
 
-#include <Eigen/Dense>
+#include "Eigen/Eigen"
 
 using namespace std;
 using namespace Eigen;

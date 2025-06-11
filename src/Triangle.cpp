@@ -13,10 +13,10 @@ unsigned int addVertexIfMissing(Polyhedron& P, const Vector3d coords_V)
 	const double eps = numeric_limits<double>::epsilon();
 
 	// Iterate along existing vertices
-	for(const auto& existing : P.vertices)
+	for (const auto& existing : P.vertices)
 	{
 		// Check if the vertex already exists
-		if(coords_V.isApprox(existing.coords, eps))
+		if (coords_V.isApprox(existing.coords, eps))
 		{
 			// If it does, return its ID
 			return existing.id;
@@ -58,12 +58,10 @@ unsigned int addEdgeIfMissing(Polyhedron& P, unsigned int id1, unsigned int id2,
 	
 	
 	// Iterate along existing edges
-	for(const auto& existing : P.edges)
+	for (const auto& existing : P.edges)
 	{
-		// Check su id1 == id2 e su id1||id2 >= P.numVertices() ??
-		
 		// Check if the edge already exists
-		if(((existing.origin == id1) && (existing.end == id2)) ||
+		if (((existing.origin == id1) && (existing.end == id2)) ||
 			((existing.origin == id2) && (existing.end == id1)))
 		{
 			// If it does, return its ID
@@ -86,6 +84,7 @@ unsigned int addEdgeIfMissing(Polyhedron& P, unsigned int id1, unsigned int id2,
 				return numeric_limits<unsigned int>::max();
 			}
 		}
+
 		// Set the requested ID
 		e_new.id = id_e;
 	}
@@ -117,7 +116,7 @@ Polyhedron TriangleClassI(const Polyhedron& P_old, const unsigned int& val)
 	P.id = P_old.id;
 
 	// If val = 1, no triangulation is needed
-	if(val == 1)
+	if (val == 1)
 	{
 		return P_old;
 	}
@@ -128,7 +127,7 @@ Polyhedron TriangleClassI(const Polyhedron& P_old, const unsigned int& val)
 	unsigned int T = val * val;
 
 	// Tetrahedron
-	if(P_old.id == 0)
+	if (P_old.id == 0)
 	{
 		P.vertices.reserve(2 * T + 2);
 		P.edges.reserve(6 * T);
@@ -151,7 +150,7 @@ Polyhedron TriangleClassI(const Polyhedron& P_old, const unsigned int& val)
 
 
 	// Iterate along faces of the platonic solid
-	for(const auto& face : P_old.faces)
+	for (const auto& face : P_old.faces)
 	{
 		// We expect all faces to be triangles
 		// Get IDs and a reference of each vertex of the face
@@ -171,9 +170,9 @@ Polyhedron TriangleClassI(const Polyhedron& P_old, const unsigned int& val)
 		map<pair<unsigned int, unsigned int>, unsigned int> Vij;
 
 		// (i,j) are the barycentric coordinates
-		for(unsigned int i = 0; i <= val; i++)
+		for (unsigned int i = 0; i <= val; i++)
 		{
-			for(unsigned int j = 0; j <= val - i; j++)
+			for (unsigned int j = 0; j <= val - i; j++)
 			{
 				// Compute new vertex coordinates
 				Vector3d coords_V = (i * A.coords + j * B.coords + (val - i - j) * C.coords) / val;
@@ -188,9 +187,9 @@ Polyhedron TriangleClassI(const Polyhedron& P_old, const unsigned int& val)
 		
 		// Create new edges and faces
 
-		for(unsigned int i = 0; i <= val - 1; i++)
+		for (unsigned int i = 0; i <= val - 1; i++)
 		{
-			for(unsigned int j = 0; j <= val - 1 - i; j++)
+			for( unsigned int j = 0; j <= val - 1 - i; j++)
 			{
 				// Add the "upside triangles"
 				
@@ -261,12 +260,12 @@ Polyhedron TriangleClassI(const Polyhedron& P_old, const unsigned int& val)
 						// If not, remove the face from the polyhedron and print error
 						P.faces.pop_back();
 						cerr << "Error: invalid polyhedron" << endl;
-
 					}
 				}
 			}
 		}
 	}
+
 
 	return P;
 
@@ -357,5 +356,7 @@ Polyhedron TriangleClassII(const Polyhedron& P_old, const unsigned int& val)
 		P.faces.push_back(f1);
 	}
 
+
 	return P;
+	
 }

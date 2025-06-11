@@ -1,6 +1,7 @@
 #include "Geometry.hpp"
 #include "Triangle.hpp"
 
+
 using namespace std;
 using namespace Eigen;
 
@@ -32,12 +33,19 @@ Vertex Barycenter(const Polyhedron& P, const unsigned int& f_id)
 	//Compute coordinates of bc
 	for (size_t i = 0; i < num_v; i++)
 	{
+		// ID of barycenter is the same as the ID of the face
 		unsigned int id_v = P.faces[f_id].idVertices[i];
+
+		// Running sum
 		bc.coords += P.vertices[id_v].coords;
 	}
+
+	// Divide by number of vertices to take the average
 	bc.coords /= num_v;
 
+
 	return bc;
+
 }
 
 
@@ -49,9 +57,10 @@ void getEdgeNeighbors(Polyhedron& P)
 	for (auto& e : P.edges)
 	{
 		// Clear existing neighbors
+		// (needed in case the function is called multiple times)
 		e.faceNeighbors.clear();
 		
-		// Find faces containing this edge
+		// Find faces containing current edge
 		for (const auto& f : P.faces)
 		{
 			if (find(f.idEdges.begin(), f.idEdges.end(), e.id) != f.idEdges.end())
@@ -92,7 +101,7 @@ void getVertexNeighbors(Polyhedron& P)
 		v.edgeNeighbors.clear();
 		
 		
-		// Get its edge neighbors
+		// Get current vertex's edge neighbors
 		vector<unsigned int>& neighbors = unordered_neighbors[v.id];
 		
 		// Choose the starting edge (the first of the neighbors)
@@ -112,13 +121,13 @@ void getVertexNeighbors(Polyhedron& P)
 		// Find the first edge between the edges of the first face
 		for (unsigned int e_id : P.faces[currentFaceId].idEdges) // 3 cycles
 		{
-			// Exclude the starting edge
+			// Skip the starting edge
 			if (e_id == startEdgeId)
 			{
 				continue;
 			}
 			
-			// Exclude the edge that doesn't contain the vertex
+			// Skip the edge that doesn't contain the vertex
 			if (find(neighbors.begin(), neighbors.end(), e_id) == neighbors.end())
 			{
 				continue;
@@ -137,7 +146,7 @@ void getVertexNeighbors(Polyhedron& P)
 		
 		// currentFaceId and currentEdgeId are the IDs of the first face and edge
 		
-		// Iterate until the cycle is closed: until the the currect edge is the starting edge
+		// Iterate until the cycle is closed, i.e. until the the current edge is the starting edge
 		while (currentEdgeId != startEdgeId)
 		{
 			// Initialize the ID of the next face to be added
@@ -232,6 +241,7 @@ Polyhedron Dual(const Polyhedron& P)
 	// Create faces of the dual (one for each vertex of P)
 	for (const auto& v : P.vertices)
 	{
+		// Initialize a face, its ID is the corresponding vertex's
 		Face f_dual;
 		f_dual.id = v.id;
 		
@@ -243,9 +253,12 @@ Polyhedron Dual(const Polyhedron& P)
 			f_dual.idEdges.push_back(v.edgeNeighbors[i]);
 		}
 		
+		// Add the face to the dual polyhedron
 		Q.faces.push_back(f_dual);
 	}
 	
+
 	return Q;
+	
 }
 

@@ -4,6 +4,7 @@
 using namespace std;
 using namespace Eigen;
 
+
 // Function which creates the graph 
 Graph createGraph(const Polyhedron& pol)
 {
@@ -36,12 +37,15 @@ Graph createGraph(const Polyhedron& pol)
         }
     }
 
+
     return graph;
+
 }
 
 // Create the weights matrix
 MatrixXd createWeights(const Graph& graph, const Polyhedron& pol)
 {
+    // Initialize the matrix to be "infinity" for all weights
 	MatrixXd weights = MatrixXd::Constant(pol.numVertices(), pol.numVertices(), numeric_limits<double>::max());
 	
 	// Initialize diagonal elements (distance to self = 0)
@@ -53,7 +57,11 @@ MatrixXd createWeights(const Graph& graph, const Polyhedron& pol)
     // Iterate along edges to set the weights
     for (const auto& e: pol.edges)
     {
+
+        /////////////////////////////////////////////
+
         // Weighted graph
+
         // Get extrema of current edge
         Vertex v1 = pol.vertices[e.origin];
         Vertex v2 = pol.vertices[e.end];
@@ -65,13 +73,17 @@ MatrixXd createWeights(const Graph& graph, const Polyhedron& pol)
         weights(e.origin, e.end) = length;
         weights(e.end, e.origin) = length;
 
+        /////////////////////////////////////////////
 
         // Unweighted graph
+
         // weights(e.origin, e.end) = 1.0;
         // weights(e.end, e.origin) = 1.0;
     }
 
+
     return weights;
+
 }
 
 // Dijkstra algorithm, returns vector of IDs of visited vertices
@@ -81,40 +93,45 @@ vector<unsigned int> Dijkstra(const Graph& graph,
                                 const MatrixXd& weights)
 {
     
+
     // Initialize vectors 
     vector<int> pred; // signed int to be initialized to be -1
     vector<double> dist;
 
+    // Get number of nodes
     unsigned int N = graph.adjacencyList.size();
 
     // Reserve correct amount of space
-    // Use resize since we access the elements, they need to be  initialized
+    // Use resize (since we access the elements, they need to be initialized)
     pred.resize(N);
     dist.resize(N);
 
-   // Fill the vectors with initial values
-   for (unsigned int i = 0; i < N; i++)
-   {
-    pred[i] = -1;
-    dist[i] = numeric_limits<double>::max();
-   }
+    // Fill the vectors with initial values
+    for (unsigned int i = 0; i < N; i++)
+    {
+        pred[i] = -1;
+        dist[i] = numeric_limits<double>::max();
+    }
 
-   // Initialize a priority queue
-   // Each element is a pair (distance, vertex)
-   // When .top() is called it returns the pair with shortest distance
+    // Initialize a priority queue
+    // Each element is a pair (distance, vertex)
+    // When .top() is called it returns the pair with shortest distance
     priority_queue<pair<double, unsigned int>,
                     vector<pair<double, unsigned int>>,
-                    greater<>> PQ;
+                    greater<pair<double, unsigned int>>> PQ;
 
     // Initialize source node
     pred[id_path_start] = id_path_start;
     dist[id_path_start] = 0.0;
     PQ.push({0.0, id_path_start});
 
+    
 
-   while(!PQ.empty())
-   {
+    // Algorithm stops when the priority queue is empty
+    while(!PQ.empty())
+    {
         // Access element with lowest priority (distance)
+        // d_v = (distance, vertex)
         pair<double, unsigned int> d_v = PQ.top();
 
         // Get current distance and node
@@ -125,10 +142,12 @@ vector<unsigned int> Dijkstra(const Graph& graph,
         PQ.pop();
 
         // Stop the algorithm as soon as the end node is reached
+        // (we only care about reaching this particular vertex)
         if (u == id_path_end)
         {
             break;
         }
+
         // If the node was already reached with a shorter path, skip
         if (current_dist > dist[u])
         {
@@ -138,15 +157,24 @@ vector<unsigned int> Dijkstra(const Graph& graph,
         // For each node adjacent to u
         for (const auto& w : graph.adjacencyList[u])
         {
+            // Compute new distance
             double new_dist = dist[u] + weights(u, w);
+
+            // If the new distance is shorter
             if (dist[w] > new_dist)
             {
+                // Update vector of distances
                 dist[w] = new_dist;
+
+                // Set current node's predecessor to u
                 pred[w] = u;
+
+                // Add it to the priority queue
                 PQ.push({dist[w], w});
             }
         }
     }
+
 
     // Initialize requested path
     vector<unsigned int> path;
@@ -154,9 +182,12 @@ vector<unsigned int> Dijkstra(const Graph& graph,
     // If node was not reached
     if (dist[id_path_end] == numeric_limits<double>::max())
     {
-        return path; // no path found
-        cout << "Something went wrong" << endl;
+        cerr << "Something went wrong" << endl;
+        return path; // empty vector
+        
     }
+
+    cout << "debug2" << endl;
 
     // Iterate following the sequence in the pred vector
     for (int i = id_path_end; i != id_path_start; i = pred[i])
@@ -168,10 +199,11 @@ vector<unsigned int> Dijkstra(const Graph& graph,
     path.push_back(id_path_start);
     reverse(path.begin(), path.end());
 
-
+    
     return path;
 
 }
+
 
 // Function which prints the path in the terminal
 void printPath(Polyhedron& pol, const vector<unsigned int> path)
