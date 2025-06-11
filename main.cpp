@@ -85,6 +85,11 @@ int main(int argc, char *argv[])
 	if(p != 3)
 	{
 		P_new = Dual(P);
+
+		// Get new neighbors
+		getEdgeNeighbors(P_new);
+		getVertexNeighbors(P_new);
+
 	}
 
 
@@ -108,11 +113,11 @@ int main(int argc, char *argv[])
 		// Run Dijkstra algorithm
 		vector<unsigned int> path = Dijkstra(graph, id_path_start, id_path_end, weights);
 
-		// // Uncomment to print path
-		// printPath(P_new, path);
+		// Uncomment to print path
+		printPath(P_new, path);
 	
-		// // Draw path on the polyhedron
-		// drawPath(P_new, path);
+		// Draw path on the polyhedron
+		drawPath(P_new, path);
 	}
 
 

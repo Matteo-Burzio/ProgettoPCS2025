@@ -113,7 +113,7 @@ bool checkGraphInput(char* argv[],
 	}
 
 	// Check if inputs are coherent
-	if ((id_path_start > P.numVertices()) || (id_path_end > P.numVertices()))
+	if ((id_path_start > P.numVertices() - 1) || (id_path_end > P.numVertices() - 1))
 	{
 		cerr << "Out of bounds IDs" << endl;
 		return false;

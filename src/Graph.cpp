@@ -42,6 +42,7 @@ Graph createGraph(const Polyhedron& pol)
 
 }
 
+
 // Create the weights matrix
 MatrixXd createWeights(const Graph& graph, const Polyhedron& pol)
 {
@@ -187,7 +188,6 @@ vector<unsigned int> Dijkstra(const Graph& graph,
         
     }
 
-    cout << "debug2" << endl;
 
     // Iterate following the sequence in the pred vector
     for (int i = id_path_end; i != id_path_start; i = pred[i])
@@ -211,7 +211,6 @@ void printPath(Polyhedron& pol, const vector<unsigned int> path)
 cout << "The path crosses " << path.size() << " nodes." << endl;
     for (unsigned int i = 0; i + 1 < path.size(); i++)
     {
-        
         // Iterate along edges
         for (const auto& e : pol.edges)
         {
@@ -223,6 +222,13 @@ cout << "The path crosses " << path.size() << " nodes." << endl;
             }
         }
     }
+
+    for (unsigned int i = 0; i < path.size(); i++)
+    {
+        cout << path[i] << " ";
+    }
+    cout << endl;
+
 }
 
 // Function which draws the path on the polyhedron
