@@ -29,14 +29,16 @@ TEST(GeometryTest, BarycenterComputation)
 {
 	// Create a polyhedron object
 	Polyhedron P;
-	Vertex v0 = {0, {0, 0, 0}, {0,0,0}, {0,0,0}};
-	Vertex v1 = {1, {1, 0, 0}, {0,0,0}, {0,0,0}};
-	Vertex v2 = {2, {0, 1, 0}, {0,0,0}, {0,0,0}};
 
-	P.vertices.push_back(v0);
-	P.vertices.push_back(v1);
-	P.vertices.push_back(v2);
+	// Create vertices
+	P.vertices = 
+	{
+		{0, {0, 0, 0}, {0,0,0}, {0,0,0}},
+		{1, {1, 0, 0}, {0,0,0}, {0,0,0}},
+		{2, {0, 1, 0}, {0,0,0}, {0,0,0}}
+	};
 
+	// Create a face
 	Face f;
 	f.id = 0;
 	f.idVertices = {0, 1, 2};
@@ -107,8 +109,6 @@ TEST(DualTest, VertexNeighborsComputation)
 	sort(faceNeighbors3.begin(), faceNeighbors3.end());
 	ASSERT_EQ(edgeNeighbors3, vector<unsigned int>({3, 4, 5}));
 	ASSERT_EQ(faceNeighbors3, vector<unsigned int>({1, 2, 3}));
-	
-	
 }
 
 

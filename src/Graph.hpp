@@ -4,6 +4,7 @@
 
 #include "Polyhedron.hpp"
 
+
 // Graph struct containing the adjacency matrix
 struct Graph
 {

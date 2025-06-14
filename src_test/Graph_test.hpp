@@ -61,7 +61,7 @@ TEST(TestGraph, CreateWeightsMatrix)
             ASSERT_EQ(weights(i,j), weights(j,i)); 
         }
 
-        // This tests the unweighted case
+        // Uncomment to test the unweighted case
         // ASSERT_EQ(weights(0,1), 1);
         // ASSERT_EQ(weights(1,2), 1);
         // ASSERT_EQ(weights(2,3), 1);

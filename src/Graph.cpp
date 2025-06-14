@@ -87,6 +87,7 @@ MatrixXd createWeights(const Graph& graph, const Polyhedron& pol)
 
 }
 
+
 // Dijkstra algorithm, returns vector of IDs of visited vertices
 vector<unsigned int> Dijkstra(const Graph& graph,
                                 const unsigned int& id_path_start,
@@ -230,6 +231,7 @@ cout << "The path crosses " << path.size() << " nodes." << endl;
     cout << endl;
 
 }
+
 
 // Function which draws the path on the polyhedron
 void drawPath(Polyhedron& pol, const vector<unsigned int> path)

@@ -9,8 +9,10 @@
 // Function which normalizes the vertices (Geometry.cpp)
 void normalizeVertex(Vertex& v);
 
+
 // Function which computes the barycenter of a face (Geometry.cpp)
 Vertex Barycenter(const Polyhedron& P, const unsigned int& f_id);
+
 
 // Functions which find the neighbors of each edge and vertex
 void getEdgeNeighbors(Polyhedron& P);
