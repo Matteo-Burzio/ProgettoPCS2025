@@ -44,7 +44,7 @@ Graph createGraph(const Polyhedron& pol)
 
 
 // Create the weights matrix
-MatrixXd createWeights(const Graph& graph, const Polyhedron& pol)
+MatrixXd createWeights(const Polyhedron& pol)
 {
     // Initialize the matrix to be "infinity" for all weights
 	MatrixXd weights = MatrixXd::Constant(pol.numVertices(), pol.numVertices(), numeric_limits<double>::max());

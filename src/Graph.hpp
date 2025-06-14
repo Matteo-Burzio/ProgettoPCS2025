@@ -16,7 +16,7 @@ struct Graph
 Graph createGraph(const Polyhedron& pol);
 
 // Function which creates the weights matrix
-MatrixXd createWeights(const Graph& graph, const Polyhedron& pol);
+MatrixXd createWeights(const Polyhedron& pol);
 
 // Function which finds the shortest path using Diskstra's algorithm
 vector<unsigned int> Dijkstra(const Graph& graph,

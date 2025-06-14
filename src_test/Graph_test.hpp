@@ -50,7 +50,7 @@ TEST(TestGraph, CreateWeightsMatrix)
 	// Create the graph
 	Graph graph = createGraph(P);
 
-    MatrixXd weights = createWeights(graph, P);
+    MatrixXd weights = createWeights(P);
 
     // Check if the matrix is symmetric
     for(unsigned int i = 0; i < weights.rows(); i++)
@@ -82,7 +82,7 @@ TEST(TestGraph, Dijkstra_ShortestPath)
 
     // Build graph and weight matrix
     Graph graph = createGraph(P);
-    MatrixXd weights = createWeights(graph, P);
+    MatrixXd weights = createWeights(P);
 
     // Define start and end nodes
     unsigned int id_path_start = 0;
