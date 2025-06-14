@@ -1,6 +1,7 @@
 #pragma once
 
 #include <queue>
+#include <list>
 
 #include "Polyhedron.hpp"
 
@@ -8,7 +9,7 @@
 // Graph struct containing the adjacency matrix
 struct Graph
 {
-    vector<vector<unsigned int>> adjacencyList;
+    vector<list<unsigned int>> adjacencyList;
 };
 
 

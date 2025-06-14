@@ -113,11 +113,12 @@ int main(int argc, char *argv[])
 		// Run Dijkstra algorithm
 		vector<unsigned int> path = Dijkstra(graph, id_path_start, id_path_end, weights);
 
-		// Print path in the terminal
-		printPath(P_new, path);
-	
 		// Draw path on the polyhedron
 		drawPath(P_new, path);
+
+		// Print path in the terminal
+		printPath(P_new, path);
+
 	}
 
 

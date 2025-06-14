@@ -97,8 +97,8 @@ vector<unsigned int> Dijkstra(const Graph& graph,
     
 
     // Initialize vectors 
-    vector<int> pred; // signed int to be initialized to be -1
-    vector<double> dist;
+    vector<int> pred; // signed int initialized to -1
+    vector<double> dist; // doubles initialized to "infinity"
 
     // Get number of nodes
     unsigned int N = graph.adjacencyList.size();
@@ -122,13 +122,13 @@ vector<unsigned int> Dijkstra(const Graph& graph,
                     vector<pair<double, unsigned int>>,
                     greater<pair<double, unsigned int>>> PQ;
 
+
     // Initialize source node
     pred[id_path_start] = id_path_start;
     dist[id_path_start] = 0.0;
     PQ.push({0.0, id_path_start});
 
     
-
     // Algorithm stops when the priority queue is empty
     while(!PQ.empty())
     {
@@ -138,41 +138,41 @@ vector<unsigned int> Dijkstra(const Graph& graph,
 
         // Get current distance and node
         unsigned int current_dist = d_v.first;
-        unsigned int u = d_v.second;
+        unsigned int current_node = d_v.second;
 
         // Then, dequeue it
         PQ.pop();
 
         // Stop the algorithm as soon as the end node is reached
         // (we only care about reaching this particular vertex)
-        if (u == id_path_end)
+        if (current_node == id_path_end)
         {
             break;
         }
 
         // If the node was already reached with a shorter path, skip
-        if (current_dist > dist[u])
+        if (current_dist > dist[current_node])
         {
             continue;
         }
 
         // For each node adjacent to u
-        for (const auto& w : graph.adjacencyList[u])
+        for (const auto& candidate : graph.adjacencyList[current_node])
         {
             // Compute new distance
-            double new_dist = dist[u] + weights(u, w);
+            double new_dist = dist[current_node] + weights(current_node, candidate);
 
             // If the new distance is shorter
-            if (dist[w] > new_dist)
+            if (dist[candidate] > new_dist)
             {
                 // Update vector of distances
-                dist[w] = new_dist;
+                dist[candidate] = new_dist;
 
                 // Set current node's predecessor to u
-                pred[w] = u;
+                pred[candidate] = current_node;
 
                 // Add it to the priority queue
-                PQ.push({dist[w], w});
+                PQ.push({dist[candidate], candidate});
             }
         }
     }
@@ -184,7 +184,7 @@ vector<unsigned int> Dijkstra(const Graph& graph,
     // If node was not reached
     if (dist[id_path_end] == numeric_limits<double>::max())
     {
-        cerr << "Something went wrong" << endl;
+        cerr << "Something went wrong: no path found" << endl;
         return path; // empty vector
         
     }
@@ -196,7 +196,7 @@ vector<unsigned int> Dijkstra(const Graph& graph,
         path.push_back(i);
     }
 
-    // Add final node and reverse the order
+    // Add starting node ("last predecessor") and reverse the order
     path.push_back(id_path_start);
     reverse(path.begin(), path.end());
 
@@ -220,15 +220,19 @@ cout << "The path crosses " << path.size() << " nodes." << endl;
             {
                 cout << "Travelled across edge " << e.id 
                 << " which connects nodes " << path[i] << " and " << path[i + 1] << endl;
+
+                // Uncomment to check if shortPath was set to true
+                //cout << e.shortPath << endl;
             }
         }
     }
 
-    for (unsigned int i = 0; i < path.size(); i++)
-    {
-        cout << path[i] << " ";
-    }
-    cout << endl;
+    // Uncomment to print visited nodes
+    // for (unsigned int i = 0; i < path.size(); i++)
+    // {
+    //     cout << path[i] << " ";
+    // }
+    // cout << endl;
 
 }
 
@@ -243,7 +247,7 @@ void drawPath(Polyhedron& pol, const vector<unsigned int> path)
     }
 
     // Set short path flag to 1 for visited edges
-    for (unsigned int i = 0; i < path.size() - 1; i++)
+    for (unsigned int i = 0; i + 1 < path.size(); i++)
     {
         // Get IDs of two consecutive nodes
         unsigned int node_1 = path[i];
@@ -258,10 +262,7 @@ void drawPath(Polyhedron& pol, const vector<unsigned int> path)
             {
                 // Set shortPath to true
                 e.shortPath = true;
-            }
-            
+            } 
         }
-
     }
-    
 }
