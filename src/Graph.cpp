@@ -209,7 +209,7 @@ vector<unsigned int> Dijkstra(const Graph& graph,
 // Function which prints the path in the terminal
 void printPath(Polyhedron& pol, const vector<unsigned int> path)
 {
-cout << "The path crosses " << path.size() << " nodes." << endl;
+
     for (unsigned int i = 0; i + 1 < path.size(); i++)
     {
         // Iterate along edges
@@ -227,12 +227,41 @@ cout << "The path crosses " << path.size() << " nodes." << endl;
         }
     }
 
-    // Uncomment to print visited nodes
-    // for (unsigned int i = 0; i < path.size(); i++)
-    // {
-    //     cout << path[i] << " ";
-    // }
-    // cout << endl;
+    // Initialize total distance and number of crossed edges
+    double path_length = 0.0;
+    unsigned int edge_counter = 0;
+
+    // Iterate along edges
+    for (const auto& e : pol.edges)
+    {
+        if (e.shortPath == true)
+        {
+            // Get extrema of current edge
+            Vertex v1 = pol.vertices[e.origin];
+            Vertex v2 = pol.vertices[e.end];
+
+            // Add edge length to total distance
+            path_length += (v1.coords - v2.coords).norm();
+
+            // Increment counter
+            edge_counter++;
+        }
+    }
+
+
+    // Print edge(s) crossed
+    cout << "The path crosses " << edge_counter;
+    if (edge_counter == 1)
+    {
+        cout << " edge"  << endl;  
+    }
+    else
+    {
+        cout << " edges" << endl;
+    }
+    
+    // Print path length
+    cout << "Total distance travelled is " << path_length << endl;
 
 }
 
