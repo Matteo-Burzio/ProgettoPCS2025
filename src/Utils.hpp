@@ -13,9 +13,9 @@ using namespace std;
 
 // Function which checks if values of polyhedron input are correct
 bool checkPolyhedronInput(int argc, char* argv[],
-				 unsigned int &p, unsigned int &q,
-				 unsigned int &b, unsigned int &c,
-				 unsigned int &val, unsigned int &flag);
+				 		unsigned int &p, unsigned int &q,
+				 		unsigned int &b, unsigned int &c,
+				 		unsigned int &val, unsigned int &flag);
 
 // Function which checks if values of graph input are correct
 bool checkGraphInput(char* argv[],

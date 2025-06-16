@@ -138,5 +138,4 @@ TEST(TriangleTest, ClassII)
 	}
 
 	ASSERT_TRUE(P.checkFaces());
-	
 }

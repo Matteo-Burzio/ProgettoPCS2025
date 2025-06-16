@@ -261,4 +261,3 @@ Polyhedron Dual(const Polyhedron& P)
 	return Q;
 	
 }
-

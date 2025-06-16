@@ -8,15 +8,6 @@
 using namespace std;
 
 
-
-// Input TEST
-
-TEST(InputTest, InputCheck)
-{
-	
-}
-
-
 // Polyhedron TEST
 
 TEST(PolyhedronTest, ValidTetrahedron)
@@ -37,21 +28,5 @@ TEST(PolyhedronTest, ValidIcosahedron)
 {
 	Polyhedron P = Icosahedron();
 	ASSERT_TRUE(P.checkFaces());
-}
-
-
-// Export TEST
-
-TEST(ExportTest, ExportParaview)
-{
-	
-}
-
-
-// Outout Test
-
-TEST(OutputTest, OutputWriting)
-{
-	
 }
 

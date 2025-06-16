@@ -108,16 +108,17 @@ int main(int argc, char *argv[])
 
 		// Initialize graph and weight matrix
 		Graph graph = createGraph(P_new);
-		MatrixXd weights = createWeights(graph, P_new);
+		MatrixXd weights = createWeights(P_new);
 
 		// Run Dijkstra algorithm
 		vector<unsigned int> path = Dijkstra(graph, id_path_start, id_path_end, weights);
 
-		// Uncomment to print path
-		printPath(P_new, path);
-	
 		// Draw path on the polyhedron
 		drawPath(P_new, path);
+
+		// Print path in the terminal
+		printPath(P_new, path);
+
 	}
 
 

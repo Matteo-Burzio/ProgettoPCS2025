@@ -135,7 +135,7 @@ struct Polyhedron
 				}
 			}
 		}
+		
 		return true;
 	}
 };
-
