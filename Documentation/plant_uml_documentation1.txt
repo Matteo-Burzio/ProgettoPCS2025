@@ -1,0 +1,62 @@
+@startuml
+start
+
+:Leggi parametri da argv;
+:Check input (check_input);
+if (Input non valido?) then (sì)
+  stop
+else (no)
+endif 
+'in plant uml we need the keeword endif to close a scope
+'the keeword if open the branch true
+'false open the branch false
+'this because plant uml is not a Indentation-based language
+
+:Costruisci solido platonico iniziale;
+if (p = 3 and q = 3) then
+  :Tetrahedron;
+elseif (p = 3 and q = 4 or viceversa) then
+  :Octahedron;
+elseif (p = 3 and q = 5 or viceversa) then
+  :Icosahedron;
+else
+  :Errore: combinazione non valida;
+  stop
+endif
+
+
+if (flag == 1) then
+  :Triangolazione classe I;
+elseif (flag == 2) then
+  :Triangolazione classe II;
+else
+  :Errore: flag non valido;
+  stop
+endif
+'I open a scope whith if, so I have to close It 
+
+:Proiezione dei vertici sulla sfera;
+:Calcolo vicini di vertici e spigoli;
+
+if (p != 3) then (sì)
+  :Costruzione del duale;
+else (no)
+endif
+
+:Esportazione del poliedro;
+if (writeOutput fallisce) then (sì)
+  stop
+endif
+
+if (argc == 7) then (sì)
+  :Estrai ID partenza/arrivo;
+  if (ID non validi) then (sì)
+    stop
+  endif
+endif
+
+:Costruzione grafo;
+:Creazione matrice pesi;
+:Eseguo l'algoritmo Dijkstra; 
+stop
+@enduml

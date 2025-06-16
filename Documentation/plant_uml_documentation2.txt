@@ -1,0 +1,59 @@
+@startuml
+title PCS PROJECT
+
+left to right direction
+
+'Graph a sinistra
+struct Graph{
+    + vector<vector<unsigned int>> adjacencyList;
+	+ Graph createGraph();
+	+ MatrixXd createWeights();
+	+ vector<unsigned int> Dijkstra();
+}
+
+' Polyhedron ìn mezzo
+  struct Polyhedron {
+    + unsigned int id
+    + vector<Vertex> vertices
+    + vector<Edge> edges
+    + vector<Face> faces 
+    + unsigned int numVertices()
+    + unsigned int numEdges()
+    + unsigned int numFaces()
+    + bool checkFaces()
+  }
+  
+  ' Componenti a destra, messe una dopo l’altra per forzare la disposizione verticale
+
+  struct Vertex{
+	 + unsigned int id
+	 + Vector3d coords
+	 + vector<unsigned int> edgeNeighbors 
+	 + vector<unsigned int> faceNeighbors
+	 + bool shortPath
+	-- Non member functions listed elsewhere --
+	 + normalizeVertex(Vertex& v)
+ }
+
+  struct Edge{
+	 + unsigned int id
+	 + unsigned int origin
+	 + unsigned int end
+	 + vector<unsigned int> faceNeighbors
+	 + bool shortPath 
+ }
+
+  struct Face{
+	 + unsigned int id
+	 + vector<unsigned int> idVertices
+	 + vector<unsigned int> idEdges
+	 + unsigned int numVertices()
+	 + unsigned int numEdges() 
+
+ }
+' Frecce per collegare
+Polyhedron <-- Vertex : belongs to
+Polyhedron <-- Edge : connects vertices of
+Polyhedron <-- Face : face of
+Graph --> Polyhedron : find shortest path in a 
+@enduml
