@@ -1,59 +1,62 @@
 @startuml
-title PCS PROJECT
+start
 
-left to right direction
+:Leggi parametri da argv;
+:Check input (check_input);
+if (Input non valido?) then (sì)
+  stop
+else (no)
+endif 
+'in plant uml we need the keeword endif to close a scope
+'the keeword if open the branch true
+'false open the branch false
+'this because plant uml is not a Indentation-based language
 
-'Graph a sinistra
-struct Graph{
-    + vector<vector<unsigned int>> adjacencyList;
-	+ Graph createGraph();
-	+ MatrixXd createWeights();
-	+ vector<unsigned int> Dijkstra();
-}
+:Costruisci solido platonico iniziale;
+if (p = 3 and q = 3) then
+  :Tetrahedron;
+elseif (p = 3 and q = 4 or viceversa) then
+  :Octahedron;
+elseif (p = 3 and q = 5 or viceversa) then
+  :Icosahedron;
+else
+  :Errore: combinazione non valida;
+  stop
+endif
 
-' Polyhedron ìn mezzo
-  struct Polyhedron {
-    + unsigned int id
-    + vector<Vertex> vertices
-    + vector<Edge> edges
-    + vector<Face> faces 
-    + unsigned int numVertices()
-    + unsigned int numEdges()
-    + unsigned int numFaces()
-    + bool checkFaces()
-  }
-  
-  ' Componenti a destra, messe una dopo l’altra per forzare la disposizione verticale
 
-  struct Vertex{
-	 + unsigned int id
-	 + Vector3d coords
-	 + vector<unsigned int> edgeNeighbors 
-	 + vector<unsigned int> faceNeighbors
-	 + bool shortPath
-	-- Non member functions listed elsewhere --
-	 + normalizeVertex(Vertex& v)
- }
+if (flag == 1) then
+  :Triangolazione classe I;
+elseif (flag == 2) then
+  :Triangolazione classe II;
+else
+  :Errore: flag non valido;
+  stop
+endif
+'I open a scope whith if, so I have to close It 
 
-  struct Edge{
-	 + unsigned int id
-	 + unsigned int origin
-	 + unsigned int end
-	 + vector<unsigned int> faceNeighbors
-	 + bool shortPath 
- }
+:Proiezione dei vertici sulla sfera;
+:Calcolo vicini di vertici e spigoli;
 
-  struct Face{
-	 + unsigned int id
-	 + vector<unsigned int> idVertices
-	 + vector<unsigned int> idEdges
-	 + unsigned int numVertices()
-	 + unsigned int numEdges() 
+if (p != 3) then (sì)
+  :Costruzione del duale;
+else (no)
+endif
 
- }
-' Frecce per collegare
-Polyhedron <-- Vertex : belongs to
-Polyhedron <-- Edge : connects vertices of
-Polyhedron <-- Face : face of
-Graph --> Polyhedron : find shortest path in a 
+:Esportazione del poliedro;
+if (writeOutput fallisce) then (sì)
+  stop
+endif
+
+if (argc == 7) then (sì)
+  :Estrai ID partenza/arrivo;
+  if (ID non validi) then (sì)
+    stop
+  endif
+endif
+
+:Costruzione grafo;
+:Creazione matrice pesi;
+:Eseguo l'algoritmo Dijkstra; 
+stop
 @enduml
